@@ -33,6 +33,14 @@
 
 - push할 때 eslint 설정에 안 맞으면 push 안 되니깐 오류 메세지 잘 확인해주세요.
 
+- shadcn-ui는 컴포넌트를 사용하고 싶으면 install 해야합니다.
+    ```
+      pnpm dlx shadcn@latest add [컴포넌트 명]
+      // ex) pnpm dlx shadcn@latest add button
+    ```
+    공식 독스가 잘 되어 있으니 참고
+    [shadcn-ui](https://ui.shadcn.com/docs/installation/next)
+
 ### TailwindCSS Custom Utility 스타일 사용 방법
 
 아래 스타일 참고해서 개발하시면 됩니다.
