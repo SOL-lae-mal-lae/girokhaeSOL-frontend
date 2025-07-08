@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  
+  /* Font Sizes */
+  --font-size-heading1: 34px;
+  --font-size-heading2: 24px;
+  --font-size-heading3: 20px;
+  --font-size-body1: 16px;
+  --font-size-body2: 14px;
+  --font-size-sub1: 16px;
+  --font-size-sub2: 14px;
+  --font-size-button: 14px;
+  --font-size-caption: 12px;
+  --font-size-overline: 10px;
+  
+  /* Brand Colors */
+  --color-brand-shinhan-blue: #0046ff;
+  --color-brand-black: #000000;
+  --color-brand-white: #ffffff;
+  --color-brand-light-blue: #8cd2f5;
+  --color-brand-sky-blue: #4baff5;
+  --color-brand-royal-blue: #2878f5;
+  --color-brand-navy-blue: #00236e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-one-shinhan: var(--font-one-shinhan);
+  
+  --text-heading1: var(--font-size-heading1);
+  --text-heading2: var(--font-size-heading2);
+  --text-heading3: var(--font-size-heading3);
+  --text-body1: var(--font-size-body1);
+  --text-body2: var(--font-size-body2);
+  --text-sub1: var(--font-size-sub1);
+  --text-sub2: var(--font-size-sub2);
+  --text-button: var(--font-size-button);
+  --text-caption: var(--font-size-caption);
+  --text-overline: var(--font-size-overline);
+
+  --color-brand-shinhan-blue: var(--color-brand-shinhan-blue);
+  --color-brand-black: var(--color-brand-black);
+  --color-brand-white: var(--color-brand-white);  
+  --color-brand-light-blue: var(--color-brand-light-blue);
+  --color-brand-sky-blue: var(--color-brand-sky-blue);
+  --color-brand-royal-blue: var(--color-brand-royal-blue);
+  --color-brand-navy-blue: var(--color-brand-navy-blue);  
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  width: 100%;
+  height: 100%;
+}
