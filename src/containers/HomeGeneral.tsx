@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,7 +14,7 @@ const HomeGeneral = () => {
 	const subtitleRef = useRef<HTMLParagraphElement>(null);
 	const buttonsRef = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (
 			!logoRef.current ||
 			!titleRef.current ||

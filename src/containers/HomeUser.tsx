@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect, useRef } from 'react';
+import { FC, useLayoutEffect, useRef } from 'react';
 
 import Link from 'next/link';
 
@@ -25,8 +25,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 	const infoCardsRef = useRef<HTMLUListElement>(null);
 	const linkCardsRef = useRef<HTMLUListElement>(null);
 
-	useEffect(() => {
-		// 초기 상태 설정
+	useLayoutEffect(() => {
 		if (!titleRef.current || !infoCardsRef.current || !linkCardsRef.current)
 			return;
 
@@ -49,7 +48,8 @@ const HomeUser: FC<Props> = ({ userName }) => {
 		<>
 			<p
 				ref={titleRef}
-				className="text-heading1 text-brand-royal-blue text-bold"
+				className="text-heading1 text-brand-royal-blue text-bold opacity-0"
+				style={{ visibility: 'hidden' }}
 			>
 				<strong className="text-brand-shinhan-blue">
 					{userName}님
@@ -57,7 +57,11 @@ const HomeUser: FC<Props> = ({ userName }) => {
 				의 최근 1년 투자 현황
 			</p>
 			<div className="flex flex-col gap-4 w-full">
-				<ul ref={infoCardsRef} className="flex gap-4 w-full">
+				<ul
+					ref={infoCardsRef}
+					className="flex gap-4 w-full opacity-0"
+					style={{ visibility: 'hidden' }}
+				>
 					<li className="flex-1">
 						<InfoCard
 							description="최근 1년 거래 횟수"
@@ -83,7 +87,11 @@ const HomeUser: FC<Props> = ({ userName }) => {
 						/>
 					</li>
 				</ul>
-				<ul ref={linkCardsRef} className="flex gap-4 w-full">
+				<ul
+					ref={linkCardsRef}
+					className="flex gap-4 w-full opacity-0"
+					style={{ visibility: 'hidden' }}
+				>
 					<li className="flex-1">
 						<LinkCard
 							title="매매일지 관리"

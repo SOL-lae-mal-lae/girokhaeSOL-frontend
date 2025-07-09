@@ -11,7 +11,9 @@ export const homeUserAnimation = ({
 	infoCardsRef,
 	linkCardsRef,
 }: Props) => {
+	// 먼저 visibility를 보이게 설정
 	gsap.set([titleRef.current, infoCardsRef.current, linkCardsRef.current], {
+		visibility: 'visible',
 		opacity: 0,
 		y: 30,
 	});
