@@ -1,3 +1,5 @@
+'use client';
+
 import { FC } from 'react';
 
 import {
@@ -6,19 +8,20 @@ import {
 	CardDescription,
 	CardTitle,
 } from '@/components/ui/card';
+import { ICON_BG_COLOR_LIST } from '@/constants/colors';
 
 interface Props {
 	value: string;
 	description: string;
-	bgColor: string;
 	icon: React.ReactNode;
+	index: number;
 }
 
-const InfoCard: FC<Props> = ({ value, description, icon, bgColor }) => {
+const InfoCard: FC<Props> = ({ value, description, icon, index = 0 }) => {
 	return (
 		<Card className="w-auto h-[200px] flex flex-col items-center justify-center">
 			<div
-				className={`flex items-center justify-center w-[46px] h-[46px] rounded-xl bg-${bgColor}`}
+				className={`flex items-center justify-center w-[46px] h-[46px] rounded-xl ${ICON_BG_COLOR_LIST[index]}`}
 			>
 				{icon}
 			</div>
