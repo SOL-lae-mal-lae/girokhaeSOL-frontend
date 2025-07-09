@@ -3,7 +3,7 @@ import { Response } from '@/@types/response';
 export const fetchData = async <T>(
 	path: string,
 	init: RequestInit
-): Promise<T | null> => {
+): Promise<Response<T> | null> => {
 	try {
 		const response = await fetch(`${process.env.API_URL}/api/v1${path}`, {
 			...init,
@@ -14,7 +14,7 @@ export const fetchData = async <T>(
 			throw new Error(data.message);
 		}
 
-		return data.data;
+		return data;
 	} catch (error) {
 		console.error(error);
 		return null;
