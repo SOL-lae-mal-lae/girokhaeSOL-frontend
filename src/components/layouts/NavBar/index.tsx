@@ -1,14 +1,18 @@
 'use client';
 
+import { FC } from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { NAV_ITEM_HEIGHT, NAV_ITEMS } from '@/constants/nav';
 
-import { Button } from '../ui/button';
+interface NavBarProps {
+	children: React.ReactNode;
+}
 
-export const NavBar = () => {
+export const NavBar: FC<NavBarProps> = ({ children }: NavBarProps) => {
 	const pathname = usePathname();
 
 	return (
@@ -41,9 +45,7 @@ export const NavBar = () => {
 					))}
 				</menu>
 			</div>
-			<Link href="/login">
-				<Button variant="outline">로그인</Button>
-			</Link>
+			{children}
 		</header>
 	);
 };

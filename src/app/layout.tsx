@@ -1,6 +1,8 @@
 import localFont from 'next/font/local';
 
-import { NavBar } from '@/components/layouts';
+import { ClerkProvider } from '@clerk/nextjs';
+
+import { Login, NavBar } from '@/components/layouts';
 
 import type { Metadata } from 'next';
 
@@ -38,11 +40,15 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body className={`${oneShinhan.className} antialiased`}>
-				<NavBar />
-				{children}
-			</body>
-		</html>
+		<ClerkProvider>
+			<html lang="en">
+				<body className={`${oneShinhan.className} antialiased`}>
+					<NavBar>
+						<Login />
+					</NavBar>
+					{children}
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }
