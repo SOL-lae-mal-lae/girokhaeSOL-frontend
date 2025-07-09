@@ -34,7 +34,7 @@ export const NavBar = () => {
 							>
 								{item.label}
 							</Link>
-							{pathname.startsWith(item.href) && (
+							{pathname === item.href && (
 								<div className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-shinhan-blue animate-slide-in" />
 							)}
 						</li>
