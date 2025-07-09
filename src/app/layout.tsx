@@ -1,5 +1,7 @@
 import localFont from 'next/font/local';
 
+import { NavBar } from '@/components/layouts';
+
 import type { Metadata } from 'next';
 
 import './globals.css';
@@ -38,6 +40,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${oneShinhan.className} antialiased`}>
+				<NavBar />
 				{children}
 			</body>
 		</html>
