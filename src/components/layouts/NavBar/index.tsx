@@ -16,7 +16,7 @@ export const NavBar: FC<NavBarProps> = ({ children }: NavBarProps) => {
 	const pathname = usePathname();
 
 	return (
-		<header className="flex justify-between items-center pr-4 pl-4 gap-4 h-14 bg-brand-white shadow-md relative">
+		<header className="fixed top-0 left-0 flex w-full justify-between items-center pr-4 pl-4 gap-4 h-14 bg-brand-white shadow-md">
 			<div className="flex items-center gap-12 h-full">
 				<Link href="/">
 					<Image
