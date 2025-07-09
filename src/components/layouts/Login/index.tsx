@@ -13,7 +13,10 @@ export const Login = () => {
 		<div className="flex justify-end items-center p-4 gap-2 h-16">
 			<SignedOut>
 				<SignUpButton>
-					<Button className="w-[80px] bg-brand-white text-brand-black border border-gray-300 cursor-pointer hover:bg-brand-black hover:text-brand-white">
+					<Button
+						className="w-[80px] bg-brand-white text-brand-black cursor-pointer"
+						variant="outline"
+					>
 						회원가입
 					</Button>
 				</SignUpButton>

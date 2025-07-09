@@ -2,7 +2,7 @@ import localFont from 'next/font/local';
 
 import { ClerkProvider } from '@clerk/nextjs';
 
-import { Login, NavBar } from '@/components/layouts';
+import { Base, Login, NavBar } from '@/components/layouts';
 import { DialogProvider } from '@/hooks/DialogContext';
 
 import type { Metadata } from 'next';
@@ -48,7 +48,7 @@ export default function RootLayout({
 						<NavBar>
 							<Login />
 						</NavBar>
-						<div className="pt-14 w-full h-full">{children}</div>
+						<Base>{children}</Base>
 					</body>
 				</html>
 			</DialogProvider>

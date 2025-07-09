@@ -3,14 +3,15 @@ import { currentUser } from '@clerk/nextjs/server';
 import { User } from '@/@types/user';
 import { fetchData } from '@/services/fetchData';
 
-import HomeBody from './HomeBody';
 import HomeDialogClient from './HomeDialog.client';
+import HomeGeneral from './HomeGeneral';
+import HomeUser from './HomeUser';
 
 const HomeContainer = async () => {
 	const clientUser = await currentUser();
 
 	if (!clientUser) {
-		return <HomeBody />;
+		return <HomeGeneral />;
 	}
 
 	const res = await fetchData<User | null>(`/users?userId=${clientUser.id}`, {
@@ -26,7 +27,7 @@ const HomeContainer = async () => {
 		return <HomeDialogClient />;
 	}
 
-	return <HomeBody />;
+	return <HomeUser userName={res.data.nickname} />;
 };
 
 export default HomeContainer;
