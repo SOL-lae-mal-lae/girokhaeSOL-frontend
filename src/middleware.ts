@@ -1,6 +1,19 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
-export default clerkMiddleware();
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+
+const isPublicRoute = createRouteMatcher(['/', '/community', '/auth-required']);
+
+export default clerkMiddleware(async (auth, req) => {
+	if (!isPublicRoute(req)) {
+		const { userId } = await auth();
+
+		if (!userId) {
+			// 로그인되지 않은 경우 커스텀 페이지로 리다이렉트
+			return NextResponse.redirect(new URL('/auth-required', req.url));
+		}
+	}
+});
 
 export const config = {
 	matcher: [

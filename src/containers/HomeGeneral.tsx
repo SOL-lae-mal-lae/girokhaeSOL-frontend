@@ -62,7 +62,7 @@ const HomeGeneral = () => {
 				</p>
 			</div>
 			<div ref={buttonsRef} className="flex gap-4">
-				<Link href={process.env.NEXT_PUBLIC_SIGN_IN_URL as string}>
+				<Link href="/auth-required">
 					<Button
 						className="bg-brand-shinhan-blue !text-brand-white text-button hover:bg-brand-navy-blue cursor-pointer"
 						size="lg"
