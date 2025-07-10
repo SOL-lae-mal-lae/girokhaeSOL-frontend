@@ -5,7 +5,7 @@ export const fetchData = async <T>(
 	init: RequestInit
 ): Promise<Response<T> | null> => {
 	try {
-		const response = await fetch(`${process.env.API_URL}/api/v1${path}`, {
+		const response = await fetch(`${process.env.API_URL}/api${path}`, {
 			...init,
 		});
 

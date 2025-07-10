@@ -16,14 +16,12 @@ const AuthRequireContainer = () => {
 					시도해주세요.
 				</p>
 			</div>
-
 			<div className="flex gap-4">
 				<SignInButton>
 					<Button className="bg-brand-shinhan-blue text-brand-white hover:bg-brand-navy-blue cursor-pointer">
 						로그인하기
 					</Button>
 				</SignInButton>
-
 				<Link href="/">
 					<Button className="cursor-pointer" variant="outline">
 						홈으로 돌아가기
