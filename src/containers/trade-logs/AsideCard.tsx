@@ -67,7 +67,7 @@ const AsideCard: FC<Props> = ({
 					</div>
 					<div className="flex flex-col">
 						<span className="text-body2 text-muted-foreground">
-							나의 거래 감정 유형
+							나의 거래 심리 유형
 						</span>
 						<span className="text-body1 font-semibold">
 							{sentiments.length > 0 && (
