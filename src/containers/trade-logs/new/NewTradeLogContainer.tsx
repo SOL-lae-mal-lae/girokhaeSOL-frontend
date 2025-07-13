@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 
+import NewTradeLogContainerClient from './NewTradeLogContainer.client';
+
 interface Props {
 	searchParams: Promise<{ date: string }>;
 }
@@ -13,7 +15,7 @@ const NewTradeLogContainer = async ({ searchParams }: Props) => {
 		redirect('/trade-logs');
 	}
 
-	return <div>NewTradeLogContainer</div>;
+	return <NewTradeLogContainerClient date={date} />;
 };
 
 export default NewTradeLogContainer;
