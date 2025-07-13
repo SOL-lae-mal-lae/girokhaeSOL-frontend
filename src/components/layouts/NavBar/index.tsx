@@ -17,7 +17,7 @@ export const NavBar: FC<NavBarProps> = ({ children }: NavBarProps) => {
 
 	return (
 		<header className="fixed top-0 left-0 flex w-full justify-between items-center pr-4 pl-4 gap-4 h-14 bg-brand-white shadow-md z-50">
-			<div className="flex items-center justify-between w-[1200px] mx-auto">
+			<div className="flex items-center justify-between w-[1200px] h-full mx-auto">
 				<div className="flex items-center gap-12 h-full">
 					<Link href="/">
 						<Image
