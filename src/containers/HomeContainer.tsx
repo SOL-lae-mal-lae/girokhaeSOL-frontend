@@ -1,7 +1,6 @@
 import { currentUser } from '@clerk/nextjs/server';
 
-import { User } from '@/@types/user';
-import { fetchData } from '@/services/fetchData';
+import { getUserExist } from '@/db/user';
 
 import HomeDialogClient from './HomeDialog.client';
 import HomeGeneral from './HomeGeneral';
@@ -14,20 +13,17 @@ const HomeContainer = async () => {
 		return <HomeGeneral />;
 	}
 
-	const res = await fetchData<User | null>(`/users?userId=${clientUser.id}`, {
-		method: 'GET',
-		cache: 'no-store',
-	});
+	const user = await getUserExist(clientUser.id);
 
-	if (!res) {
+	if (!user) {
 		return <div>Error</div>;
 	}
 
-	if (!res.data) {
+	if (!user.length) {
 		return <HomeDialogClient />;
 	}
 
-	return <HomeUser userName={res.data.nickname} />;
+	return <HomeUser userName={user[0].nickname ?? ''} />;
 };
 
 export default HomeContainer;
