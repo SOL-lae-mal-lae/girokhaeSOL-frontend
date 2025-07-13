@@ -31,7 +31,7 @@ const TradeLogsContainerClient = () => {
 	}
 
 	return (
-		<div className="flex h-full w-full gap-4">
+		<div className="flex h-full w-full gap-4 items-start">
 			<div className="flex flex-3/4 w-full h-full justify-center">
 				<CalendarContainer dates={data?.dates ?? []} />
 			</div>
