@@ -59,7 +59,7 @@ const CustomDayButton = ({
 					'bg-gray-100/90 pointer-events-none select-none cursor-default hover:bg-gray-100/90 focus:bg-gray-100/90 focus:ring-0',
 				isToday &&
 					!isFuture &&
-					'box-border border-3 border-brand-shinhan-blue hover:bg-brand-shinhan-blue hover:text-brand-white focus:bg-brand-shinhan-blue focus:text-brand-white',
+					'box-border bg-brand-white border-3 border-brand-shinhan-blue hover:bg-brand-shinhan-blue hover:text-brand-white focus:bg-brand-shinhan-blue focus:text-brand-white',
 				!isFuture && 'cursor-pointer'
 			)}
 			{...(isFuture ? {} : { onClick })}

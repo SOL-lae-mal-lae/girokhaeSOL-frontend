@@ -26,12 +26,12 @@ const AsideCard: FC<Props> = ({
 	topBuy,
 }) => {
 	return (
-		<Card className="flex-1/4 w-full min-h-3/4 border border-gray-300 my-8 rounded-[8px] shadow-md p-6 flex flex-col justify-between">
+		<Card className="flex-1/4 w-full border border-gray-300 my-8 rounded-[8px] shadow-md p-6 flex flex-col">
 			<CardHeader className="flex gap-2 items-center p-0 mb-4">
 				<Lightbulb />
 				<CardTitle className="text-lg">이번 달 요약</CardTitle>
 			</CardHeader>
-			<CardContent className="flex flex-col flex-1 justify-between p-0">
+			<CardContent className="flex flex-col justify-between p-0 gap-4">
 				<div className="flex flex-col gap-4">
 					<div className="flex flex-col">
 						<span className="text-body2 text-muted-foreground">
@@ -67,7 +67,7 @@ const AsideCard: FC<Props> = ({
 					</div>
 					<div className="flex flex-col">
 						<span className="text-body2 text-muted-foreground">
-							나의 거래 감정 유형
+							나의 거래 심리 유형
 						</span>
 						<span className="text-body1 font-semibold">
 							{sentiments.length > 0 && (
@@ -94,7 +94,7 @@ const AsideCard: FC<Props> = ({
 					</div>
 				</div>
 				<Separator />
-				<div className="mt-2 flex flex-col">
+				<div className="flex flex-col">
 					<div className="font-semibold mb-2 text-base">
 						상위 3개 매수 종목
 					</div>

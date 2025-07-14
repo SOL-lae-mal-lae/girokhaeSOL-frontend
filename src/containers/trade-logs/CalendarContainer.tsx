@@ -1,9 +1,8 @@
 'use client';
 
 import { FC } from 'react';
-import * as React from 'react';
 
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { format } from 'date-fns/format';
 
@@ -15,6 +14,7 @@ interface Props {
 }
 
 export const CalendarContainer: FC<Props> = ({ dates }) => {
+	const router = useRouter();
 	return (
 		<Calendar
 			className="min-w-3/4 min-h-2/3 mt-8"
@@ -27,9 +27,9 @@ export const CalendarContainer: FC<Props> = ({ dates }) => {
 					return;
 				}
 				if (hasTradeLog) {
-					redirect(`/trade-logs/${dateString}`);
+					router.push(`/trade-logs/${dateString}`);
 				} else {
-					redirect(`/trade-logs/new?date=${dateString}`);
+					router.push(`/trade-logs/new?date=${dateString}`);
 				}
 			}}
 			components={{

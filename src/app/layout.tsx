@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import { ClerkProvider } from '@clerk/nextjs';
 
 import { Base, Login, NavBar } from '@/components/layouts';
+import QueryClientProvider from '@/components/providers/QueryClientProvider';
 import { DialogProvider } from '@/hooks/DialogContext';
 
 import type { Metadata } from 'next';
@@ -42,16 +43,18 @@ export default function RootLayout({
 }>) {
 	return (
 		<ClerkProvider>
-			<DialogProvider>
-				<html lang="en">
-					<body className={`${oneShinhan.className} antialiased`}>
-						<NavBar>
-							<Login />
-						</NavBar>
-						<Base>{children}</Base>
-					</body>
-				</html>
-			</DialogProvider>
+			<QueryClientProvider>
+				<DialogProvider>
+					<html lang="en">
+						<body className={`${oneShinhan.className} antialiased`}>
+							<NavBar>
+								<Login />
+							</NavBar>
+							<Base>{children}</Base>
+						</body>
+					</html>
+				</DialogProvider>
+			</QueryClientProvider>
 		</ClerkProvider>
 	);
 }

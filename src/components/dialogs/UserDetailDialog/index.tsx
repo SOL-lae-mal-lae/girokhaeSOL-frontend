@@ -20,7 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { fetchClientData } from '@/services/fetchClientData';
+import { createUser } from '@/services/users';
 
 interface Props {
 	onClose: () => void;
@@ -44,12 +44,9 @@ const UserDetailDialog: FC<Props> = ({ onClose }) => {
 	});
 
 	const onSubmit = async (data: FormSchema) => {
-		const res = await fetchClientData('/users', {
-			method: 'POST',
-			body: JSON.stringify({
-				age: data.age,
-				gender: data.gender,
-			}),
+		const res = await createUser({
+			age: data.age,
+			gender: data.gender,
 		});
 
 		if (res?.data) {
