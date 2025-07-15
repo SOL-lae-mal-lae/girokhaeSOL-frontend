@@ -20,7 +20,11 @@ const NewTradeLogContainer = async ({ searchParams }: Props) => {
 		redirect('/trade-logs');
 	}
 
-	return <NewTradeLogContainerClient date={date} />;
+	return (
+		<div className="w-full h-full">
+			<NewTradeLogContainerClient date={date} />
+		</div>
+	);
 };
 
 export default NewTradeLogContainer;

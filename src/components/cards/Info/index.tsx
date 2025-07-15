@@ -15,9 +15,22 @@ interface Props {
 	description: string;
 	icon: React.ReactNode;
 	index: number;
+	fontColor?: 'black' | 'red' | 'blue';
 }
 
-const InfoCard: FC<Props> = ({ value, description, icon, index = 0 }) => {
+const InfoCard: FC<Props> = ({
+	value,
+	description,
+	icon,
+	index = 0,
+	fontColor = 'black',
+}) => {
+	const fontColorClass = {
+		black: 'text-brand-black',
+		red: 'text-red-500',
+		blue: 'text-blue-500',
+	};
+
 	return (
 		<Card className="w-auto h-[200px] flex flex-col items-center justify-center">
 			<div
@@ -26,7 +39,9 @@ const InfoCard: FC<Props> = ({ value, description, icon, index = 0 }) => {
 				{icon}
 			</div>
 			<CardContent className="flex flex-col items-center justify-center gap-1">
-				<CardTitle className="text-heading2">{value}</CardTitle>
+				<CardTitle className={`text-2xl ${fontColorClass[fontColor]}`}>
+					{value}
+				</CardTitle>
 				<CardDescription>{description}</CardDescription>
 			</CardContent>
 		</Card>
