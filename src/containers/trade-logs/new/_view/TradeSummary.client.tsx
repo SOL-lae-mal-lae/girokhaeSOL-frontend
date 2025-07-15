@@ -19,11 +19,11 @@ const TradeSummary: FC<Props> = ({ summaries }) => {
 		total_buy_amount,
 		total_sell_amount,
 		total_cmsn_tax,
-		profit_rate,
 		settlement_amount,
 	} = summaries;
 	return (
 		<div className="flex flex-col gap-2">
+			<h1 className="text-heading3 font-bold">금일 거래 요약</h1>
 			<div className="grid grid-cols-2 gap-2 w-full">
 				<InfoCard
 					value={`${total_buy_amount.toLocaleString()}원`}
@@ -37,21 +37,12 @@ const TradeSummary: FC<Props> = ({ summaries }) => {
 					icon={<HandCoins className="text-brand-white" />}
 					index={1}
 				/>
-			</div>
-			<div className="grid grid-cols-3 gap-2 w-full">
 				<InfoCard
 					value={`${settlement_amount.toLocaleString()}원`}
 					description="금일 손익금"
 					icon={<TrendingUpDown className="text-brand-white" />}
 					index={0}
 					fontColor={settlement_amount > 0 ? 'red' : 'blue'}
-				/>
-				<InfoCard
-					value={`${profit_rate.toFixed(2)}%`}
-					description="금일 수익률"
-					icon={<TrendingUpDown className="text-brand-white" />}
-					index={1}
-					fontColor={profit_rate > 0 ? 'red' : 'blue'}
 				/>
 				<InfoCard
 					value={`${total_cmsn_tax.toLocaleString()}원`}

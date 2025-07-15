@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 
 import { Plus, X } from 'lucide-react';
@@ -39,11 +41,10 @@ const TradeLogAside = () => {
 				<CardContent className="space-y-6">
 					{/* 투자 유형 (단일 선택) */}
 					<div className="space-y-2">
-						<h3 className="font-semibold mb-2">투자 유형</h3>
+						<h3 className="font-semibold">투자 유형</h3>
 						<div className="flex flex-wrap gap-2">
 							{Object.entries(INVESTMENT_TYPES).map(
 								([key, value]) => {
-									console.log(key, value);
 									return (
 										<Badge
 											key={key}
@@ -70,7 +71,7 @@ const TradeLogAside = () => {
 					</div>
 					{/* 감정 유형 (다중 선택) */}
 					<div className="space-y-2">
-						<h3 className="font-semibold mb-2">감정 유형</h3>
+						<h3 className="font-semibold">감정 유형</h3>
 						<div className="flex gap-2 flex-wrap">
 							{Object.entries(SENTIMENTS).map(([key, value]) => (
 								<Badge
