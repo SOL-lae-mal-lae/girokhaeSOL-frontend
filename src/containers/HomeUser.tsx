@@ -1,9 +1,12 @@
 'use client';
 
-import { FC, useLayoutEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 import Link from 'next/link';
 
+import { useQuery } from '@tanstack/react-query';
+import { format, subYears } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import {
 	ArrowLeftRight,
 	CalendarRange,
@@ -14,21 +17,37 @@ import {
 
 import { InfoCard, LinkCard } from '@/components/cards';
 import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/spinner';
 import { homeUserAnimation } from '@/lib/gsap/homeUserAnimation';
+import { getYearSummary } from '@/services/home';
 
 interface Props {
 	userName: string;
 }
 
 const HomeUser: FC<Props> = ({ userName }) => {
+	const today = new Date();
+	const oneYearAgo = subYears(today, 1);
+
+	const todayFormatted = format(today, 'yyyyMMdd', { locale: ko });
+	const oneYearAgoFormatted = format(oneYearAgo, 'yyyyMMdd', { locale: ko });
+
+	const { data: userSummary, isLoading } = useQuery({
+		queryKey: ['userSummary'],
+		queryFn: () =>
+			getYearSummary({
+				startDate: oneYearAgoFormatted,
+				endDate: todayFormatted,
+			}),
+	});
 	const titleRef = useRef<HTMLParagraphElement>(null);
 	const infoCardsRef = useRef<HTMLUListElement>(null);
 	const linkCardsRef = useRef<HTMLUListElement>(null);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (!titleRef.current || !infoCardsRef.current || !linkCardsRef.current)
 			return;
-
+		if (!userSummary) return;
 		homeUserAnimation({
 			titleRef,
 			infoCardsRef,
@@ -42,8 +61,15 @@ const HomeUser: FC<Props> = ({ userName }) => {
 				button.removeEventListener('mouseleave', () => {});
 			});
 		};
-	}, []);
+	}, [userSummary]);
 
+	if (isLoading) {
+		return (
+			<div className="flex justify-center items-center h-full">
+				<LoadingSpinner text="사용자 정보 요약하는 중..." />
+			</div>
+		);
+	}
 	return (
 		<>
 			<p
@@ -65,7 +91,10 @@ const HomeUser: FC<Props> = ({ userName }) => {
 					<li className="flex-1">
 						<InfoCard
 							description="최근 1년 거래 횟수"
-							value="15"
+							value={`${
+								userSummary?.journal_count_year.toLocaleString() ??
+								0
+							}회`}
 							icon={<ArrowLeftRight color="white" />}
 							index={0}
 						/>
@@ -73,7 +102,10 @@ const HomeUser: FC<Props> = ({ userName }) => {
 					<li className="flex-1">
 						<InfoCard
 							description="누적 손익값"
-							value="150,000,000원"
+							value={`${
+								userSummary?.cumulative_profit_loss.toLocaleString() ??
+								0
+							}원`}
 							icon={<DollarSign color="white" />}
 							index={1}
 						/>
@@ -81,7 +113,11 @@ const HomeUser: FC<Props> = ({ userName }) => {
 					<li className="flex-1">
 						<InfoCard
 							description="손익률"
-							value="2500%"
+							value={`${
+								userSummary?.cumulative_profit_rate.toFixed(
+									2
+								) ?? 0
+							}%`}
 							icon={<Plus color="white" />}
 							index={2}
 						/>
