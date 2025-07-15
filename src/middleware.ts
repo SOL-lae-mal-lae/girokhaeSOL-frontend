@@ -2,14 +2,16 @@ import { NextResponse } from 'next/server';
 
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
+const isApiRoute = createRouteMatcher(['/api(.*)']);
 const isPublicRoute = createRouteMatcher(['/', '/community', '/auth-required']);
 
 export default clerkMiddleware(async (auth, req) => {
-	if (req.nextUrl.pathname.startsWith('/api')) {
-		return;
+	const { userId } = await auth();
+
+	if (isApiRoute(req)) {
+		return NextResponse.next();
 	}
 	if (!isPublicRoute(req)) {
-		const { userId } = await auth();
 		if (!userId) {
 			// 로그인되지 않은 경우 커스텀 페이지로 리다이렉트
 			return NextResponse.redirect(new URL('/auth-required', req.url));

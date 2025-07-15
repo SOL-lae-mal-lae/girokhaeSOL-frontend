@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 
 import { currentUser } from '@clerk/nextjs/server';
 
+import TradeLogsContainerClient from './TradeLogsContainer.client';
+
 export default async function TradeLogsContainer() {
 	const user = await currentUser();
 
@@ -9,5 +11,9 @@ export default async function TradeLogsContainer() {
 		redirect('/auth-required');
 	}
 
-	return <div>TradeLogsContainer</div>;
+	return (
+		<div className="flex w-full h-full">
+			<TradeLogsContainerClient />
+		</div>
+	);
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import {
 	Card,
@@ -11,7 +11,7 @@ import {
 import { ICON_BG_COLOR_LIST } from '@/constants/colors';
 
 interface Props {
-	value: string;
+	value: ReactNode;
 	description: string;
 	icon: React.ReactNode;
 	index: number;

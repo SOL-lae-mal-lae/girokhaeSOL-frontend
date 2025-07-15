@@ -43,7 +43,18 @@
     공식 독스가 잘 되어 있으니 참고
     [shadcn-ui](https://ui.shadcn.com/docs/installation/next)
 
-- fetchClientData는 클라이언트 -> 서버 요청 시, fetchData는 서버 -> 서버 요청 시 사용해주세요.
+- service 내부에 api 요청 함수로 작성하고 컴포넌트에서 가져다가 사용해주세요.
+
+- constant로 env host들 받아오는데 잘 보고 사용해주세요.
+
+    ```javascript
+    export const HOST_FOR_CLIENT = process.env.NEXT_PUBLIC_API_URL; // 브라우저에서 백엔드로 보낼 때
+    export const HOST_FOR_SERVER = process.env.API_URL; // 서버컴포넌트에서 백엔드 서버로 보낼 때
+
+    export const CLIENT_HOST_FOR_SERVER = process.env.CLIENT_API_URL; // 서버 컴포넌트에서 next 서버로 보낼 때
+    export const CLIENT_HOST_FOR_CLIENT =
+    	process.env.NEXT_PUBLIC_CLIENT_API_URL; // 브라우저에서 next 서버로 보낼 때
+    ```
 
 ### TailwindCSS Custom Utility 스타일 사용 방법
 
