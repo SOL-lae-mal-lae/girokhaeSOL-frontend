@@ -1,6 +1,6 @@
 import AccountRegisterContainer from '@/containers/account/register/AccountRegisterContainer';
 
-export default function AccountPage() {
+export default function AccountRegisterPage() {
 	return (
 		<div>
 			<AccountRegisterContainer />
