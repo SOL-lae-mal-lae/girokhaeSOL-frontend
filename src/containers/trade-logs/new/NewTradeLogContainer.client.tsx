@@ -13,8 +13,8 @@ import {
 } from 'lucide-react';
 
 import { FinancialStatementData } from '@/@types/financialStatement';
-import { LargeCard } from '@/components/cards/FinanceInfo/LargeCard/Index';
-import { SmallCard } from '@/components/cards/FinanceInfo/SmallCard/Index';
+import { LargeCard } from '@/components/cards/FinanceInfo/LargeCard';
+import { SmallCard } from '@/components/cards/FinanceInfo/SmallCard';
 import InfoCard from '@/components/cards/Info';
 import { AccountSelectDialog } from '@/components/dialogs';
 import { Badge } from '@/components/ui/badge';
