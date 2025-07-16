@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { StockWithDisplay } from '@/@types/stocks';
-import { TradeLogTransaction } from '@/@types/tradeLogs';
 import { Card, CardContent } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/spinner';
+import { useCreateTradeLog } from '@/hooks/useCreateTradeLog';
 import { getAccounts } from '@/services/accounts';
 import { getTransaction } from '@/services/trade-logs';
 
@@ -20,57 +19,66 @@ import {
 } from './_view';
 import NoReport from './_view/NoReport.client';
 
-interface Props {
-	date: string;
-}
-
-export default function NewTradeLogContainerClient({ date }: Props) {
+const NewTradeLogContainerClient = () => {
+	const {
+		date,
+		onAddTradeDetail,
+		onSetTodayTradeCompanyList,
+		onSetSummaries,
+	} = useCreateTradeLog();
 	const queryClient = useQueryClient();
-	const [selectedAccount, setSelectedAccount] = useState<string>('');
+	const [selectedAccount, setSelectedAccount] = useState<number>(0);
 	const [isClicked, setIsClicked] = useState(false);
-	const [stockList, setStockList] = useState<StockWithDisplay[]>([]);
-	const [transactionList, setTransactionList] = useState<
-		TradeLogTransaction[]
-	>([]);
 
 	const { data: accounts } = useQuery({
 		queryKey: ['accounts'],
 		queryFn: getAccounts,
 	});
+
 	const { data: transaction, isLoading: isLoadingTransaction } = useQuery({
 		queryKey: ['transaction', date, selectedAccount],
 		queryFn: () => getTransaction(date, selectedAccount),
+		select: (data) => {
+			if (!data) {
+				return null;
+			}
+			return {
+				...data,
+				trade_details: data.trade_details.map((trade) => ({
+					...trade,
+					account_id: selectedAccount,
+				})),
+			};
+		},
 		enabled: isClicked,
 	});
 
 	const handleSelectAccount = (account: string) => {
-		setSelectedAccount(account);
+		setSelectedAccount(Number(account));
 	};
 
 	const handleClickGetAccount = () => {
-		setIsClicked(true);
 		if (isClicked) {
 			queryClient.refetchQueries({
 				queryKey: ['transaction', date, selectedAccount],
 			});
+			return;
 		}
+		setIsClicked(true);
 	};
 
 	useEffect(() => {
 		if (transaction?.trade_details.length) {
-			setStockList(
+			onSetTodayTradeCompanyList(
 				transaction.trade_details.map(({ stock_code, stock_name }) => {
 					return {
 						code: stock_code,
 						name: stock_name,
-						display: true,
 					};
 				})
 			);
-			setTransactionList((prev) => [
-				...prev,
-				...transaction.trade_details,
-			]);
+			onSetSummaries(transaction.summaries);
+			onAddTradeDetail(transaction.trade_details);
 		}
 	}, [transaction]);
 
@@ -106,15 +114,11 @@ export default function NewTradeLogContainerClient({ date }: Props) {
 							transaction.trade_details.length > 0 && (
 								<>
 									{/* 차트 자리 */}
-									<StockDatePicker stockList={stockList} />
+									<StockDatePicker />
 									{/* 거래 요약 카드 */}
-									<TradeSummary
-										summaries={transaction.summaries}
-									/>
+									<TradeSummary />
 									{/* 상세 거래내역 테이블 */}
-									<TradeDetailTable
-										tradeDetail={transactionList}
-									/>
+									<TradeDetailTable />
 								</>
 							)}
 					</CardContent>
@@ -124,4 +128,6 @@ export default function NewTradeLogContainerClient({ date }: Props) {
 			</div>
 		</div>
 	);
-}
+};
+
+export default NewTradeLogContainerClient;

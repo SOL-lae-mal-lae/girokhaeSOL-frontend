@@ -3,6 +3,9 @@ import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
+import CreateTradeLogProvider from '@/hooks/CreateTradeLogContext';
+import { DialogProvider } from '@/hooks/DialogContext';
+
 import NewTradeLogContainerClient from './NewTradeLogContainer.client';
 
 interface Props {
@@ -21,9 +24,13 @@ const NewTradeLogContainer = async ({ searchParams }: Props) => {
 	}
 
 	return (
-		<div className="w-full h-full">
-			<NewTradeLogContainerClient date={date} />
-		</div>
+		<DialogProvider>
+			<CreateTradeLogProvider date={date}>
+				<div className="w-full h-full">
+					<NewTradeLogContainerClient />
+				</div>
+			</CreateTradeLogProvider>
+		</DialogProvider>
 	);
 };
 

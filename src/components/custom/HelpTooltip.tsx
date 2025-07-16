@@ -8,7 +8,7 @@ interface Props {
 	text: string;
 }
 
-const HelpPopover: FC<Props> = ({ text }) => {
+const HelpTooltip: FC<Props> = ({ text }) => {
 	return (
 		<Tooltip>
 			<TooltipTrigger>
@@ -17,11 +17,11 @@ const HelpPopover: FC<Props> = ({ text }) => {
 					size={16}
 				/>
 			</TooltipTrigger>
-			<TooltipContent className="bg-brand-shinhan-blue text-white">
+			<TooltipContent className="bg-brand-shinhan-blue text-white border-brand-shinhan-blue fill-brand-shinhan-blue">
 				<p>{text}</p>
 			</TooltipContent>
 		</Tooltip>
 	);
 };
 
-export default HelpPopover;
+export default HelpTooltip;

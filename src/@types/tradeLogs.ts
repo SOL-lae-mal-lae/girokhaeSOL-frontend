@@ -1,3 +1,6 @@
+import { InvestmentType } from './investment';
+import { SentimentType } from './sentiments';
+
 export interface TradeLogMonthData {
 	dates: string[];
 	total_buy_amount: number;
@@ -31,4 +34,21 @@ export interface TradeLogSummary {
 	total_cmsn_tax: number;
 	settlement_amount: number;
 	profit_rate: number;
+}
+
+export interface TradeLog {
+	date: string;
+	summaries: TradeLogSummary;
+	trade_details: TradeLogTransaction[];
+	investment_type: InvestmentType;
+	sentiments: SentimentType[];
+	news_links: { url: string }[];
+	rationale: string;
+	evaluation: string;
+	charts: {
+		stock_code: string;
+		start_date: string;
+		end_date: string;
+		sequence: number;
+	}[];
 }

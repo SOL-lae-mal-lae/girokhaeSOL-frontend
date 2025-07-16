@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/select';
 
 interface Props {
-	accounts?: Account[] | null;
-	selectedAccount: string;
+	accounts: Account[] | undefined | null;
+	selectedAccount: number;
 	onSelectAccount: (account: string) => void;
 	onClickGetAccount: () => void;
 }
@@ -34,7 +34,14 @@ const AccountSelect: FC<Props> = ({
 				<div className="flex items-center gap-2">
 					<span className="text-sm font-medium">계좌 선택:</span>
 					<Select
-						value={selectedAccount}
+						value={
+							accounts
+								?.find(
+									(account) =>
+										account.account_id === selectedAccount
+								)
+								?.account_id.toString() || ''
+						}
 						onValueChange={onSelectAccount}
 					>
 						<SelectTrigger className="w-[200px] border-brand-shinhan-blue focus:border-brand-shinhan-blue cursor-pointer">
@@ -46,7 +53,7 @@ const AccountSelect: FC<Props> = ({
 									<SelectItem
 										className="cursor-pointer"
 										key={item.account_id}
-										value={item.account_number}
+										value={item.account_id.toString()}
 									>
 										{item.account_number}
 									</SelectItem>

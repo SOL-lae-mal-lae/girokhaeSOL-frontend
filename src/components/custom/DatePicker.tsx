@@ -3,8 +3,6 @@
 import * as React from 'react';
 import { FC, useState } from 'react';
 
-import { useSearchParams } from 'next/navigation';
-
 import { ChevronDownIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -15,6 +13,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from '@/components/ui/popover';
+import { useCreateTradeLog } from '@/hooks/useCreateTradeLog';
 
 interface Props {
 	id: string;
@@ -22,13 +21,12 @@ interface Props {
 }
 
 const DatePicker: FC<Props> = ({ id, label }) => {
-	const searchParams = useSearchParams();
+	const { stockDateRange, onChangeDate } = useCreateTradeLog();
 	const [open, setOpen] = useState(false);
-	const [date, setDate] = useState<Date | undefined>(
-		searchParams.get('date')
-			? new Date(searchParams.get('date') as string)
-			: undefined
-	);
+
+	const date = stockDateRange[id]?.start_date
+		? new Date(stockDateRange[id]?.start_date)
+		: undefined;
 
 	return (
 		<div className="flex gap-3 items-center">
@@ -55,8 +53,10 @@ const DatePicker: FC<Props> = ({ id, label }) => {
 						selected={date}
 						captionLayout="dropdown"
 						onSelect={(date) => {
-							setDate(date);
 							setOpen(false);
+							if (date) {
+								onChangeDate(id, date);
+							}
 						}}
 						components={{
 							DayButton: (props) => (
