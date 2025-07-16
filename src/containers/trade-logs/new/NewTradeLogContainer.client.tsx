@@ -36,6 +36,7 @@ import {
 	TableCell,
 } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
+import { calculateOperatingMargin, formatCurrency } from '@/lib/format';
 import { getFinancialStatements } from '@/services/financial-statements';
 
 interface Props {
@@ -135,41 +136,6 @@ export default function NewTradeLogContainerClient({ date }: Props) {
 	async function getFinanceData(code: string) {
 		setSelectedCode(code);
 		setSheetOpen(true);
-	}
-
-	// 단위 정리용~
-	function formatCurrency(value: bigint) {
-		const numValue = Number(value);
-
-		if (numValue >= 10_000) {
-			// 1조원 이상
-			const trillion = (numValue / 10_000).toFixed(1);
-			return `${trillion}조원`;
-		} else if (numValue >= 1) {
-			// 1억원 이상 1조원 미만
-			const billion = Math.floor(numValue);
-			return `${billion}억원`;
-		} else if (numValue >= 0.0001) {
-			// 1만원 이상 1억원 미만
-			const tenThousand = Math.floor(numValue / 0.0001);
-			return `${tenThousand}만원`;
-		} else {
-			// 1만원 미만
-			return `${numValue.toLocaleString()}원`;
-		}
-	}
-
-	// 이익률 계산기~
-	function calculateOperatingMargin(
-		revenue: bigint,
-		operatingIncome: bigint
-	) {
-		if (!revenue || !operatingIncome || Number(operatingIncome) === 0) {
-			return '0.00%';
-		}
-
-		const ratio = (Number(operatingIncome) / Number(revenue)) * 100;
-		return `${ratio.toFixed(2)}%`;
 	}
 
 	return (
