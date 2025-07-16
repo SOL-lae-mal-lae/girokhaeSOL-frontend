@@ -18,6 +18,7 @@ import {
 	TradeSummary,
 	StockDatePicker,
 } from './_view';
+import NoReport from './_view/NoReport.client';
 
 interface Props {
 	date: string;
@@ -96,27 +97,26 @@ export default function NewTradeLogContainerClient({ date }: Props) {
 								<LoadingSpinner text="매매일지 만드는 중..." />
 							</div>
 						)}
-						{!isLoadingTransaction && !transaction && (
-							<div className="flex items-center justify-center h-full">
-								<span className="text-muted-foreground">
-									거래 기록이 없습니다.
-								</span>
-							</div>
-						)}
-						{transaction && (
-							<>
-								{/* 차트 자리 */}
-								<StockDatePicker stockList={stockList} />
-								{/* 거래 요약 카드 */}
-								<TradeSummary
-									summaries={transaction.summaries}
-								/>
-								{/* 상세 거래내역 테이블 */}
-								<TradeDetailTable
-									tradeDetail={transactionList}
-								/>
-							</>
-						)}
+						{!isLoadingTransaction && !transaction && <NoReport />}
+						{transaction &&
+							transaction.trade_details.length === 0 && (
+								<NoReport />
+							)}
+						{transaction &&
+							transaction.trade_details.length > 0 && (
+								<>
+									{/* 차트 자리 */}
+									<StockDatePicker stockList={stockList} />
+									{/* 거래 요약 카드 */}
+									<TradeSummary
+										summaries={transaction.summaries}
+									/>
+									{/* 상세 거래내역 테이블 */}
+									<TradeDetailTable
+										tradeDetail={transactionList}
+									/>
+								</>
+							)}
 					</CardContent>
 				</Card>
 				{/* 우측: 작성 폼 */}
