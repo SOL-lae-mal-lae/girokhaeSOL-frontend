@@ -16,6 +16,7 @@ import {
 	TradeLogAside,
 	TradeSummary,
 	StockDatePicker,
+	FinancialContainer,
 } from './_view';
 import NoReport from './_view/NoReport.client';
 
@@ -29,13 +30,19 @@ const NewTradeLogContainerClient = () => {
 	const queryClient = useQueryClient();
 	const [selectedAccount, setSelectedAccount] = useState<number>(0);
 	const [isClicked, setIsClicked] = useState(false);
+	const [sheetOpen, setSheetOpen] = useState(false);
+	const [selectedCode, setSelectedCode] = useState('');
 
 	const { data: accounts } = useQuery({
 		queryKey: ['accounts'],
 		queryFn: getAccounts,
 	});
 
-	const { data: transaction, isLoading: isLoadingTransaction } = useQuery({
+	const {
+		data: transaction,
+		isLoading: isLoadingTransaction,
+		isSuccess,
+	} = useQuery({
 		queryKey: ['transaction', date, selectedAccount],
 		queryFn: () => getTransaction(date, selectedAccount),
 		select: (data) => {
@@ -67,8 +74,17 @@ const NewTradeLogContainerClient = () => {
 		setIsClicked(true);
 	};
 
+	const handleChangeSheetOpen = (status: boolean) => {
+		setSheetOpen(status);
+	};
+
+	const getFinanceData = (code: string) => {
+		setSelectedCode(code);
+		handleChangeSheetOpen(true);
+	};
+
 	useEffect(() => {
-		if (transaction?.trade_details.length) {
+		if (isSuccess && transaction) {
 			onSetTodayTradeCompanyList(
 				transaction.trade_details.map(({ stock_code, stock_name }) => {
 					return {
@@ -79,8 +95,9 @@ const NewTradeLogContainerClient = () => {
 			);
 			onSetSummaries(transaction.summaries);
 			onAddTradeDetail(transaction.trade_details);
+			setIsClicked(false);
 		}
-	}, [transaction]);
+	}, [isSuccess, transaction]);
 
 	return (
 		<div className="w-full max-w-7xl mx-auto px-8 flex flex-col gap-8 mt-8">
@@ -114,11 +131,16 @@ const NewTradeLogContainerClient = () => {
 							transaction.trade_details.length > 0 && (
 								<>
 									{/* 차트 자리 */}
-									<StockDatePicker />
+									<StockDatePicker
+										selectedAccount={selectedAccount}
+									/>
 									{/* 거래 요약 카드 */}
 									<TradeSummary />
 									{/* 상세 거래내역 테이블 */}
-									<TradeDetailTable />
+									<TradeDetailTable
+										selectedAccount={selectedAccount}
+										getFinanceData={getFinanceData}
+									/>
 								</>
 							)}
 					</CardContent>
@@ -126,6 +148,11 @@ const NewTradeLogContainerClient = () => {
 				{/* 우측: 작성 폼 */}
 				<TradeLogAside />
 			</div>
+			<FinancialContainer
+				sheetOpen={sheetOpen}
+				selectedCode={selectedCode}
+				onChangeSheet={handleChangeSheetOpen}
+			/>
 		</div>
 	);
 };

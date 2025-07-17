@@ -1,5 +1,8 @@
 'use client';
 
+import { FC } from 'react';
+
+import HelpTooltip from '@/components/custom/HelpTooltip';
 import {
 	Table,
 	TableHeader,
@@ -10,11 +13,20 @@ import {
 } from '@/components/ui/table';
 import { useCreateTradeLog } from '@/hooks/useCreateTradeLog';
 
-const TradeDetailTable = () => {
+interface Props {
+	selectedAccount: number;
+	getFinanceData: (code: string) => void;
+}
+
+const TradeDetailTable: FC<Props> = ({ selectedAccount, getFinanceData }) => {
 	const { tradeDetail } = useCreateTradeLog();
+
 	return (
 		<div className="flex flex-col gap-2">
-			<h1 className="text-heading3 font-bold">거래 기록</h1>
+			<div className="flex items-center gap-1">
+				<h1 className="text-heading3 font-bold">거래 기록</h1>
+				<HelpTooltip text="종목명을 클릭하면 재무제표를 확인할 수 있습니다." />
+			</div>
 			<Table>
 				<TableHeader>
 					<TableRow>
@@ -29,9 +41,16 @@ const TradeDetailTable = () => {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{tradeDetail.map((row, i) => (
-						<TableRow key={i}>
-							<TableCell>{row.stock_name}</TableCell>
+					{tradeDetail.map((row) => (
+						<TableRow
+							key={`${row.stock_name}-${row.stock_code}-${selectedAccount}`}
+						>
+							<TableCell
+								onClick={() => getFinanceData(row.stock_code)}
+								className="cursor-pointer underline text-brand-shinhan-blue"
+							>
+								{row.stock_name}
+							</TableCell>
 							<TableCell>
 								{row.avg_buy_price === 0 ? (
 									<span className="text-muted-foreground">

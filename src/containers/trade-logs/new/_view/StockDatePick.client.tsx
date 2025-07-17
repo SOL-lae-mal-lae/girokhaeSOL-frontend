@@ -1,5 +1,7 @@
 'use client';
 
+import { FC } from 'react';
+
 import {
 	DndContext,
 	closestCenter,
@@ -18,7 +20,11 @@ import StockDayPickerCard from '@/components/cards/StockDayPicker';
 import HelpTooltip from '@/components/custom/HelpTooltip';
 import { useCreateTradeLog } from '@/hooks/useCreateTradeLog';
 
-const StockDatePicker = () => {
+interface Props {
+	selectedAccount: number;
+}
+
+const StockDatePicker: FC<Props> = ({ selectedAccount }) => {
 	const { todayTradeCompanyList, onReorderTodayTradeCompanyList } =
 		useCreateTradeLog();
 
@@ -65,7 +71,7 @@ const StockDatePicker = () => {
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 						{todayTradeCompanyList.map((stock) => (
 							<StockDayPickerCard
-								key={stock.code}
+								key={`${stock.code}-${selectedAccount}`}
 								code={stock.code}
 								name={stock.name}
 							/>
