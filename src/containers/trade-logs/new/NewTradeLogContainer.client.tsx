@@ -125,7 +125,6 @@ export default function NewTradeLogContainerClient({ date }: Props) {
 		if (sheetOpen && selectedCode) {
 			(async () => {
 				const data = await getFinancialStatements(selectedCode);
-				console.log(data);
 				setStatements(data); // 받아온 데이터 저장
 			})();
 		} else {
@@ -208,17 +207,16 @@ export default function NewTradeLogContainerClient({ date }: Props) {
 								<TableBody>
 									{detailRows.map((row, i) => (
 										<TableRow key={i}>
+											<TableCell>{row.code}</TableCell>
 											<TableCell
-												onClick={(e) =>
+												onClick={() =>
 													getFinanceData(
-														e.currentTarget
-															.innerText
+														`${row.code}`
 													)
 												}
 											>
-												{row.code}
+												{row.name}
 											</TableCell>
-											<TableCell>{row.name}</TableCell>
 											<TableCell>
 												{row.buyAvg.toLocaleString()}
 											</TableCell>
@@ -266,7 +264,10 @@ export default function NewTradeLogContainerClient({ date }: Props) {
 				</div>
 				{/* 재무제표 띄우기 */}
 				<Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-					<SheetContent className="!w-[30vw] flex flex-col !max-w-none pl-3 pr-3">
+					<SheetContent
+						className="!w-[30vw] flex flex-col !max-w-none pl-3 pr-3"
+						aria-describedby={undefined}
+					>
 						<SheetHeader>
 							<SheetTitle>
 								{statements
