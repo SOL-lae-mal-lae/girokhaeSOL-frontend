@@ -1,12 +1,12 @@
 import { FinancialStatementData } from '@/@types/financialStatement';
-import { HOST_FOR_CLIENT } from '@/constants/hosts';
+import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 
 export const getFinancialStatements = async (
 	stk_cd: string
 ): Promise<FinancialStatementData | null> => {
 	try {
 		const res = await fetch(
-			`${HOST_FOR_CLIENT}/api/v1/financial-statements/?stock_code=${stk_cd}`
+			`${CLIENT_HOST_FOR_CLIENT}/api/v1/financial-statements/?stock_code=${stk_cd}`
 		);
 		if (!res.ok) {
 			return null;
