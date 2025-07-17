@@ -4,6 +4,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 
 import { Base, Login, NavBar } from '@/components/layouts';
 import QueryClientProvider from '@/components/providers/QueryClientProvider';
+import { Toaster } from '@/components/ui/sonner';
 import { DialogProvider } from '@/hooks/DialogContext';
 
 import type { Metadata } from 'next';
@@ -51,6 +52,7 @@ export default function RootLayout({
 								<Login />
 							</NavBar>
 							<Base>{children}</Base>
+							<Toaster />
 						</body>
 					</html>
 				</DialogProvider>

@@ -1,9 +1,1 @@
-import AccountRegisterContainer from '@/containers/account/register/AccountRegisterContainer';
-
-export default function AccountPage() {
-	return (
-		<div>
-			<AccountRegisterContainer />
-		</div>
-	);
-}
+export { default } from '@/containers/account/AccountRegisterContainer.client';
