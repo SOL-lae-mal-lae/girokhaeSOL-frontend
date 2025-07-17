@@ -52,3 +52,13 @@ export interface TradeLog {
 		sequence: number;
 	}[];
 }
+
+export interface TradeLogWithCode extends TradeLog {
+	charts: {
+		stock_code: string;
+		stock_name: string;
+		start_date: string;
+		end_date: string;
+		sequence: number;
+	}[];
+}
