@@ -3,12 +3,12 @@ import {
 	CreateAccountRequest,
 	CreateAccountResponse,
 } from '@/@types/account';
-import { HOST_FOR_CLIENT } from '@/constants/hosts';
+import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 
 // 계좌 목록 조회
 export const getAccounts = async (): Promise<AccountListResponse | null> => {
 	try {
-		const res = await fetch(`${HOST_FOR_CLIENT}/api/v1/accounts`, {
+		const res = await fetch(`${CLIENT_HOST_FOR_CLIENT}/api/v1/accounts`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export const createAccount = async (
 	accountData: CreateAccountRequest
 ): Promise<CreateAccountResponse | null> => {
 	try {
-		const res = await fetch(`${HOST_FOR_CLIENT}/api/v1/accounts`, {
+		const res = await fetch(`${CLIENT_HOST_FOR_CLIENT}/api/v1/accounts`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
