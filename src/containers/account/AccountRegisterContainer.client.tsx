@@ -19,7 +19,7 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { createAccount } from '@/services/account';
+import { createAccount } from '@/services/accounts';
 
 const formSchema = z.object({
 	accountNumber: z.string().min(1, {

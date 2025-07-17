@@ -1,4 +1,6 @@
-export const SENTIMENTS = {
+import { SentimentType } from '@/@types/sentiments';
+
+export const SENTIMENTS: Record<SentimentType, string> = {
 	anxiety: '불안',
 	confidence: '확신',
 	fear: '두려움',
