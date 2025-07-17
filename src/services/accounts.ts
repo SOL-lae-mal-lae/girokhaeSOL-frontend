@@ -1,5 +1,8 @@
-import { CreateAccountRequest, CreateAccountResponse } from '@/@types/account';
-import { Account } from '@/@types/accounts';
+import {
+	CreateAccountRequest,
+	CreateAccountResponse,
+	Account,
+} from '@/@types/accounts';
 import { Response } from '@/@types/response';
 import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 

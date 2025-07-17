@@ -3,6 +3,7 @@ import {
 	TradeLog,
 	TradeLogMonthData,
 	TradeLogTransactionData,
+	TradeLogWithCode,
 } from '@/@types/tradeLogs';
 import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 import { HOUR_IN_SECOND } from '@/constants/time';
@@ -42,6 +43,26 @@ export const getTransaction = async (date: string, account: number) => {
 			throw new Error('Failed to fetch transaction');
 		}
 		const data: Response<TradeLogTransactionData> = await res.json();
+
+		return data.data;
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+};
+
+export const getTradeLogByDate = async (date: string) => {
+	try {
+		const res = await fetch(
+			`${CLIENT_HOST_FOR_CLIENT}/api/v1/trade-logs/detail?date=${date}`,
+			{
+				method: 'GET',
+			}
+		);
+		if (!res.ok) {
+			throw new Error('Failed to fetch trade log');
+		}
+		const data: Response<TradeLogWithCode> = await res.json();
 
 		return data.data;
 	} catch (error) {

@@ -1,5 +1,9 @@
 import { redirect } from 'next/navigation';
 
+import { DialogProvider } from '@/hooks/DialogContext';
+
+import TradeLogDetailContainerClient from './TradeLogDetailContainer.client';
+
 interface Props {
 	params: Promise<{ date: string }>;
 }
@@ -13,7 +17,13 @@ const TradeLogDetailContainer = async ({ params }: Props) => {
 		redirect('/trade-logs');
 	}
 
-	return <div>TradeLogDetailContainer</div>;
+	return (
+		<DialogProvider>
+			<div className="w-full h-full">
+				<TradeLogDetailContainerClient date={date} />
+			</div>
+		</DialogProvider>
+	);
 };
 
 export default TradeLogDetailContainer;
