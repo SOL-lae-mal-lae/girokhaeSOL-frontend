@@ -85,6 +85,7 @@ jobs:
                     pnpm-lock.yaml \
                     next.config.ts \
                     deploy.sh \
+                    middleware.ts \
 
                     # 2. 압축된 파일을 EC2의 배포 폴더로 전송
                     # ssh-agent에 키가 추가되었으므로 -i 옵션은 필요 없지만, 사용자 예시에 따라 명시적으로 지정
@@ -94,7 +95,7 @@ jobs:
                     # 환경 변수들을 `ssh` 명령을 통해 원격 쉘 세션으로 전달
                     ssh -o StrictHostKeyChecking=no \
                       ${EC2_USER}@${EC2_HOST} \
-                      "cd ${EC2_APP_PATH} && cd ${EC2_APP_PATH} && chmod +x deploy.sh && ./deploy.sh"
+                      "cd ${EC2_APP_PATH} && cd ${EC2_APP_PATH} && tar -xzf deploy.tar.gz --overwrite && chmod +x deploy.sh && ./deploy.sh"
                         
                       
                     echo "Deployment to EC2 initiated. Check EC2 logs for full status."
