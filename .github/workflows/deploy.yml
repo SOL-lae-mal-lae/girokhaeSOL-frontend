@@ -67,25 +67,24 @@ jobs:
                   chmod 600 ~/.ssh/known_hosts # 권한 설정
 
             - name: Deploy to EC2
+              env:
+                  EC2_USER: ${{ secrets.EC2_USER }}
+                  EC2_HOST: ${{ secrets.EC2_HOST }}
+                  EC2_APP_PATH: /home/${{ secrets.EC2_USER }}/girokhaeSOL/frontend
               run: |
-                  env:
-                    EC2_USER: ${{ secrets.EC2_USER }}
-                    EC2_HOST: ${{ secrets.EC2_HOST }}
-                    EC2_APP_PATH: /home/${{ secrets.EC2_USER }}/girokhaeSOL/frontend
+                  echo "Starting deployment to EC2..."
 
-                    echo "Starting deployment to EC2..."
-
-                    # 1. 빌드 결과물 및 필요한 파일들을 하나의 tar.gz 파일로 압축
-                    # node_modules는 빌드 후 생성되므로 포함해야 함.
-                    # next.config.mjs, ecosystem.config.js는 Next.js 및 PM2 설정 파일
-                    tar -czf deploy.tar.gz \
-                      .next \
-                      node_modules \
-                      public \
-                      package.json \
-                      pnpm-lock.yaml \
-                      next.config.ts \
-                      deploy.sh \
+                  # 1. 빌드 결과물 및 필요한 파일들을 하나의 tar.gz 파일로 압축
+                  # node_modules는 빌드 후 생성되므로 포함해야 함.
+                  # next.config.mjs, ecosystem.config.js는 Next.js 및 PM2 설정 파일
+                  tar -czf deploy.tar.gz \
+                    .next \
+                    node_modules \
+                    public \
+                    package.json \
+                    pnpm-lock.yaml \
+                    next.config.ts \
+                    deploy.sh \
 
                     # 2. 압축된 파일을 EC2의 배포 폴더로 전송
                     # ssh-agent에 키가 추가되었으므로 -i 옵션은 필요 없지만, 사용자 예시에 따라 명시적으로 지정
@@ -95,6 +94,6 @@ jobs:
                     ssh -i ${{ secrets.EC2_SSH_KEY }} \
                       ${EC2_USER}@${EC2_HOST} \
                       "cd ${EC2_APP_PATH} && chmod +x deploy.sh && ./deploy.sh"
+                        
                       
-                    
                     echo "Deployment to EC2 initiated. Check EC2 logs for full status."
