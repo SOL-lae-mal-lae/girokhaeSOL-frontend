@@ -94,7 +94,7 @@ jobs:
                     # 환경 변수들을 `ssh` 명령을 통해 원격 쉘 세션으로 전달
                     ssh -o StrictHostKeyChecking=no \
                       ${EC2_USER}@${EC2_HOST} \
-                      "cd ${EC2_APP_PATH} && chmod +x deploy.sh && ./deploy.sh"
+                      "cd ${EC2_APP_PATH} && cd ${EC2_APP_PATH} && chmod +x deploy.sh && ./deploy.sh"
                         
                       
                     echo "Deployment to EC2 initiated. Check EC2 logs for full status."
