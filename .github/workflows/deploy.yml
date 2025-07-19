@@ -1,0 +1,110 @@
+name: Deploy to EC2 on Develop Push
+
+on:
+    push:
+        branches:
+            - develop # develop 브랜치에 push 또는 merge될 때 실행
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest # GitHub Actions 러너 환경
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4 # develop 브랜치의 최신 코드 체크아웃
+
+            - name: Set up SSH Key
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }} # GitHub Secrets에 저장된 SSH 개인 키
+                  ssh-passphrase: ${{ secrets.SSH_PASSPHRASE }} # GitHub Secrets에 저장된 SSH 개인 키의 암호 추가
+            - name: Add EC2 Host to known_hosts
+              run: |
+                  mkdir -p ~/.ssh
+                  ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+                  chmod 600 ~/.ssh/known_hosts # 권한 설정
+
+            - name: Connect to EC2 and Deploy
+              env:
+                  EC2_USER: ${{ secrets.EC2_USER }} # EC2 접속 사용자 이름
+                  EC2_HOST: ${{ secrets.EC2_HOST }} # EC2 IP 주소 또는 도메인
+                  EC2_APP_PATH: /home/${{ secrets.EC2_USER }}/girokhaeSOL/frontend # EC2에서 프로젝트가 위치할 경로
+
+                  # GitHub Secrets에 등록된 환경 변수들을 여기에 매핑합니다.
+                  # 이 변수들은 EC2에서 .env 파일을 생성할 때 사용됩니다.
+                  NEXT_PUBLIC_CLIENT_API_URL: ${{ secrets.NEXT_PUBLIC_CLIENT_API_URL }}
+                  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+                  CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+                  NEXT_PUBLIC_SIGN_IN_URL: ${{ secrets.NEXT_PUBLIC_SIGN_IN_URL }}
+                  NEXT_PUBLIC_SIGN_UP_URL: ${{ secrets.NEXT_PUBLIC_SIGN_UP_URL }}
+                  DB_URL: ${{ secrets.DB_URL }}
+                  DB_HOST: ${{ secrets.DB_HOST }}
+                  DB_PORT: ${{ secrets.DB_PORT }}
+                  DB_USER: ${{ secrets.DB_USER }}
+                  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+                  DB_NAME: ${{ secrets.DB_NAME }}
+
+              run: |
+                  echo "Connecting to EC2 instance: $EC2_USER@$EC2_HOST"
+                  ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+                    echo "Navigating to application directory..."
+                    # 디렉토리가 없으면 생성하고 이동
+                    mkdir -p ${EC2_APP_PATH}
+                    cd ${EC2_APP_PATH}
+
+                    echo "Pulling latest code from develop branch..."
+                    # git init이 안 되어 있다면 초기화
+                    if [ ! -d ".git" ]; then
+                      echo "Git repository not found, initializing..."
+                      git init
+                      git remote add origin https://github.com/SOL-lae-mal-lae/girokhaeSOL-frontend.git
+                    fi
+
+                    # 현재 브랜치가 develop인지 확인하고 아니면 develop으로 전환
+                    if [ "$(git rev-parse --abbrev-ref HEAD)" != "develop" ]; then
+                      echo "Current branch is not develop. Switching to develop..."
+                      git checkout develop || git checkout -b develop # develop 브랜치가 없으면 생성
+                    fi
+                    git pull origin develop
+
+                    echo "Creating .env file with secrets..."
+                    # .env 파일 생성 또는 업데이트
+                    cat << EOT > .env
+                    NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+                    NEXT_PUBLIC_CLIENT_API_URL=${NEXT_PUBLIC_CLIENT_API_URL}
+                    API_URL=${API_URL}
+                    CLIENT_API_URL=${CLIENT_API_URL}
+                    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+                    CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+                    NEXT_PUBLIC_SIGN_IN_URL=${NEXT_PUBLIC_SIGN_IN_URL}
+                    NEXT_PUBLIC_SIGN_UP_URL=${NEXT_PUBLIC_SIGN_UP_URL}
+                    DB_URL=${DB_URL}
+                    DB_HOST=${DB_HOST}
+                    DB_PORT=${DB_PORT}
+                    DB_USER=${DB_USER}
+                    DB_PASSWORD=${DB_PASSWORD}
+                    DB_NAME=${DB_NAME}
+                    EOT
+                    
+                    echo ".env file created."
+
+                    echo "Installing Node.js dependencies..."
+                    pnpm install
+
+                    echo "Building Next.js application..."
+                    pnpm run build
+
+                    echo "Stopping existing Next.js process (if running)..."
+                    # PM2를 사용하여 기존 프로세스 중지 및 삭제
+                    pm2 stop girokhaeSOL-frontend || true
+                    pm2 delete girokhaeSOL-frontend || true
+
+                    echo "Starting Next.js application with PM2..."
+                    # PM2를 사용하여 Next.js 애플리케이션 시작
+                    # --name 옵션으로 프로세스 이름을 지정하여 관리 용이
+                    # -i max 옵션으로 CPU 코어 수에 맞춰 클러스터 모드로 실행 (프로덕션 권장)
+                    # -- start 명령은 package.json의 "start" 스크립트 실행
+                    pm2 start npm --name "girokhaeSOL-frontend" -- run start
+
+                    echo "Deployment complete!"
+                  EOF
