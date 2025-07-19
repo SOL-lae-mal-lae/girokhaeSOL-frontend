@@ -76,7 +76,6 @@ jobs:
 
                   # 1. 빌드 결과물 및 필요한 파일들을 하나의 tar.gz 파일로 압축
                   # node_modules는 빌드 후 생성되므로 포함해야 함.
-                  # next.config.mjs, ecosystem.config.js는 Next.js 및 PM2 설정 파일
                   tar -czf deploy.tar.gz \
                     .next \
                     node_modules \
@@ -85,7 +84,7 @@ jobs:
                     pnpm-lock.yaml \
                     next.config.ts \
                     deploy.sh \
-                    middleware.ts \
+                    src/middleware.ts \
 
                     # 2. 압축된 파일을 EC2의 배포 폴더로 전송
                     # ssh-agent에 키가 추가되었으므로 -i 옵션은 필요 없지만, 사용자 예시에 따라 명시적으로 지정
