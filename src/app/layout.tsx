@@ -1,4 +1,5 @@
-import localFont from 'next/font/local';
+// import localFont from 'next/font/local';
+import { Roboto } from 'next/font/google';
 
 import { ClerkProvider } from '@clerk/nextjs';
 
@@ -11,25 +12,30 @@ import type { Metadata } from 'next';
 
 import './globals.css';
 
-const oneShinhan = localFont({
-	src: [
-		{
-			path: './fonts/ONESHINHANLIGHT_2.ttf',
-			weight: '300', // light
-			style: 'normal',
-		},
-		{
-			path: './fonts/ONESHINHANMEDIUM_2.ttf',
-			weight: '500', // medium (기본으로 사용할 weight)
-			style: 'normal',
-		},
-		{
-			path: './fonts/ONESHINHANBOLD_2.ttf',
-			weight: '700', // bold
-			style: 'normal',
-		},
-	],
-	variable: '--font-one-shinhan',
+// const oneShinhan = localFont({
+// 	src: [
+// 		{
+// 			path: './fonts/ONESHINHANLIGHT_2.ttf',
+// 			weight: '300', // light
+// 			style: 'normal',
+// 		},
+// 		{
+// 			path: './fonts/ONESHINHANMEDIUM_2.ttf',
+// 			weight: '500', // medium (기본으로 사용할 weight)
+// 			style: 'normal',
+// 		},
+// 		{
+// 			path: './fonts/ONESHINHANBOLD_2.ttf',
+// 			weight: '700', // bold
+// 			style: 'normal',
+// 		},
+// 	],
+// 	variable: '--font-one-shinhan',
+// });
+
+const roboto = Roboto({
+	weight: '400',
+	subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
@@ -47,7 +53,8 @@ export default function RootLayout({
 			<QueryClientProvider>
 				<DialogProvider>
 					<html lang="en">
-						<body className={`${oneShinhan.className} antialiased`}>
+						{/* <body className={`${oneShinhan.className} antialiased`}> */}
+						<body className={roboto.className}>
 							<NavBar>
 								<Login />
 							</NavBar>

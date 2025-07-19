@@ -1,10 +1,9 @@
 name: Deploy Frontend to EC2
 
 on:
-    push:
+    pull_requests:
         branches:
-            - develop # develop 브랜치에 push 또는 merge될 때 실행
-
+            - develop
 jobs:
     deploy:
         runs-on: ubuntu-latest # GitHub Actions 러너 환경
