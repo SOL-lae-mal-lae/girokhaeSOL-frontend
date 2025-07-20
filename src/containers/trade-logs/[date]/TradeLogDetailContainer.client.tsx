@@ -72,7 +72,7 @@ const TradeLogDetailContainerClient = ({ date }: Props) => {
 				<div className="text-base text-muted-foreground">{date}</div>
 			</div>
 
-			<div className="flex flex-row gap-10 w-full mb-8">
+			<div className="flex flex-row gap-10 w-full mb-8 items-start">
 				{/* 좌측: 차트, 요약, 상세 */}
 				<Card className="flex-[2.2] min-w-[500px] max-w-[900px] flex flex-col gap-8">
 					<CardContent className="flex flex-col gap-8">
