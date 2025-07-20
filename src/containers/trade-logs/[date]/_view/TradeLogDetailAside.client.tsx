@@ -2,8 +2,12 @@
 
 import { FC } from 'react';
 
+import Link from 'next/link';
+
 import { TradeLog } from '@/@types/tradeLogs';
+import HelpTooltip from '@/components/custom/HelpTooltip';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import INVESTMENT_TYPES from '@/constants/investmentType';
@@ -32,9 +36,7 @@ const TradeLogDetailAside: FC<Props> = ({ tradeLog }) => {
 						{INVESTMENT_TYPES[investment_type]}
 					</Badge>
 				</div>
-
 				<Separator />
-
 				{/* 투자 심리 */}
 				<div>
 					<h4 className="font-medium text-sm text-muted-foreground mb-2">
@@ -53,31 +55,6 @@ const TradeLogDetailAside: FC<Props> = ({ tradeLog }) => {
 				</div>
 
 				<Separator />
-
-				{/* 뉴스 링크 */}
-				{news_links.length > 0 && (
-					<>
-						<div>
-							<h4 className="font-medium text-sm text-muted-foreground mb-2">
-								참고 뉴스
-							</h4>
-							<div className="space-y-2">
-								{news_links.map((link, index) => (
-									<a
-										key={index}
-										href={link.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="block text-sm text-blue-600 hover:text-blue-800 underline break-all"
-									>
-										{link.url}
-									</a>
-								))}
-							</div>
-						</div>
-						<Separator />
-					</>
-				)}
 
 				{/* 매매 근거 */}
 				<div>
@@ -99,6 +76,44 @@ const TradeLogDetailAside: FC<Props> = ({ tradeLog }) => {
 					<div className="text-sm bg-gray-50 p-3 rounded-md whitespace-pre-wrap">
 						{evaluation || '-'}
 					</div>
+				</div>
+
+				<Separator />
+
+				{/* 뉴스 링크 */}
+				{news_links.length > 0 && (
+					<>
+						<div>
+							<h4 className="font-medium text-sm text-muted-foreground mb-2">
+								참고 뉴스
+							</h4>
+							<div className="space-y-2">
+								{news_links.map((link) => (
+									<Link
+										key={link.url}
+										href={link.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="block text-sm text-blue-600 hover:text-blue-800 underline break-all"
+									>
+										{link.url}
+									</Link>
+								))}
+							</div>
+						</div>
+					</>
+				)}
+				<Separator />
+				<div className="flex flex-col gap-2">
+					<div className="flex flex-row gap-2 items-center">
+						<h4 className="font-medium text-sm text-muted-foreground">
+							평가받기
+						</h4>
+						<HelpTooltip text="작성한 매매일지를 기반으로 AI평가를 받을 수 있습니다." />
+					</div>
+					<Button className="w-full bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue cursor-pointer">
+						평가받기
+					</Button>
 				</div>
 			</CardContent>
 		</Card>
