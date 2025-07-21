@@ -8,13 +8,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import { getTradeLogByDate } from '@/services/trade-logs';
 
-import {
-	TradeDetailTable,
-	TradeSummary,
-	TradeLogDetailAside,
-	FinancialContainer,
-} from './_view';
+import { TradeDetailTable, TradeSummary, TradeLogDetailAside } from './_view';
 import StockChart from './_view/StockChart.client';
+import FinancialContainer from '../_view/FinancialContainer.client';
 
 interface Props {
 	date: string;
@@ -23,6 +19,7 @@ interface Props {
 const TradeLogDetailContainerClient = ({ date }: Props) => {
 	const [sheetOpen, setSheetOpen] = useState(false);
 	const [selectedCode, setSelectedCode] = useState('');
+	const [stockName, setStockName] = useState('');
 
 	const { data: tradeLog, isLoading: isLoadingTradeLog } = useQuery({
 		queryKey: ['tradeLog', 'detail', date],
@@ -33,8 +30,9 @@ const TradeLogDetailContainerClient = ({ date }: Props) => {
 		setSheetOpen(status);
 	};
 
-	const getFinanceData = (code: string) => {
+	const getFinanceData = (code: string, name: string) => {
 		setSelectedCode(code);
+		setStockName(name);
 		handleChangeSheetOpen(true);
 	};
 
@@ -99,6 +97,7 @@ const TradeLogDetailContainerClient = ({ date }: Props) => {
 				sheetOpen={sheetOpen}
 				selectedCode={selectedCode}
 				onChangeSheet={handleChangeSheetOpen}
+				stockName={stockName}
 			/>
 		</div>
 	);
