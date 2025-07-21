@@ -1,4 +1,5 @@
 'use client';
+
 import Link from 'next/link';
 
 import { PlusIcon } from 'lucide-react';
@@ -7,10 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { CommunityPostAll } from './CommunityPostAll';
-import { useRouter } from 'next/navigation';
 
 const CommunityContainer = () => {
-	const router = useRouter();
 	return (
 		<div className="flex w-full h-full mt-8 px-8 flex-col gap-4">
 			<div className="flex justify-between flex-shrink-0">
@@ -25,7 +24,6 @@ const CommunityContainer = () => {
 						<Button
 							variant="outline"
 							className="rounded-full	cursor-pointer"
-							onClick={() => router.push('/community/new')}
 						>
 							<PlusIcon className="w-4 h-4" />
 							글쓰기

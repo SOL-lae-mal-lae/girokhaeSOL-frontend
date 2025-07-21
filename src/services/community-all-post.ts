@@ -1,4 +1,4 @@
-import { CommunityPost, CommunityPostLisst } from '@/@types/communityPost';
+import { CommunityPost, CommunityPostList } from '@/@types/communityPost';
 import { Response } from '@/@types/response';
 import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 
@@ -19,7 +19,7 @@ export const getCommunityAllPost = async () => {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
 
-		const data: Response<CommunityPostLisst> = await response.json();
+		const data: Response<CommunityPostList> = await response.json();
 
 		return data.data;
 	} catch (error) {
@@ -45,7 +45,7 @@ export const getCommunityGeneralPost = async () => {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
 
-		const data: Response<CommunityPostLisst> = await response.json();
+		const data: Response<CommunityPostList> = await response.json();
 
 		return data.data;
 	} catch (error) {
@@ -71,7 +71,7 @@ export const getCommunityTradeLogPost = async () => {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
 
-		const data: Response<CommunityPostLisst> = await response.json();
+		const data: Response<CommunityPostList> = await response.json();
 
 		return data.data;
 	} catch (error) {

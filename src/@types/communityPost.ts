@@ -20,4 +20,4 @@ export interface CommunityPost {
 	is_public: boolean; //투자 정보 공개 여부
 }
 
-export type CommunityPostLisst = CommunityAllPost[];
+export type CommunityPostList = CommunityAllPost[];
