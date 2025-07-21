@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/table';
 
 interface Props {
-	getFinanceData: (code: string) => void;
+	getFinanceData: (code: string, name: string) => void;
 	tradeDetails: TradeLogTransaction[];
 }
 
@@ -42,7 +42,12 @@ const TradeDetailTable: FC<Props> = ({ getFinanceData, tradeDetails }) => {
 					{tradeDetails.map((row) => (
 						<TableRow key={`${row.stock_name}-${row.stock_code}`}>
 							<TableCell
-								onClick={() => getFinanceData(row.stock_code)}
+								onClick={() =>
+									getFinanceData(
+										row.stock_code,
+										row.stock_name
+									)
+								}
 								className="cursor-pointer underline text-brand-shinhan-blue"
 							>
 								{row.stock_name}

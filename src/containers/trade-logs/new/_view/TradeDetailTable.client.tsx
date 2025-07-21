@@ -15,7 +15,7 @@ import { useCreateTradeLog } from '@/hooks/useCreateTradeLog';
 
 interface Props {
 	selectedAccount: number;
-	getFinanceData: (code: string) => void;
+	getFinanceData: (code: string, stockName: string) => void;
 }
 
 const TradeDetailTable: FC<Props> = ({ selectedAccount, getFinanceData }) => {
@@ -46,7 +46,12 @@ const TradeDetailTable: FC<Props> = ({ selectedAccount, getFinanceData }) => {
 							key={`${row.stock_name}-${row.stock_code}-${selectedAccount}`}
 						>
 							<TableCell
-								onClick={() => getFinanceData(row.stock_code)}
+								onClick={(e) =>
+									getFinanceData(
+										row.stock_code,
+										e.currentTarget.innerText
+									)
+								}
 								className="cursor-pointer underline text-brand-shinhan-blue"
 							>
 								{row.stock_name}

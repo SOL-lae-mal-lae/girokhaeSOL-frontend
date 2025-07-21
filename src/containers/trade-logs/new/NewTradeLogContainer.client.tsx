@@ -16,9 +16,9 @@ import {
 	TradeLogAside,
 	TradeSummary,
 	StockDatePicker,
-	FinancialContainer,
 } from './_view';
 import NoReport from './_view/NoReport.client';
+import FinancialContainer from '../_view/FinancialContainer.client';
 
 const NewTradeLogContainerClient = () => {
 	const {
@@ -32,7 +32,7 @@ const NewTradeLogContainerClient = () => {
 	const [isClicked, setIsClicked] = useState(false);
 	const [sheetOpen, setSheetOpen] = useState(false);
 	const [selectedCode, setSelectedCode] = useState('');
-
+	const [stockName, setStockName] = useState('');
 	const { data: accounts } = useQuery({
 		queryKey: ['accounts'],
 		queryFn: getAccounts,
@@ -78,8 +78,9 @@ const NewTradeLogContainerClient = () => {
 		setSheetOpen(status);
 	};
 
-	const getFinanceData = (code: string) => {
+	const getFinanceData = (code: string, name: string) => {
 		setSelectedCode(code);
+		setStockName(name);
 		handleChangeSheetOpen(true);
 	};
 
@@ -152,6 +153,7 @@ const NewTradeLogContainerClient = () => {
 				sheetOpen={sheetOpen}
 				selectedCode={selectedCode}
 				onChangeSheet={handleChangeSheetOpen}
+				stockName={stockName}
 			/>
 		</div>
 	);
