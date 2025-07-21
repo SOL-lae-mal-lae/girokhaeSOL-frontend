@@ -3,8 +3,14 @@
 import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+	Dialog,
+	DialogTrigger,
+	DialogContent,
+	DialogTitle,
+} from '@/components/ui/dialog';
 import { fetchAccountList, setPrimaryAccount } from '@/services/accounts';
-// import { Typography } from '@/components/ui/typography';
 
 import AccountRegisterContainer from './AccountRegisterContainer';
 
@@ -20,7 +26,6 @@ const AccountListContainer = () => {
 	const [primaryAccount, setPrimaryAccountState] = useState<Account | null>(
 		null
 	);
-	const [showRegister, setShowRegister] = useState(false);
 
 	useEffect(() => {
 		const loadAccounts = async () => {
@@ -58,14 +63,36 @@ const AccountListContainer = () => {
 
 	return (
 		<div className="p-6">
-			<p>보유 계좌</p>
+			<div className="text-center mb-8">
+				<h1 className="text-2xl font-bold text-gray-800 mb-2">
+					계좌 연동
+				</h1>
+				<p className="text-gray-600">
+					증권계좌를 연결하여 자동으로 거래내역을 가져오세요
+				</p>
+			</div>
+
+			<div className="mb-6 text-center">
+				<Dialog>
+					<DialogTrigger asChild>
+						<Button className="bg-blue-500 text-white">
+							새 계좌 추가하기
+						</Button>
+					</DialogTrigger>
+					<DialogContent>
+						<DialogTitle>계좌 등록</DialogTitle>
+						<AccountRegisterContainer />
+					</DialogContent>
+				</Dialog>
+			</div>
+
 			<div className="mb-6">
 				<h2 className="text-xl font-semibold text-gray-800">
 					대표 계좌
 				</h2>
 				{primaryAccount ? (
 					<p className="text-gray-600">
-						대표 계좌: {primaryAccount.name}
+						대표 계좌 번호: {primaryAccount.name}
 					</p>
 				) : (
 					<p className="text-gray-600">
@@ -73,40 +100,40 @@ const AccountListContainer = () => {
 					</p>
 				)}
 			</div>
-			<ul className="space-y-4">
+
+			<div className="space-y-4">
 				{accounts.map((account) => (
-					<li
+					<Card
 						key={account.id}
 						className={`p-4 border rounded ${
 							account.isPrimary ? 'bg-blue-100' : 'bg-white'
 						}`}
 					>
-						<div className="flex justify-between items-center">
-							<span>{account.name}</span>
-							{!account.isPrimary && (
-								<Button
-									onClick={() => handleSetPrimary(account.id)}
-									className="bg-blue-500 text-white"
-								>
-									대표 계좌로 설정
-								</Button>
-							)}
-							{account.isPrimary && (
-								<span className="text-blue-500 font-bold">
-									대표 계좌
-								</span>
-							)}
-						</div>
-					</li>
+						<CardHeader>
+							<CardTitle>{account.name}</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<div className="flex justify-between items-center">
+								{!account.isPrimary && (
+									<Button
+										onClick={() =>
+											handleSetPrimary(account.id)
+										}
+										className="bg-blue-500 text-white"
+									>
+										대표 계좌로 설정
+									</Button>
+								)}
+								{account.isPrimary && (
+									<span className="text-blue-500 font-bold">
+										대표 계좌
+									</span>
+								)}
+							</div>
+						</CardContent>
+					</Card>
 				))}
-			</ul>
-			<Button
-				onClick={() => setShowRegister(true)}
-				className="mt-6 bg-green-500 text-white"
-			>
-				새 계좌 등록하기
-			</Button>
-			{showRegister && <AccountRegisterContainer />}
+			</div>
 		</div>
 	);
 };
