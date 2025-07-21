@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
 import { useRouter, useParams } from 'next/navigation';
 
@@ -8,7 +8,6 @@ import { useUser } from '@clerk/nextjs';
 import { ArrowLeft, Send, Share2, User, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { CommunityPost } from '@/@types/communityPost';
 import { Comment } from '@/@types/posts';
 import {
 	AlertDialog,
@@ -28,41 +27,30 @@ import {
 	deleteCommunityPost,
 	getCommunityPost,
 } from '@/services/community-all-post';
-
-// import { clerkClient } from '@clerk/nextjs/server';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { LoadingSpinner } from '@/components/ui/spinner';
 
 const GeneralPost: FC = () => {
 	const router = useRouter();
 	const params = useParams();
 	const postId = params.postId as string;
-	const [isDeleting, setIsDeleting] = useState(false);
-	const { user, isLoaded } = useUser();
-	const [post, setPost] = useState<CommunityPost>();
-	console.log(postId);
+	const { user } = useUser();
+	const { data, isLoading } = useQuery({
+		queryKey: ['community-post', postId],
+		queryFn: () => getCommunityPost(postId),
+	});
 
-	// const clerk = await clerkClient();
-	// const users = await clerk.users.getUser('');
-	useEffect(() => {
-		if (!isLoaded) return; // 사용자 정보가 로드되지 않았으면 대기
-
-		const fetchPost = async () => {
-			try {
-				const data = await getCommunityPost(postId);
-				if (data) {
-					setPost(data);
-					// 디버깅 정보 출력
-					// console.log('Current user:', user);
-					// console.log('Post user_id:', data.user_id);
-					// console.log('Is owner:', user?.id === data.user_id);
-				} else {
-					console.log('데이터를 가져올 수 없습니다.');
-				}
-			} catch (error) {
-				console.error('Failed to fetch posts:', error);
+	const { mutate: deletePost, isPending: isDeleting } = useMutation({
+		mutationFn: () => deleteCommunityPost(postId),
+		onSuccess: (data) => {
+			if (data) {
+				toast.success('게시글이 삭제되었습니다.');
+				router.push('/community');
+				return;
 			}
-		};
-		fetchPost();
-	}, [postId, user, isLoaded]);
+			toast.error('게시글 삭제에 실패했습니다.');
+		},
+	});
 
 	const comments: Comment[] = [
 		{
@@ -82,24 +70,13 @@ const GeneralPost: FC = () => {
 		},
 	];
 
-	const handleDeletePost = async () => {
-		setIsDeleting(true);
-		try {
-			const result = await deleteCommunityPost(postId);
-			if (result) {
-				toast.success('게시글이 삭제되었습니다.');
-
-				router.push('/community');
-			} else {
-				toast.error('게시글 삭제에 실패했습니다.');
-			}
-		} catch (error) {
-			console.error('삭제 중 오류 발생:', error);
-			toast.error('게시글 삭제 중 오류가 발생했습니다.');
-		} finally {
-			setIsDeleting(false);
-		}
-	};
+	if (isLoading) {
+		return (
+			<div className="flex justify-center items-center h-full">
+				<LoadingSpinner text="게시글 불러오는 중..." />;
+			</div>
+		);
+	}
 
 	return (
 		<div className="flex flex-col w-full h-full">
@@ -115,7 +92,7 @@ const GeneralPost: FC = () => {
 						<ArrowLeft size={20} />
 					</Button>
 					<h1 className="text-lg font-semibold text-gray-900 truncate ">
-						{post?.title}
+						{data?.title}
 					</h1>
 				</div>
 				<Button variant="ghost" size="sm" className="p-2">
@@ -137,13 +114,13 @@ const GeneralPost: FC = () => {
 								</div>
 								<div className="flex flex-col">
 									<span className="font-medium text-gray-900">
-										{post?.nickname}
+										{data?.nickname}
 									</span>
 									<span className="text-sm text-gray-500">
 										{/* {post?.created_at.toLocaleString()} */}
-										{post?.created_at &&
+										{data?.created_at &&
 											new Date(
-												post.created_at
+												data.created_at
 											).toLocaleString('ko-KR', {
 												year: 'numeric',
 												month: '2-digit',
@@ -156,7 +133,7 @@ const GeneralPost: FC = () => {
 								</div>
 							</div>
 							{/* 본인이 작성한 글에만 삭제 버튼 표시 */}
-							{user && user.id === post?.user_id && (
+							{user && user.id === data?.user_id && (
 								<div>
 									<AlertDialog>
 										<AlertDialogTrigger asChild>
@@ -187,7 +164,7 @@ const GeneralPost: FC = () => {
 													취소
 												</AlertDialogCancel>
 												<AlertDialogAction
-													onClick={handleDeletePost}
+													onClick={() => deletePost()}
 													className="bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue"
 												>
 													삭제
@@ -201,7 +178,7 @@ const GeneralPost: FC = () => {
 
 						{/* 게시글 내용 */}
 						<div className="mb-6">
-							{post?.content.split('\n').map((line, index) => (
+							{data?.content.split('\n').map((line, index) => (
 								<p
 									key={index}
 									className="text-gray-700 leading-relaxed mb-2"
