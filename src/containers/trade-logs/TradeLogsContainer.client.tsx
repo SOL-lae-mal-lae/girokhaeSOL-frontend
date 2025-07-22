@@ -7,8 +7,8 @@ import { ko } from 'date-fns/locale';
 import { PageSpinner } from '@/components/ui/spinner';
 import { getMonthlyTradeLogs } from '@/services/trade-logs';
 
-import AsideCard from './AsideCard';
-import { CalendarContainer } from './CalendarContainer';
+import AsideCard from './_view/AsideCard';
+import { CalendarContainer } from './_view/CalendarContainer';
 
 const TradeLogsContainerClient = () => {
 	const { data, isLoading } = useQuery({
@@ -39,7 +39,6 @@ const TradeLogsContainerClient = () => {
 				totalBuyAmount={data?.total_buy_amount ?? 0}
 				totalSellAmount={data?.total_sell_amount ?? 0}
 				totalCommissionAndTax={data?.total_commission_and_tax ?? 0}
-				profitRate={data?.profit_rate ?? 0}
 				sentiments={data?.sentiment ?? []}
 				topBuy={data?.top_buy ?? []}
 			/>

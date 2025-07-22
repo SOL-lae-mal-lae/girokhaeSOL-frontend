@@ -1,9 +1,10 @@
+import { AIEvaluationResult } from '@/@types/ai';
 import { Response } from '@/@types/response';
 import {
 	TradeLog,
+	TradeLogAIResult,
 	TradeLogMonthData,
 	TradeLogTransactionData,
-	TradeLogWithCode,
 } from '@/@types/tradeLogs';
 import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 import { HOUR_IN_SECOND } from '@/constants/time';
@@ -62,7 +63,7 @@ export const getTradeLogByDate = async (date: string) => {
 		if (!res.ok) {
 			throw new Error('Failed to fetch trade log');
 		}
-		const data: Response<TradeLogWithCode> = await res.json();
+		const data: Response<TradeLogAIResult> = await res.json();
 
 		return data.data;
 	} catch (error) {
@@ -87,6 +88,26 @@ export const createTradeLog = async (data: TradeLog) => {
 		}
 
 		return true;
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+};
+
+export const getAiEvaluation = async (date: string) => {
+	try {
+		const res = await fetch(
+			`${CLIENT_HOST_FOR_CLIENT}/api/v1/trade-logs/ai?date=${date}`,
+			{
+				method: 'GET',
+			}
+		);
+		if (!res.ok) {
+			throw new Error('Failed to fetch ai evaluation');
+		}
+		const data: Response<AIEvaluationResult> = await res.json();
+
+		return data.data;
 	} catch (error) {
 		console.error(error);
 		return null;

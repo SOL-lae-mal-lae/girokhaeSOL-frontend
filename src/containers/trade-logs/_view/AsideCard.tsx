@@ -12,7 +12,6 @@ interface Props {
 	totalBuyAmount: number;
 	totalSellAmount: number;
 	totalCommissionAndTax: number;
-	profitRate: number;
 	sentiments: string[];
 	topBuy: string[];
 }
@@ -21,7 +20,6 @@ const AsideCard: FC<Props> = ({
 	totalBuyAmount,
 	totalSellAmount,
 	totalCommissionAndTax,
-	profitRate,
 	sentiments,
 	topBuy,
 }) => {
@@ -57,14 +55,14 @@ const AsideCard: FC<Props> = ({
 							{formatNumber(totalCommissionAndTax)}원
 						</span>
 					</div>
-					<div className="flex flex-col">
+					{/* <div className="flex flex-col">
 						<span className="text-body2 text-muted-foreground">
 							손익률
 						</span>
 						<span className="text-body1 font-semibold">
 							{formatNumber(profitRate)}%
 						</span>
-					</div>
+					</div> */}
 					<div className="flex flex-col">
 						<span className="text-body2 text-muted-foreground">
 							나의 거래 심리 유형

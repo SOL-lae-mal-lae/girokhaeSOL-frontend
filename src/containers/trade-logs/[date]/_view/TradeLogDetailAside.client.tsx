@@ -4,32 +4,32 @@ import { FC, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import { useQuery } from '@tanstack/react-query';
-
-import { AIEvaluationResult } from '@/@types/ai';
 import { TradeLogAIResult } from '@/@types/tradeLogs';
 import HelpTooltip from '@/components/custom/HelpTooltip';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Spinner } from '@/components/ui/spinner';
 import INVESTMENT_TYPES from '@/constants/investmentType';
 import { SENTIMENTS } from '@/constants/sentiments';
-import { getAiEvaluation } from '@/services/trade-logs';
 
 interface Props {
 	tradeLog: TradeLogAIResult;
-	onChangeAiSheetOpen: () => void;
-	onChangeAiResult: (result: AIEvaluationResult) => void;
+	onChangeAiSheetOpen: (status: boolean) => void;
+	fetchAiEvaluation: () => void;
+	isLoading: boolean;
+	hasResult: boolean;
 }
 
 const TradeLogDetailAside: FC<Props> = ({
 	tradeLog,
 	onChangeAiSheetOpen,
-	onChangeAiResult,
+	fetchAiEvaluation,
+	isLoading,
+	hasResult,
 }) => {
 	const {
-		date,
 		investment_type,
 		sentiments,
 		news_links,
@@ -39,27 +39,19 @@ const TradeLogDetailAside: FC<Props> = ({
 	} = tradeLog;
 	const [hasAiEvaluation, setHasAiEvaluation] = useState(ai_result !== null);
 
-	const { data, isLoading, isSuccess, refetch } = useQuery({
-		queryKey: ['ai-evaluation', date],
-		queryFn: () => getAiEvaluation(date),
-		enabled: false,
-	});
-
 	const handleClickAiEvaluation = () => {
 		if (hasAiEvaluation) {
-			onChangeAiSheetOpen();
+			onChangeAiSheetOpen(true);
 		} else {
-			refetch();
+			fetchAiEvaluation();
 		}
 	};
 
 	useEffect(() => {
-		if (isSuccess && data) {
-			onChangeAiResult(data);
-			onChangeAiSheetOpen();
+		if (hasResult) {
 			setHasAiEvaluation(true);
 		}
-	}, [isSuccess, data, onChangeAiResult, onChangeAiSheetOpen]);
+	}, [hasResult]);
 
 	return (
 		<Card className="flex-1 min-w-[300px]">
@@ -155,7 +147,10 @@ const TradeLogDetailAside: FC<Props> = ({
 						onClick={handleClickAiEvaluation}
 						disabled={isLoading}
 					>
-						{hasAiEvaluation ? '결과 확인하기' : '평가 받기'}
+						{isLoading && <Spinner />}
+						{!isLoading && hasAiEvaluation
+							? '결과 확인하기'
+							: '평가 받기'}
 					</Button>
 				</div>
 			</CardContent>
