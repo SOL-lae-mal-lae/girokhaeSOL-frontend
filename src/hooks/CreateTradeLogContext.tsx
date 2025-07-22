@@ -43,6 +43,7 @@ interface CreateTradeLogContext {
 	rationalRef: React.RefObject<HTMLTextAreaElement | null> | null;
 	evaluationRef: React.RefObject<HTMLTextAreaElement | null> | null;
 	onSubmit: () => void;
+	filterTodayTradeCompanyList: (removeCode: string) => void;
 }
 
 export const CreateTradeLogContext = createContext<CreateTradeLogContext>({
@@ -73,6 +74,7 @@ export const CreateTradeLogContext = createContext<CreateTradeLogContext>({
 	rationalRef: null,
 	evaluationRef: null,
 	onSubmit: () => {},
+	filterTodayTradeCompanyList: () => {},
 });
 
 const CreateTradeLogProvider = ({
@@ -168,6 +170,14 @@ const CreateTradeLogProvider = ({
 				start_date: format(date, 'yyyy-MM-dd'),
 			},
 		}));
+	};
+
+	const filterTodayTradeCompanyList = (removeCode: string) => {
+		setTodayTradeCompanyList((prev) =>
+			prev.filter(({ code }) => {
+				return code !== removeCode;
+			})
+		);
 	};
 
 	const handleSubmit = async () => {
@@ -314,6 +324,7 @@ const CreateTradeLogProvider = ({
 				rationalRef,
 				evaluationRef,
 				onSubmit: handleSubmit,
+				filterTodayTradeCompanyList,
 			}}
 		>
 			{children}

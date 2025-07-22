@@ -1,17 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
+import { AIEvaluationResult } from '@/@types/ai';
 import { Card, CardContent } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/spinner';
-import { getTradeLogByDate } from '@/services/trade-logs';
+import { getAiEvaluation, getTradeLogByDate } from '@/services/trade-logs';
 
 import { TradeDetailTable, TradeSummary, TradeLogDetailAside } from './_view';
 import StockChart from './_view/StockChart.client';
 import FinancialContainer from '../_view/FinancialContainer.client';
-
+import AIEvaluation from './_view/AIEvaluation';
 interface Props {
 	date: string;
 }
@@ -20,10 +22,22 @@ const TradeLogDetailContainerClient = ({ date }: Props) => {
 	const [sheetOpen, setSheetOpen] = useState(false);
 	const [selectedCode, setSelectedCode] = useState('');
 	const [stockName, setStockName] = useState('');
+	const [aiSheetOpen, setAiSheetOpen] = useState(false);
+	const [aiResult, setAiResult] = useState<AIEvaluationResult | null>(null);
+
+	const handleChangeAiSheetOpen = (status: boolean) => {
+		setAiSheetOpen(status);
+	};
 
 	const { data: tradeLog, isLoading: isLoadingTradeLog } = useQuery({
 		queryKey: ['tradeLog', 'detail', date],
 		queryFn: () => getTradeLogByDate(date),
+	});
+
+	const { data, isLoading, isSuccess, refetch } = useQuery({
+		queryKey: ['ai-evaluation', date],
+		queryFn: () => getAiEvaluation(date),
+		enabled: false,
 	});
 
 	const handleChangeSheetOpen = (status: boolean) => {
@@ -35,6 +49,24 @@ const TradeLogDetailContainerClient = ({ date }: Props) => {
 		setStockName(name);
 		handleChangeSheetOpen(true);
 	};
+
+	const fetchAiEvaluation = () => {
+		refetch();
+	};
+
+	useEffect(() => {
+		if (tradeLog?.ai_result) {
+			setAiResult(tradeLog.ai_result);
+		}
+	}, [tradeLog?.ai_result]);
+
+	useEffect(() => {
+		if (isSuccess) {
+			toast.success('AI 평가가 완료되었습니다.');
+			setAiResult(data);
+			handleChangeAiSheetOpen(true);
+		}
+	}, [isSuccess]);
 
 	if (isLoadingTradeLog) {
 		return (
@@ -90,15 +122,27 @@ const TradeLogDetailContainerClient = ({ date }: Props) => {
 				</Card>
 
 				{/* 우측: 매매일지 작성 내용 */}
-				<TradeLogDetailAside tradeLog={tradeLog} />
+				<TradeLogDetailAside
+					tradeLog={tradeLog}
+					onChangeAiSheetOpen={handleChangeAiSheetOpen}
+					fetchAiEvaluation={fetchAiEvaluation}
+					isLoading={isLoading}
+					hasResult={!!data}
+				/>
 			</div>
-
 			<FinancialContainer
 				sheetOpen={sheetOpen}
 				selectedCode={selectedCode}
 				onChangeSheet={handleChangeSheetOpen}
 				stockName={stockName}
 			/>
+			{aiResult && (
+				<AIEvaluation
+					result={aiResult}
+					isOpen={aiSheetOpen}
+					onChangeOpen={handleChangeAiSheetOpen}
+				/>
+			)}
 		</div>
 	);
 };
