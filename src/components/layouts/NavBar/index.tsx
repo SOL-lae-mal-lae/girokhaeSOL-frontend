@@ -40,7 +40,7 @@ export const NavBar: FC<NavBarProps> = ({ children }: NavBarProps) => {
 								>
 									{item.label}
 								</Link>
-								{pathname === item.href && (
+								{pathname.startsWith(item.href) && (
 									<div className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-shinhan-blue animate-slide-in" />
 								)}
 							</li>
