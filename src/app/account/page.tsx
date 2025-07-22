@@ -1,1 +1,1 @@
-export { default } from '@/containers/account/AccountRegisterContainer.client';
+export { default } from '@/containers/account/AccountListContainer';
