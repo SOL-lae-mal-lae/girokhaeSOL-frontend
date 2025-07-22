@@ -1,10 +1,13 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import { TradeLog } from '@/@types/tradeLogs';
+import { useQuery } from '@tanstack/react-query';
+
+import { AIEvaluationResult } from '@/@types/ai';
+import { TradeLogAIResult } from '@/@types/tradeLogs';
 import HelpTooltip from '@/components/custom/HelpTooltip';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -12,14 +15,51 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import INVESTMENT_TYPES from '@/constants/investmentType';
 import { SENTIMENTS } from '@/constants/sentiments';
+import { getAiEvaluation } from '@/services/trade-logs';
 
 interface Props {
-	tradeLog: TradeLog;
+	tradeLog: TradeLogAIResult;
+	onChangeAiSheetOpen: () => void;
+	onChangeAiResult: (result: AIEvaluationResult) => void;
 }
 
-const TradeLogDetailAside: FC<Props> = ({ tradeLog }) => {
-	const { investment_type, sentiments, news_links, rationale, evaluation } =
-		tradeLog;
+const TradeLogDetailAside: FC<Props> = ({
+	tradeLog,
+	onChangeAiSheetOpen,
+	onChangeAiResult,
+}) => {
+	const {
+		date,
+		investment_type,
+		sentiments,
+		news_links,
+		rationale,
+		evaluation,
+		ai_result,
+	} = tradeLog;
+	const [hasAiEvaluation, setHasAiEvaluation] = useState(ai_result !== null);
+
+	const { data, isLoading, isSuccess, refetch } = useQuery({
+		queryKey: ['ai-evaluation', date],
+		queryFn: () => getAiEvaluation(date),
+		enabled: false,
+	});
+
+	const handleClickAiEvaluation = () => {
+		if (hasAiEvaluation) {
+			onChangeAiSheetOpen();
+		} else {
+			refetch();
+		}
+	};
+
+	useEffect(() => {
+		if (isSuccess && data) {
+			onChangeAiResult(data);
+			onChangeAiSheetOpen();
+			setHasAiEvaluation(true);
+		}
+	}, [isSuccess, data, onChangeAiResult, onChangeAiSheetOpen]);
 
 	return (
 		<Card className="flex-1 min-w-[300px]">
@@ -78,11 +118,10 @@ const TradeLogDetailAside: FC<Props> = ({ tradeLog }) => {
 					</div>
 				</div>
 
-				<Separator />
-
 				{/* 뉴스 링크 */}
 				{news_links.length > 0 && (
 					<>
+						<Separator />
 						<div>
 							<h4 className="font-medium text-sm text-muted-foreground mb-2">
 								참고 뉴스
@@ -111,8 +150,12 @@ const TradeLogDetailAside: FC<Props> = ({ tradeLog }) => {
 						</h4>
 						<HelpTooltip text="작성한 매매일지를 기반으로 AI평가를 받을 수 있습니다." />
 					</div>
-					<Button className="w-full bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue cursor-pointer">
-						평가받기
+					<Button
+						className="w-full bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue cursor-pointer"
+						onClick={handleClickAiEvaluation}
+						disabled={isLoading}
+					>
+						{hasAiEvaluation ? '결과 확인하기' : '평가 받기'}
 					</Button>
 				</div>
 			</CardContent>
