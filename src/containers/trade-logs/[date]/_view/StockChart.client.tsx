@@ -3,8 +3,16 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { createChart, CandlestickSeries, LineSeries } from 'lightweight-charts';
 
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { LoadingSpinner } from '@/components/ui/spinner';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getChartByStockCode } from '@/services/charts';
 
 interface Props {
@@ -230,61 +238,66 @@ const StockChart: FC<Props> = ({ stockChartList }) => {
 		};
 	}, [data, isSuccess, selectedStockCode]);
 
-	if (isPending) {
-		return (
-			<div className="h-96 flex flex-col gap-2">
-				<h1 className="text-heading3 font-bold">거래 기록 차트</h1>
-				<div className="flex items-center justify-center flex-1">
-					<LoadingSpinner text="차트를 불러오는 중..." />
-				</div>
-			</div>
-		);
-	}
-
 	return (
 		<div className="flex flex-col gap-2">
 			<h1 className="text-heading3 font-bold">거래 기록 차트</h1>
-			<div className="h-96 rounded-lg flex items-center justify-center p-4">
-				<Tabs
-					defaultValue={selectedStockCode.stock_code}
-					onValueChange={(value) => {
-						const stockCode = stockChartList.find(
-							(stock) => stock.stock_code === value
-						);
-						if (stockCode) {
-							setSelectedStockCode(stockCode);
-						}
-					}}
-				>
-					<TabsList className="bg-brand-shinhan-blue/10">
+			<Select
+				value={selectedStockCode.stock_code}
+				onValueChange={(value) => {
+					const stockCode = stockChartList.find(
+						(stock) => stock.stock_code === value
+					);
+					if (stockCode) {
+						setSelectedStockCode(stockCode);
+					}
+				}}
+			>
+				<SelectTrigger className="w-[200px]">
+					<SelectValue placeholder="주식 선택" />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectGroup>
+						<SelectLabel>주식 종목</SelectLabel>
 						{stockChartList.map((stock) => (
-							<TabsTrigger
+							<SelectItem
 								key={stock.stock_code}
 								value={stock.stock_code}
-								className="cursor-pointer data-[state=active]:bg-brand-shinhan-blue data-[state=active]:text-white hover:bg-brand-shinhan-blue/20"
+								className="cursor-pointer"
 							>
 								{stock.stock_name}
-							</TabsTrigger>
+							</SelectItem>
 						))}
-					</TabsList>
-					{!isPending && (
-						<TabsContent value={selectedStockCode.stock_code}>
-							{stockChartList.map((stock) => (
-								<div
-									key={stock.stock_code}
-									ref={(el) => {
-										if (el) {
-											chartContainerRef.current[
-												stock.stock_code
-											] = el;
-										}
-									}}
-									className="relative"
-								/>
-							))}
-						</TabsContent>
-					)}
-				</Tabs>
+					</SelectGroup>
+				</SelectContent>
+			</Select>
+			<div className="h-96 rounded-lg flex flex-col gap-4 p-4">
+				{!isPending && (
+					<div className="flex-1">
+						{stockChartList.map((stock) => (
+							<div
+								key={stock.stock_code}
+								ref={(el) => {
+									if (el) {
+										chartContainerRef.current[
+											stock.stock_code
+										] = el;
+									}
+								}}
+								className={`relative ${stock.stock_code === selectedStockCode.stock_code ? 'block' : 'hidden'}`}
+							/>
+						))}
+					</div>
+				)}
+				{isPending && (
+					<div className="h-96 flex flex-col gap-2">
+						<h1 className="text-heading3 font-bold">
+							거래 기록 차트
+						</h1>
+						<div className="flex items-center justify-center flex-1">
+							<LoadingSpinner text="차트를 불러오는 중..." />
+						</div>
+					</div>
+				)}
 			</div>
 		</div>
 	);
