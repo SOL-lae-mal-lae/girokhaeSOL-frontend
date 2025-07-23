@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { CommunityPostAll } from './CommunityPostAll';
 
-const CommunityContainer = () => {
+export const CommunityContainer = () => {
 	return (
 		<div className="flex w-full h-full mt-8 px-8 flex-col gap-4">
 			<div className="flex justify-between flex-shrink-0">
@@ -67,5 +67,3 @@ const CommunityContainer = () => {
 		</div>
 	);
 };
-
-export default CommunityContainer;

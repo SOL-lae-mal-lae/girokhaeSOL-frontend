@@ -1,12 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-import { useRouter } from 'next/navigation';
-
 import { MessageCircle, Share2 } from 'lucide-react';
 
-import { CommunityAllPost } from '@/@types/communityPost';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
 	getCommunityGeneralPost,
@@ -15,6 +10,7 @@ import {
 } from '@/services/community-all-post';
 import { useQuery } from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/spinner';
+import { useRouter } from 'next/navigation';
 
 type PostType = 'all' | 'general' | 'trade-log';
 
@@ -24,7 +20,6 @@ interface CommunityPostAllProps {
 
 export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
 	const router = useRouter();
-
 	const { data, isLoading } = useQuery({
 		queryKey: ['community-all-post', postType],
 		queryFn: () => {
