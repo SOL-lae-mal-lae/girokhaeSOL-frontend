@@ -1,6 +1,10 @@
+'use client';
+
 import { FC } from 'react';
 
-import { Send, Share2, User } from 'lucide-react';
+import { useRouter, useParams } from 'next/navigation';
+
+import { ArrowLeft, Send, Share2, User } from 'lucide-react';
 
 import { Comment, Post } from '@/@types/posts';
 import { Button } from '@/components/ui/button';
@@ -9,12 +13,12 @@ import { Input } from '@/components/ui/input';
 
 // import { clerkClient } from '@clerk/nextjs/server';
 
-interface Props {
-	params: Promise<{ postId: string }>;
-}
+type Props = Record<string, never>;
 
-const GeneralPost: FC<Props> = async ({ params }) => {
-	const { postId } = await params;
+const GeneralPost: FC<Props> = () => {
+	const router = useRouter();
+	const params = useParams();
+	const postId = params.postId as string;
 	console.log(postId);
 
 	// const clerk = await clerkClient();
@@ -66,9 +70,19 @@ const GeneralPost: FC<Props> = async ({ params }) => {
 		<div className="flex flex-col w-full h-full">
 			{/* 상단 네비게이션 */}
 			<div className="flex items-center justify-between p-4 border-b bg-white sticky top-14 z-10">
-				<h1 className="text-lg font-semibold text-gray-900 truncate ">
-					{post.title}
-				</h1>
+				<div className="flex items-center gap-2">
+					<Button
+						variant="ghost"
+						size="sm"
+						className="p-2"
+						onClick={() => router.back()}
+					>
+						<ArrowLeft size={20} />
+					</Button>
+					<h1 className="text-lg font-semibold text-gray-900 truncate ">
+						{post.title}
+					</h1>
+				</div>
 				<Button variant="ghost" size="sm" className="p-2">
 					<Share2 size={20} />
 				</Button>
@@ -81,9 +95,9 @@ const GeneralPost: FC<Props> = async ({ params }) => {
 						{/* 작성자 정보 */}
 						<div className="flex items-center gap-3 mb-4">
 							<div
-								className={`w-10 h-10 rounded-full flex items-center justify-center`}
+								className={`w-10 h-10 rounded-full flex items-center justify-center border border-black`}
 							>
-								<User size={20} className="text-white" />
+								<User size={20} className="text-black" />
 							</div>
 							<div className="flex flex-col">
 								<span className="font-medium text-gray-900">
@@ -139,11 +153,11 @@ const GeneralPost: FC<Props> = async ({ params }) => {
 								<CardContent className="px-4 py-2">
 									<div className="flex items-start gap-3">
 										<div
-											className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0`}
+											className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border border-black`}
 										>
 											<User
 												size={16}
-												className="text-white"
+												className="text-black"
 											/>
 										</div>
 										<div className="flex-1">
