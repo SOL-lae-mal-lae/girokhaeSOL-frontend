@@ -1,3 +1,4 @@
+import { AIEvaluationResult } from './ai';
 import { InvestmentType } from './investment';
 import { SentimentType } from './sentiments';
 
@@ -51,6 +52,10 @@ export interface TradeLog {
 		end_date: string;
 		sequence: number;
 	}[];
+}
+
+export interface TradeLogAIResult extends TradeLogWithCode {
+	ai_result: AIEvaluationResult | null;
 }
 
 export interface TradeLogWithCode extends TradeLog {

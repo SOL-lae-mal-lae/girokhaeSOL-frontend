@@ -58,14 +58,12 @@ export default function FinancialContainer({
 		<>
 			{/* 재무제표 띄우기 */}
 			<Sheet open={sheetOpen} onOpenChange={onChangeSheet}>
-				<SheetContent
-					className="!w-[30vw] flex flex-col !max-w-none pl-3 pr-3"
-					aria-describedby={undefined}
-				>
-					<SheetHeader>
+				<SheetContent className="!w-[30vw] flex flex-col !max-w-none pl-3 pr-3">
+					<SheetHeader aria-description="financial-statement">
 						<SheetTitle>
 							{`재무제표 - ${stockName}(${selectedCode})`}
 						</SheetTitle>
+						{/* <SheetDescription></SheetDescription> */}
 					</SheetHeader>
 					{statements ? (
 						<div className="">
