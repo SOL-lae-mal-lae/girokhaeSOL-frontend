@@ -357,9 +357,10 @@ const StockChart: FC<Props> = ({ stockChartList }) => {
 			bollingerLower: [],
 		};
 
-		// 볼린저 밴드 계산 (간단한 예시 - 실제로는 더 복잡한 계산 필요)
 		const bollingerData = data.map((item) => {
-			const close = Number(item.current_price);
+			const middle = Number(item.middle_band);
+			const upper = Number(item.upper_band);
+			const lower = Number(item.lower_band);
 			return {
 				time:
 					item.dt.substring(0, 4) +
@@ -367,9 +368,9 @@ const StockChart: FC<Props> = ({ stockChartList }) => {
 					item.dt.substring(4, 6) +
 					'-' +
 					item.dt.substring(6, 8),
-				upper: close * 1.02, // 예시 값
-				middle: close,
-				lower: close * 0.98, // 예시 값
+				upper,
+				middle,
+				lower,
 			};
 		});
 
