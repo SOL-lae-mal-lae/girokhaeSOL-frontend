@@ -1,1 +1,5 @@
-export { default } from '@/containers/community/CommunityContainer';
+import { CommunityContainer } from '@/containers/community/CommunityContainer';
+
+export default function CommunityPage() {
+	return <CommunityContainer />;
+}
