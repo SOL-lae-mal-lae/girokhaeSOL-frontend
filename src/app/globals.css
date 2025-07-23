@@ -120,6 +120,11 @@
 	--radius-xl: calc(var(--radius) + 4px);
 }
 
+body,
+html {
+	overflow-x: hidden;
+}
+
 body {
 	width: 100vw;
 	height: 100vh;
