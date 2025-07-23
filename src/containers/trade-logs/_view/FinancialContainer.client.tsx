@@ -4,7 +4,13 @@ import React, { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 
-import { ChartColumn, DollarSign, Percent, TrendingUp } from 'lucide-react';
+import {
+	Building2,
+	ChartColumn,
+	DollarSign,
+	Percent,
+	TrendingUp,
+} from 'lucide-react';
 
 import { FinancialStatementData } from '@/@types/financialStatement';
 import { LargeCard } from '@/components/cards/FinanceInfo/LargeCard';
@@ -21,12 +27,14 @@ import { getFinancialStatements } from '@/services/financial-statements';
 interface Props {
 	sheetOpen: boolean;
 	selectedCode: string;
+	stockName: string;
 	onChangeSheet: (state: boolean) => void;
 }
 
 export default function FinancialContainer({
 	sheetOpen,
 	selectedCode,
+	stockName,
 	onChangeSheet,
 }: Props) {
 	// 재무제표 sheet에 필요한 거
@@ -50,18 +58,12 @@ export default function FinancialContainer({
 		<>
 			{/* 재무제표 띄우기 */}
 			<Sheet open={sheetOpen} onOpenChange={onChangeSheet}>
-				<SheetContent
-					className="!w-[30vw] flex flex-col !max-w-none pl-3 pr-3"
-					aria-describedby={undefined}
-				>
-					<SheetHeader>
+				<SheetContent className="!w-[30vw] flex flex-col !max-w-none pl-3 pr-3">
+					<SheetHeader aria-description="financial-statement">
 						<SheetTitle>
-							{statements
-								? `재무제표 - ${
-										statements.stock_code || '코드 없음'
-									}`
-								: '재무제표 정보 없음'}
+							{`재무제표 - ${stockName}(${selectedCode})`}
 						</SheetTitle>
+						{/* <SheetDescription></SheetDescription> */}
 					</SheetHeader>
 					{statements ? (
 						<div className="">
@@ -86,11 +88,9 @@ export default function FinancialContainer({
 									unit=""
 								/>
 								<SmallCard
-									title="부채비율"
+									title="ROE"
 									value={
-										statements.debt_ratio
-											? statements.debt_ratio
-											: '-'
+										statements.roe ? statements.roe : '-'
 									}
 									color="orange"
 									icon={<Percent />}
@@ -105,39 +105,46 @@ export default function FinancialContainer({
 									icon={<DollarSign />}
 									unit="원"
 								/>
+								<SmallCard
+									title="시가총액"
+									value={
+										statements.mac
+											? formatCurrency(statements.mac)
+											: '-'
+									}
+									color="default"
+									icon={<Building2 />}
+									unit=""
+								/>
 							</div>
 							<div className="flex flex-col">
 								<LargeCard
 									title="매출"
-									value={formatCurrency(statements.revenue)}
+									value={formatCurrency(statements.sale_amt)}
 									icon={<DollarSign size={15} />}
 									subtitle="연간 매출액"
 									color="green"
 								/>
 								<LargeCard
 									title="영업이익"
-									value={formatCurrency(
-										statements.operating_income
-									)}
+									value={formatCurrency(statements.bus_pro)}
 									icon={<TrendingUp size={15} />}
 									subtitle="영업 이익률"
 									color="blue"
 									subValue={`${calculateOperatingMargin(
-										statements.revenue,
-										statements.operating_income
+										statements.sale_amt,
+										statements.bus_pro
 									)}`}
 								/>
 								<LargeCard
 									title="순이익"
-									value={formatCurrency(
-										statements.net_income
-									)}
+									value={formatCurrency(statements.cup_nga)}
 									icon={<ChartColumn size={15} />}
 									subtitle="순이익률"
 									color="purple"
 									subValue={`${calculateOperatingMargin(
-										statements.revenue,
-										statements.net_income
+										statements.sale_amt,
+										statements.cup_nga
 									)}`}
 								/>
 							</div>

@@ -5,8 +5,7 @@ import { PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { GeneralCommunity } from './GeneralCommunity';
-import { TradeLogCommunity } from './TradeLogCommunity';
+import { CommunityPostAll } from './CommunityPostAll';
 
 const CommunityContainer = () => {
 	return (
@@ -31,8 +30,14 @@ const CommunityContainer = () => {
 				</div>
 			</div>
 			<div className="flex flex-col gap-4 flex-1">
-				<Tabs defaultValue="general" className="flex-1">
+				<Tabs defaultValue="all" className="flex-1">
 					<TabsList className="bg-brand-shinhan-blue/10 rounded-lg">
+						<TabsTrigger
+							value="all"
+							className="cursor-pointer data-[state=active]:bg-brand-shinhan-blue data-[state=active]:text-white hover:bg-brand-shinhan-blue/20"
+						>
+							전체
+						</TabsTrigger>
 						<TabsTrigger
 							value="general"
 							className="cursor-pointer data-[state=active]:bg-brand-shinhan-blue data-[state=active]:text-white hover:bg-brand-shinhan-blue/20"
@@ -46,11 +51,14 @@ const CommunityContainer = () => {
 							매매일지 공유
 						</TabsTrigger>
 					</TabsList>
+					<TabsContent value="all">
+						<CommunityPostAll postType="all" />
+					</TabsContent>
 					<TabsContent value="general">
-						<GeneralCommunity />
+						<CommunityPostAll postType="general" />
 					</TabsContent>
 					<TabsContent value="trade-log">
-						<TradeLogCommunity />
+						<CommunityPostAll postType="trade-log" />
 					</TabsContent>
 				</Tabs>
 			</div>

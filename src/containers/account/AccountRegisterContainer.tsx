@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import CryptoJS from 'crypto-js';
 import { LockKeyhole, CreditCard } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -37,10 +38,13 @@ type AccountFormData = z.infer<typeof formSchema>;
 
 const AccountRegisterContainerClient = () => {
 	const router = useRouter();
+	const queryClient = useQueryClient();
+
 	const { mutate, isPending } = useMutation({
 		mutationFn: createAccount,
 		onSuccess: () => {
 			toast.success('계좌가 성공적으로 연동되었습니다!');
+			queryClient.invalidateQueries({ queryKey: ['userSummary'] });
 			router.push('/');
 		},
 		onError: () => {
@@ -57,11 +61,19 @@ const AccountRegisterContainerClient = () => {
 		resolver: zodResolver(formSchema),
 	});
 
+	const encryptData = (data: string) => {
+		const encryptionKey = process.env.NEXT_PUBLIC_ENCRYPTION_KEY; // 환경 변수에서 키를 가져옵니다.
+		return CryptoJS.AES.encrypt(data, encryptionKey || '').toString();
+	};
+
 	const onSubmit = async (data: AccountFormData) => {
+		const encryptedAppKey = encryptData(data.appKey);
+		const encryptedSecretKey = encryptData(data.securityNumber);
+
 		mutate({
 			account_number: data.accountNumber,
-			app_key: data.appKey,
-			secret_key: data.securityNumber,
+			app_key: encryptedAppKey,
+			secret_key: encryptedSecretKey,
 		});
 	};
 
