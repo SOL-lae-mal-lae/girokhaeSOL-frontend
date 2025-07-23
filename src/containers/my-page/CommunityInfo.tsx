@@ -114,7 +114,7 @@ const CommunityInfoContainer = () => {
 												{post.title}
 											</span>
 											<Badge variant="secondary">
-												{post.post_type
+												{post.postType
 													? '매매일지'
 													: '일반'}
 											</Badge>
@@ -122,7 +122,7 @@ const CommunityInfoContainer = () => {
 										<CardContent className="flex flex-col gap-1 px-0 pb-0">
 											<div className="flex items-center gap-4 text-sm text-muted-foreground">
 												<span>
-													{post.created_at.slice(
+													{post.createdAt.slice(
 														0,
 														10
 													)}
@@ -182,7 +182,7 @@ const CommunityInfoContainer = () => {
 										<CardContent className="flex flex-col gap-1 px-0 pb-0">
 											<div className="flex items-center gap-4 text-sm text-muted-foreground">
 												<span>
-													{comment.created_at.slice(
+													{comment.createdAt.slice(
 														0,
 														10
 													)}
