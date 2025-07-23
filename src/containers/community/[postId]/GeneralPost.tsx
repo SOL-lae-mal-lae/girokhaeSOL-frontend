@@ -13,9 +13,7 @@ import { Input } from '@/components/ui/input';
 
 // import { clerkClient } from '@clerk/nextjs/server';
 
-type Props = Record<string, never>;
-
-const GeneralPost: FC<Props> = () => {
+const GeneralPost: FC = () => {
 	const router = useRouter();
 	const params = useParams();
 	const postId = params.postId as string;

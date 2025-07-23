@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { MessageCircle, Share2 } from 'lucide-react';
 
 import { CommunityAllPost } from '@/@types/communityPost';
@@ -19,6 +21,7 @@ interface CommunityPostAllProps {
 }
 
 export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
+	const router = useRouter();
 	const [posts, setPosts] = useState<CommunityAllPost[]>([]);
 	const [loading, setLoading] = useState(true);
 
@@ -56,6 +59,10 @@ export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
 		fetchPosts();
 	}, [postType]);
 
+	const handleCardClick = (postId: number) => {
+		router.push(`/community/${postId}`);
+	};
+
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center py-8">
@@ -70,6 +77,7 @@ export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
 				<Card
 					key={post.id}
 					className="hover:shadow-md transition-shadow cursor-pointer"
+					onClick={() => handleCardClick(post.id)}
 				>
 					<CardHeader className="pb-3">
 						<div className="flex items-center justify-between">
