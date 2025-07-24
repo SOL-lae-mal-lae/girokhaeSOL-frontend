@@ -44,6 +44,7 @@ interface CreateTradeLogContext {
 	evaluationRef: React.RefObject<HTMLTextAreaElement | null> | null;
 	onSubmit: () => void;
 	filterTodayTradeCompanyList: (removeCode: string) => void;
+	onResetTodayTradeCompanyList: () => void;
 }
 
 export const CreateTradeLogContext = createContext<CreateTradeLogContext>({
@@ -75,6 +76,7 @@ export const CreateTradeLogContext = createContext<CreateTradeLogContext>({
 	evaluationRef: null,
 	onSubmit: () => {},
 	filterTodayTradeCompanyList: () => {},
+	onResetTodayTradeCompanyList: () => {},
 });
 
 const CreateTradeLogProvider = ({
@@ -112,8 +114,13 @@ const CreateTradeLogProvider = ({
 	}>({});
 	const rationalRef = useRef<HTMLTextAreaElement | null>(null);
 	const evaluationRef = useRef<HTMLTextAreaElement | null>(null);
+	const todayTradeCompanyRef = useRef<Stock[]>([]);
 
 	const handleSetTodayTradeCompanyList = (stocks: Stock[]) => {
+		todayTradeCompanyRef.current = [
+			...todayTradeCompanyRef.current,
+			...stocks,
+		];
 		setTodayTradeCompanyList((prev) => [...prev, ...stocks]);
 	};
 
@@ -178,6 +185,10 @@ const CreateTradeLogProvider = ({
 				return code !== removeCode;
 			})
 		);
+	};
+
+	const resetTodayTradeCompanyList = () => {
+		setTodayTradeCompanyList(todayTradeCompanyRef.current);
 	};
 
 	const handleSubmit = async () => {
@@ -325,6 +336,7 @@ const CreateTradeLogProvider = ({
 				evaluationRef,
 				onSubmit: handleSubmit,
 				filterTodayTradeCompanyList,
+				onResetTodayTradeCompanyList: resetTodayTradeCompanyList,
 			}}
 		>
 			{children}
