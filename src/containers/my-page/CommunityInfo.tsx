@@ -1,13 +1,11 @@
-// Frontend/girokhaeSOL-frontend/src/containers/my-page/CommunityInfo.tsx
-
 'use client';
 
 import { useState, useEffect } from 'react';
 
 import { useMutation } from '@tanstack/react-query'; // Import useMutation from react-query
 
-import { Comment } from '@/@types/comment';
-import { Post } from '@/@types/post';
+import { myPageComments } from '@/@types/comments';
+import { myPagePosts } from '@/@types/posts';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardTitle, CardContent } from '@/components/ui/card';
 import {
@@ -25,14 +23,14 @@ import { fetchCurrentUserPosts, fetchUserComments } from '@/services/my-page';
 const ITEMS_PER_PAGE = 10;
 
 const CommunityInfoContainer = () => {
-	const [posts, setPosts] = useState<Post[]>([]); // 게시글 상태
-	const [comments, setComments] = useState<Comment[]>([]); // 댓글 상태
+	const [posts, setPosts] = useState<myPagePosts[]>([]); // 게시글 상태
+	const [comments, setComments] = useState<myPageComments[]>([]); // 댓글 상태
 	const [postPage, setPostPage] = useState(1); // 게시글 페이지
 	const [commentPage, setCommentPage] = useState(1); // 댓글 페이지
 	const [loading, setLoading] = useState(true); // 로딩 상태
 	const [error, setError] = useState<string | null>(null); // 에러 상태
 
-	// Mutation hooks for fetching posts and comments
+	// 게시글과 댓글을 가져오는 useMutation 훅
 	const { mutate: getPosts } = useMutation({
 		mutationFn: fetchCurrentUserPosts,
 		onSuccess: (data) => {
@@ -60,8 +58,7 @@ const CommunityInfoContainer = () => {
 	useEffect(() => {
 		setLoading(true);
 		setError(null);
-
-		// Fetch data using mutate instead of useEffect directly
+		// 게시글과 댓글을 가져오는 함수 호출
 		getPosts();
 		getComments();
 	}, [getPosts, getComments]);
@@ -83,7 +80,6 @@ const CommunityInfoContainer = () => {
 
 	return (
 		<div>
-			{/* 타이틀 */}
 			<div className="flex flex-col gap-1 mb-2">
 				<h2 className="text-2xl font-bold">활동 내역</h2>
 			</div>
@@ -115,33 +111,50 @@ const CommunityInfoContainer = () => {
 								작성한 게시글이 없습니다.
 							</div>
 						) : (
-							paginatedPosts.map((post) => (
-								<Card
-									key={post.id}
-									className="flex flex-row items-center justify-between p-4"
-								>
-									<div className="flex flex-col gap-1 flex-1">
-										<CardTitle className="flex items-center gap-2">
-											<span className="text-lg font-semibold">
-												{post.title}
-											</span>
-											<Badge variant="secondary">
-												{post.post_type
-													? '매매일지'
-													: '일반'}
-											</Badge>
-										</CardTitle>
-										<CardContent className="flex flex-col gap-1 px-0 pb-0">
-											<div className="flex items-center gap-4 text-sm text-muted-foreground">
-												<span>
-													{post.created_at ||
-														'날짜 없음'}
+							paginatedPosts.map((post) => {
+								// Log each post during rendering
+								console.log('Rendering Post:', post);
+								return (
+									<Card
+										className="flex flex-row items-center justify-between p-4"
+										key={post.title}
+									>
+										<div className="flex flex-col gap-1 flex-1">
+											<CardTitle className="flex items-center gap-2">
+												<span className="text-lg font-semibold">
+													<p>
+														{post.title}{' '}
+														<Badge variant="secondary">
+															{post.post_type
+																? '매매일지'
+																: '일반'}
+														</Badge>
+													</p>
+													<p
+														className="text-base font-medium"
+														style={{
+															fontSize: '0.8em',
+														}}
+													>
+														{post.content}
+													</p>
 												</span>
-											</div>
-										</CardContent>
-									</div>
-								</Card>
-							))
+											</CardTitle>
+											<CardContent className="flex flex-col gap-1 px-0 pb-0">
+												<div className="flex items-center gap-4 text-sm text-muted-foreground">
+													<span>
+														{/* Format the date correctly */}
+														{new Date(
+															post.created_at
+														).toLocaleDateString() ||
+															'날짜 없음'}
+													</span>
+												</div>
+											</CardContent>
+										</div>
+									</Card>
+								);
+							})
 						)}
 					</div>
 
@@ -186,25 +199,32 @@ const CommunityInfoContainer = () => {
 								작성한 댓글이 없습니다.
 							</div>
 						) : (
-							paginatedComments.map((comment) => (
-								<Card
-									key={comment.id}
-									className="flex flex-row items-center justify-between p-4"
-								>
-									<div className="flex flex-col gap-1 flex-1">
-										<CardTitle className="text-base font-medium">
-											{comment.content}
-										</CardTitle>
-										<CardContent className="flex flex-col gap-1 px-0 pb-0">
-											<div className="flex items-center gap-4 text-sm text-muted-foreground">
-												<span>
-													{comment.created_at}
-												</span>
-											</div>
-										</CardContent>
-									</div>
-								</Card>
-							))
+							paginatedComments.map((comment) => {
+								// Log each comment during rendering
+								console.log('Rendering Comment:', comment);
+								return (
+									<Card
+										key={comment.id}
+										className="flex flex-row items-center justify-between p-4"
+									>
+										<div className="flex flex-col gap-1 flex-1">
+											<CardTitle className="text-base font-medium">
+												{comment.content}
+											</CardTitle>
+											<CardContent className="flex flex-col gap-1 px-0 pb-0">
+												<div className="flex items-center gap-4 text-sm text-muted-foreground">
+													<span>
+														{/* Format the date correctly */}
+														{new Date(
+															comment.created_at
+														).toLocaleDateString()}
+													</span>
+												</div>
+											</CardContent>
+										</div>
+									</Card>
+								);
+							})
 						)}
 					</div>
 
