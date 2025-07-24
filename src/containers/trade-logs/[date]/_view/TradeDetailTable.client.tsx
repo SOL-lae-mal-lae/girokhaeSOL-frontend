@@ -16,14 +16,25 @@ import {
 interface Props {
 	getFinanceData: (code: string, name: string) => void;
 	tradeDetails: TradeLogTransaction[];
+	readOnly?: boolean;
 }
 
-const TradeDetailTable: FC<Props> = ({ getFinanceData, tradeDetails }) => {
+const TradeDetailTable: FC<Props> = ({
+	getFinanceData,
+	tradeDetails,
+	readOnly = false,
+}) => {
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="flex items-center gap-1">
+			<div
+				className={`flex items-center gap-1 ${
+					readOnly ? 'justify-center' : ''
+				}`}
+			>
 				<h1 className="text-heading3 font-bold">거래 기록</h1>
-				<HelpTooltip text="종목명을 클릭하면 재무제표를 확인할 수 있습니다." />
+				{!readOnly && (
+					<HelpTooltip text="종목명을 클릭하면 재무제표를 확인할 수 있습니다." />
+				)}
 			</div>
 			<Table>
 				<TableHeader>
@@ -99,11 +110,13 @@ const TradeDetailTable: FC<Props> = ({ getFinanceData, tradeDetails }) => {
 							</TableCell>
 							<TableCell
 								className={
-									row.profit_amount === 0
+									readOnly
 										? 'text-muted-foreground'
-										: row.profit_amount > 0
-											? 'text-red-500'
-											: 'text-blue-500'
+										: row.profit_amount === 0
+											? 'text-muted-foreground'
+											: row.profit_amount > 0
+												? 'text-red-500'
+												: 'text-blue-500'
 								}
 							>
 								{row.profit_amount === 0

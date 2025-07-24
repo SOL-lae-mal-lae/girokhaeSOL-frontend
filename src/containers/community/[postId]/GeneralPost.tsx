@@ -5,6 +5,7 @@ import { FC } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 
 import { useUser } from '@clerk/nextjs';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Send, Share2, User, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -23,12 +24,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { LoadingSpinner } from '@/components/ui/spinner';
 import {
 	deleteCommunityPost,
 	getCommunityPost,
 } from '@/services/community-all-post';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { LoadingSpinner } from '@/components/ui/spinner';
 
 const GeneralPost: FC = () => {
 	const router = useRouter();

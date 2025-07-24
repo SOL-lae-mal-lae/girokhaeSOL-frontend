@@ -1,16 +1,17 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
+import { useQuery } from '@tanstack/react-query';
 import { MessageCircle, Share2 } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LoadingSpinner } from '@/components/ui/spinner';
 import {
 	getCommunityGeneralPost,
 	getCommunityTradeLogPost,
 	getCommunityAllPost,
 } from '@/services/community-all-post';
-import { useQuery } from '@tanstack/react-query';
-import { LoadingSpinner } from '@/components/ui/spinner';
-import { useRouter } from 'next/navigation';
 
 type PostType = 'all' | 'general' | 'trade-log';
 
