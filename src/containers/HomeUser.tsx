@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 
 import { InfoCard, LinkCard } from '@/components/cards';
+import SummaryError from '@/components/error/Summary';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import { homeUserAnimation } from '@/lib/gsap/homeUserAnimation';
@@ -32,7 +33,12 @@ const HomeUser: FC<Props> = ({ userName }) => {
 	const todayFormatted = format(today, 'yyyyMMdd', { locale: ko });
 	const oneYearAgoFormatted = format(oneYearAgo, 'yyyyMMdd', { locale: ko });
 
-	const { data: userSummary, isLoading } = useQuery({
+	const {
+		data: userSummary,
+		isLoading,
+		isSuccess,
+		refetch,
+	} = useQuery({
 		queryKey: ['userSummary'],
 		queryFn: () =>
 			getYearSummary({
@@ -45,6 +51,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 	const linkCardsRef = useRef<HTMLUListElement>(null);
 
 	useEffect(() => {
+		if (!isSuccess) return;
 		if (!titleRef.current || !infoCardsRef.current || !linkCardsRef.current)
 			return;
 		if (!userSummary) return;
@@ -61,7 +68,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 				button.removeEventListener('mouseleave', () => {});
 			});
 		};
-	}, [userSummary]);
+	}, [userSummary, isSuccess]);
 
 	if (isLoading) {
 		return (
@@ -70,6 +77,11 @@ const HomeUser: FC<Props> = ({ userName }) => {
 			</div>
 		);
 	}
+
+	if (!userSummary) {
+		return <SummaryError refetchSummary={() => refetch()} />;
+	}
+
 	return (
 		<>
 			<p
