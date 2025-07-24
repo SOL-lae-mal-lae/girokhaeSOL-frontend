@@ -2,9 +2,10 @@ import { FC } from 'react';
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical } from 'lucide-react';
+import { GripVertical, X } from 'lucide-react';
 
 import DatePicker from '@/components/custom/DatePicker';
+import { useCreateTradeLog } from '@/hooks/useCreateTradeLog';
 
 interface Props {
 	code: string;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const StockDayPickerCard: FC<Props> = ({ code, name }) => {
+	const { filterTodayTradeCompanyList } = useCreateTradeLog();
 	const {
 		attributes,
 		listeners,
@@ -45,12 +47,19 @@ const StockDayPickerCard: FC<Props> = ({ code, name }) => {
 
 				{/* 종목 정보 */}
 				<div className="flex items-start justify-between flex-1">
-					<span className="font-semibold text-sm leading-tight line-clamp-2 flex-1 mr-2">
-						{name}
-					</span>
-					<span className="text-xs text-gray-500 flex-shrink-0">
-						{code}
-					</span>
+					<div className="flex flex-col gap-0.5">
+						<span className="font-semibold text-sm leading-tight line-clamp-2 flex-1 mr-2">
+							{name}
+						</span>
+						<span className="text-xs text-gray-500 flex-shrink-0">
+							{code}
+						</span>
+					</div>
+					<X
+						size={16}
+						onClick={() => filterTodayTradeCompanyList(code)}
+						className="text-gray-400 hover:text-red-500 cursor-pointer"
+					/>
 				</div>
 			</div>
 			<div className="mt-auto">
