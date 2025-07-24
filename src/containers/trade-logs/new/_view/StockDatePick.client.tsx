@@ -15,9 +15,11 @@ import {
 	SortableContext,
 	rectSortingStrategy,
 } from '@dnd-kit/sortable';
+import { RefreshCcw } from 'lucide-react';
 
 import StockDayPickerCard from '@/components/cards/StockDayPicker';
 import HelpTooltip from '@/components/custom/HelpTooltip';
+import { Button } from '@/components/ui/button';
 import { useCreateTradeLog } from '@/hooks/useCreateTradeLog';
 
 interface Props {
@@ -25,8 +27,11 @@ interface Props {
 }
 
 const StockDatePicker: FC<Props> = ({ selectedAccount }) => {
-	const { todayTradeCompanyList, onReorderTodayTradeCompanyList } =
-		useCreateTradeLog();
+	const {
+		todayTradeCompanyList,
+		onReorderTodayTradeCompanyList,
+		onResetTodayTradeCompanyList,
+	} = useCreateTradeLog();
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -53,11 +58,27 @@ const StockDatePicker: FC<Props> = ({ selectedAccount }) => {
 		}
 	};
 
+	const handleResetTodayTradeCompanyList = () => {
+		onResetTodayTradeCompanyList();
+	};
+
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="flex items-center gap-1">
-				<h1 className="text-heading3 font-bold">거래 기록 날짜 선택</h1>
-				<HelpTooltip text="순서를 지정하고 시작일을 선택하면 매매일지에 차트가 생성됩니다." />
+			<div className="flex items-center justify-between">
+				<div className="flex items-center gap-2">
+					<h1 className="text-heading3 font-bold">
+						거래 기록 날짜 선택
+					</h1>
+					<HelpTooltip text="순서를 지정하고 시작일을 선택하면 매매일지에 차트가 생성됩니다." />
+				</div>
+				<Button
+					className="cursor-pointer !bg-brand-white rounded-full hover:!bg-brand-shinhan-blue hover:text-brand-white"
+					variant="outline"
+					size="icon"
+					onClick={handleResetTodayTradeCompanyList}
+				>
+					<RefreshCcw />
+				</Button>
 			</div>
 			<DndContext
 				sensors={sensors}
