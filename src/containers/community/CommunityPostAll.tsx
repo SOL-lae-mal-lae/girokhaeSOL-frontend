@@ -56,7 +56,7 @@ export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
 				data.map((post) => (
 					<Card
 						key={post.id}
-						className="hover:shadow-md transition-shadow cursor-pointer"
+						className="hover:shadow-md transition-shadow cursor-pointer p-6"
 						onClick={() => handleCardClick(post.id)}
 					>
 						<CardHeader className="pb-3">
