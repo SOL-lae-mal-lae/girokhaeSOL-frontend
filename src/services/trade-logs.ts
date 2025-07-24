@@ -5,6 +5,7 @@ import {
 	TradeLogAIResult,
 	TradeLogMonthData,
 	TradeLogTransactionData,
+	TradeLogById,
 } from '@/@types/tradeLogs';
 import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 import { HOUR_IN_SECOND } from '@/constants/time';
@@ -106,6 +107,36 @@ export const getAiEvaluation = async (date: string) => {
 			throw new Error('Failed to fetch ai evaluation');
 		}
 		const data: Response<AIEvaluationResult> = await res.json();
+
+		return data.data;
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+};
+
+export const getTradeLogById = async (
+	user_id: string,
+	trade_log_id: number
+) => {
+	try {
+		const res = await fetch(
+			`${CLIENT_HOST_FOR_CLIENT}/api/v1/trade-logs/byid`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					user_id: user_id,
+					trade_log_id: trade_log_id,
+				}),
+			}
+		);
+		if (!res.ok) {
+			throw new Error('post_id 기반 매매일지 조회 실패');
+		}
+		const data: Response<TradeLogById> = await res.json();
 
 		return data.data;
 	} catch (error) {
