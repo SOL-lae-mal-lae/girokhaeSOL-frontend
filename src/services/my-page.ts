@@ -1,9 +1,9 @@
-import { Comment } from '@/@types/comment';
-import { Post } from '@/@types/post';
+import { myPageComments } from '@/@types/comments';
+import { myPagePosts } from '@/@types/posts';
 import { User } from '@/@types/user';
 import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 
-export const fetchUserComments = async (): Promise<Comment[]> => {
+export const fetchUserComments = async (): Promise<myPageComments[]> => {
 	try {
 		const res = await fetch(
 			`${CLIENT_HOST_FOR_CLIENT}/api/v1/my-page/comments`
@@ -17,11 +17,11 @@ export const fetchUserComments = async (): Promise<Comment[]> => {
 
 		// Ensure data.comments is always an array
 		const mappedComments = (data.data.comments || []).map(
-			(comment: Comment) => ({
+			(comment: myPageComments) => ({
 				id: comment.id,
 				content: comment.content,
 				userId: comment.user_id,
-				createdAt: comment.created_at,
+				created_at: comment.created_at, // string 그대로 사용
 			})
 		);
 
@@ -32,7 +32,7 @@ export const fetchUserComments = async (): Promise<Comment[]> => {
 	}
 };
 
-export const fetchCurrentUserPosts = async (): Promise<Post[]> => {
+export const fetchCurrentUserPosts = async (): Promise<myPagePosts[]> => {
 	try {
 		const res = await fetch(
 			`${CLIENT_HOST_FOR_CLIENT}/api/v1/my-page/posts`
@@ -44,17 +44,16 @@ export const fetchCurrentUserPosts = async (): Promise<Post[]> => {
 
 		const data = await res.json();
 
-		// Ensure data.posts is always an array
-		const mappedPosts = (data.data.posts || []).map((post: Post) => ({
-			id: post.id,
-			title: post.title,
-			content: post.content,
-			isPublic: post.is_public,
-			postType: post.post_type,
-			userId: post.user_id,
-			createdAt: post.created_at,
-		}));
-
+		const mappedPosts = (data.data.posts || []).map(
+			(post: myPagePosts) => ({
+				title: post.title,
+				content: post.content,
+				isPublic: post.is_public, // boolean 타입 유지
+				postType: post.post_type, // string으로 매핑
+				userId: post.user_id, // string으로 매핑
+				created_at: post.created_at, // string 그대로 사용
+			})
+		);
 		return mappedPosts;
 	} catch (error) {
 		console.error(error);

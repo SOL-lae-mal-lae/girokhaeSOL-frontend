@@ -1,4 +1,4 @@
-//my-page/my-page-container.tsx
+// //my-page/my-page-container.tsx
 import { redirect } from 'next/navigation';
 
 import { currentUser } from '@clerk/nextjs/server';
@@ -14,12 +14,18 @@ const MyPageContainer = async () => {
 	}
 
 	const email = clientUser.emailAddresses;
+	const profileImage = clientUser.imageUrl;
+	//console.log('clientUser', clientUser);
 	console.log(email[0]?.emailAddress);
+	console.log(profileImage);
 
 	return (
 		<div className="w-full h-full">
 			<div className="w-full max-w-7xl mx-auto px-8 flex flex-col gap-8 mt-8">
-				<UserInfoContainer email={email[0]?.emailAddress} />
+				<UserInfoContainer
+					email={email[0]?.emailAddress}
+					profileImage={profileImage}
+				/>
 				<CommunityInfoContainer />
 			</div>
 		</div>

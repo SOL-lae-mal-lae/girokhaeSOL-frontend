@@ -6,12 +6,14 @@ export interface Post {
 	content: string;
 	trade_log_id: number;
 	is_public: boolean;
+	nickname: string;
 }
 
-export interface Comment {
-	id: number;
-	post_id: number;
-	user_id: string;
-	created_at: Date;
+export interface myPagePosts {
+	title: string;
 	content: string;
+	is_public: boolean;
+	post_type: string; // string으로 정의
+	user_id: string; // string으로 정의
+	created_at: string; // string으로 정의
 }
