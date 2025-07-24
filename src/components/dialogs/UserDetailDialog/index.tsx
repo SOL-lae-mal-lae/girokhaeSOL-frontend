@@ -122,7 +122,10 @@ const UserDetailDialog: FC<Props> = ({ onClose }) => {
 						</FormItem>
 					)}
 				/>
-				<Button className="w-full" type="submit">
+				<Button
+					className="w-full bg-brand-shinhan-blue text-white mt-10 py-2 rounded cursor-pointer hover:bg-brand-navy-blue"
+					type="submit"
+				>
 					제출
 				</Button>
 			</form>
