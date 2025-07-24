@@ -36,19 +36,30 @@ const formSchema = z.object({
 
 type AccountFormData = z.infer<typeof formSchema>;
 
-const AccountRegisterContainerClient = () => {
+interface AccountRegisterContainerClientProps {
+	onClose: () => void;
+}
+
+const AccountRegisterContainerClient = ({
+	onClose,
+}: AccountRegisterContainerClientProps) => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: createAccount,
-		onSuccess: () => {
+		onSuccess: (data) => {
+			if (!data) {
+				toast.error('계좌 연동에 실패했습니다.');
+				return;
+			}
 			toast.success('계좌가 성공적으로 연동되었습니다!');
-			queryClient.invalidateQueries({ queryKey: ['userSummary'] });
+			queryClient.invalidateQueries({
+				queryKey: ['userSummary'],
+			});
+			queryClient.refetchQueries({ queryKey: ['accounts'] });
+			onClose();
 			router.push('/');
-		},
-		onError: () => {
-			toast.error('계좌 연동에 실패했습니다.');
 		},
 	});
 
@@ -78,105 +89,89 @@ const AccountRegisterContainerClient = () => {
 	};
 
 	return (
-		<div className="max-w-2xl mx-auto p-6">
-			<div className="bg-white rounded-lg shadow-lg p-8">
-				<div className="text-center mb-8">
-					<h1 className="text-2xl font-bold text-gray-800 mb-2">
-						계좌 연동
-					</h1>
-					<p className="text-gray-600">
-						키움증권 계좌를 연동하여 투자 현황을 확인해보세요.
-					</p>
-				</div>
-
-				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="space-y-6"
+		<div className="w-full mx-auto p-4">
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="space-y-6"
+				>
+					<FormField
+						control={form.control}
+						name="accountNumber"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className="flex items-center gap-2">
+									<CreditCard className="w-4 h-4" />
+									계좌번호
+								</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										{...form.register('accountNumber', {
+											required: true,
+										})}
+										placeholder="계좌번호를 입력하세요"
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="appKey"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className="flex items-center gap-2">
+									<LockKeyhole className="w-4 h-4" />
+									App Key
+								</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										{...form.register('appKey', {
+											required: true,
+										})}
+										type="password"
+										placeholder="App Key를 입력하세요"
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="securityNumber"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className="flex items-center gap-2">
+									<LockKeyhole className="w-4 h-4" />
+									Secret Key
+								</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										{...form.register('securityNumber', {
+											required: true,
+										})}
+										type="password"
+										placeholder="Secret Key를 입력하세요"
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<Button
+						type="submit"
+						className="w-full bg-brand-shinhan-blue text-white cursor-pointer hover:bg-brand-navy-blue"
+						disabled={isPending}
 					>
-						<FormField
-							control={form.control}
-							name="accountNumber"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="flex items-center gap-2">
-										<CreditCard className="w-4 h-4" />
-										계좌번호
-									</FormLabel>
-									<FormControl>
-										<Input
-											{...field}
-											{...form.register('accountNumber', {
-												required: true,
-											})}
-											placeholder="계좌번호를 입력하세요"
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="appKey"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="flex items-center gap-2">
-										<LockKeyhole className="w-4 h-4" />
-										App Key
-									</FormLabel>
-									<FormControl>
-										<Input
-											{...field}
-											{...form.register('appKey', {
-												required: true,
-											})}
-											type="password"
-											placeholder="App Key를 입력하세요"
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="securityNumber"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="flex items-center gap-2">
-										<LockKeyhole className="w-4 h-4" />
-										Secret Key
-									</FormLabel>
-									<FormControl>
-										<Input
-											{...field}
-											{...form.register(
-												'securityNumber',
-												{
-													required: true,
-												}
-											)}
-											type="password"
-											placeholder="Secret Key를 입력하세요"
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<Button
-							type="submit"
-							className="w-full bg-brand-shinhan-blue text-white cursor-pointer hover:bg-brand-navy-blue"
-							disabled={isPending}
-						>
-							{isPending
-								? '계좌를 연동중입니다...'
-								: '계좌 연동하기'}
-						</Button>
-					</form>
-				</Form>
-			</div>
+						{isPending ? '계좌를 연동중입니다...' : '계좌 연동하기'}
+					</Button>
+				</form>
+			</Form>
 		</div>
 	);
 };

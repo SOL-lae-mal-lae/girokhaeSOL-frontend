@@ -65,7 +65,7 @@ export const fetchAccountList = async (): Promise<Account[] | null> => {
 };
 
 // Set primary account
-export const setPrimaryAccount = async (
+export const changePrimaryAccount = async (
 	accountId: string
 ): Promise<boolean> => {
 	try {

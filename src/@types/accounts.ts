@@ -1,7 +1,7 @@
 export interface Account {
 	account_id: number;
 	account_number: string;
-	isPrimary: boolean; // Indicates if the account is the primary account
+	is_primary: boolean;
 }
 
 export interface AccountListResponse {
