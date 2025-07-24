@@ -3,10 +3,11 @@
 import * as React from 'react';
 import { FC, useState } from 'react';
 
+import { format, subMonths } from 'date-fns';
 import { ChevronDownIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Calendar, CalendarDayButton } from '@/components/ui/calendar';
+import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
 import {
 	Popover,
@@ -14,6 +15,8 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover';
 import { useCreateTradeLog } from '@/hooks/useCreateTradeLog';
+
+import MiniCustomDayButton from './MiniDayButton';
 
 interface Props {
 	id: string;
@@ -24,12 +27,15 @@ const DatePicker: FC<Props> = ({ id, label }) => {
 	const { stockDateRange, onChangeDate } = useCreateTradeLog();
 	const [open, setOpen] = useState(false);
 
+	// 6개월 전 날짜를 기본값으로 설정
+	const defaultDate = subMonths(new Date(), 6);
+
 	const date = stockDateRange[id]?.start_date
 		? new Date(stockDateRange[id]?.start_date)
-		: undefined;
+		: defaultDate;
 
 	return (
-		<div className="flex gap-3 items-center">
+		<div className="flex justify-between items-center">
 			<Label htmlFor={id} className="px-1 cursor-pointer">
 				{label}
 			</Label>
@@ -40,7 +46,7 @@ const DatePicker: FC<Props> = ({ id, label }) => {
 						id={id}
 						className="justify-between font-normal cursor-pointer"
 					>
-						{date ? date.toLocaleDateString() : '날짜 선택'}
+						{date ? format(date, 'yyyy-MM-dd') : '날짜 선택'}
 						<ChevronDownIcon />
 					</Button>
 				</PopoverTrigger>
@@ -60,10 +66,7 @@ const DatePicker: FC<Props> = ({ id, label }) => {
 						}}
 						components={{
 							DayButton: (props) => (
-								<CalendarDayButton
-									{...props}
-									className="cursor-pointer"
-								/>
+								<MiniCustomDayButton {...props} />
 							),
 						}}
 					/>

@@ -5,7 +5,7 @@ import { createContext, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
+import { format, subMonths } from 'date-fns';
 import { toast } from 'sonner';
 
 import { InvestmentType } from '@/@types/investment';
@@ -295,7 +295,7 @@ const CreateTradeLogProvider = ({
 		}
 
 		todayTradeCompanyList.forEach(({ code }) => {
-			const startDate = new Date(date);
+			const startDate = subMonths(new Date(date), 6); // 6개월 전으로 설정
 			const endDate = new Date(date);
 			const startDateString = format(startDate, 'yyyy-MM-dd');
 			const endDateString = format(endDate, 'yyyy-MM-dd');
