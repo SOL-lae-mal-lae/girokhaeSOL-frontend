@@ -12,6 +12,7 @@ export interface CommunityAllPost {
 export interface CommunityPost {
 	post_type: boolean; // true: '일반', false: '매매일지'
 	user_id: string;
+	nickname: string;
 	created_at: Date;
 	title: string;
 	content: string;

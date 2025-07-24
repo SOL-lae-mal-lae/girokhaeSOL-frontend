@@ -1,4 +1,4 @@
-import { CommunityPostLisst } from '@/@types/communityPost';
+import { CommunityPost, CommunityPostLisst } from '@/@types/communityPost';
 import { Response } from '@/@types/response';
 import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 
@@ -74,6 +74,56 @@ export const getCommunityTradeLogPost = async () => {
 		const data: Response<CommunityPostLisst> = await response.json();
 
 		return data.data;
+	} catch (error) {
+		console.error('API 호출 에러:', error);
+		return null;
+	}
+};
+
+export const getCommunityPost = async (postId: string) => {
+	try {
+		const response = await fetch(
+			`${CLIENT_HOST_FOR_CLIENT}/api/v1/community/${postId}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		);
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
+		const data: Response<CommunityPost> = await response.json();
+
+		return data.data;
+	} catch (error) {
+		console.error('API 호출 에러:', error);
+		return null;
+	}
+};
+
+export const deleteCommunityPost = async (postId: string) => {
+	try {
+		const response = await fetch(
+			`${CLIENT_HOST_FOR_CLIENT}/api/v1/community/${postId}`,
+			{
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		);
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
+		const data: Response<{ message: string }> = await response.json();
+
+		return data;
 	} catch (error) {
 		console.error('API 호출 에러:', error);
 		return null;

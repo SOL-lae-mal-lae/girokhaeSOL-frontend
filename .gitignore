@@ -41,6 +41,3 @@ yarn-error.log*
 next-env.d.ts
 
 src/app/fonts/*
-
-# clerk configuration (can include secrets)
-/.clerk/
