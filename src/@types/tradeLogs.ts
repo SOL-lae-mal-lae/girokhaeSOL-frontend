@@ -67,3 +67,18 @@ export interface TradeLogWithCode extends TradeLog {
 		sequence: number;
 	}[];
 }
+
+export interface TradeLogById {
+	date: string;
+	summaries: TradeLogSummary;
+	trade_details: TradeLogTransaction[];
+	rationale: string;
+	evaluation: string;
+	charts: {
+		stock_name: string;
+		stock_code: string;
+		start_date: string;
+		end_date: string;
+		sequence: number;
+	}[];
+}
