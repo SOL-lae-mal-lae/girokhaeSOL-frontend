@@ -1,11 +1,24 @@
+// Frontend/girokhaeSOL-frontend/src/containers/my-page/CommunityInfo.tsx
+
 'use client';
 
 import { useState, useEffect } from 'react';
+
+import { useMutation } from '@tanstack/react-query'; // Import useMutation from react-query
 
 import { Comment } from '@/@types/comment';
 import { Post } from '@/@types/post';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardTitle, CardContent } from '@/components/ui/card';
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+	PaginationEllipsis,
+} from '@/components/ui/pagination';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { fetchCurrentUserPosts, fetchUserComments } from '@/services/my-page';
 
@@ -19,58 +32,57 @@ const CommunityInfoContainer = () => {
 	const [loading, setLoading] = useState(true); // 로딩 상태
 	const [error, setError] = useState<string | null>(null); // 에러 상태
 
+	// Mutation hooks for fetching posts and comments
+	const { mutate: getPosts } = useMutation({
+		mutationFn: fetchCurrentUserPosts,
+		onSuccess: (data) => {
+			if (data) setPosts(data);
+			setLoading(false);
+		},
+		onError: () => {
+			setError('데이터를 불러오는 데 문제가 발생했습니다.');
+			setLoading(false);
+		},
+	});
+
+	const { mutate: getComments } = useMutation({
+		mutationFn: fetchUserComments,
+		onSuccess: (data) => {
+			if (data) setComments(data);
+			setLoading(false);
+		},
+		onError: () => {
+			setError('데이터를 불러오는 데 문제가 발생했습니다.');
+			setLoading(false);
+		},
+	});
+
+	useEffect(() => {
+		setLoading(true);
+		setError(null);
+
+		// Fetch data using mutate instead of useEffect directly
+		getPosts();
+		getComments();
+	}, [getPosts, getComments]);
+
+	// 게시글 페이지네이션 처리
 	const paginatedPosts = posts.slice(
 		(postPage - 1) * ITEMS_PER_PAGE,
 		postPage * ITEMS_PER_PAGE
 	);
+
+	// 댓글 페이지네이션 처리
 	const paginatedComments = comments.slice(
 		(commentPage - 1) * ITEMS_PER_PAGE,
 		commentPage * ITEMS_PER_PAGE
 	);
 
-	const totalPostPages = Math.max(
-		1,
-		Math.ceil(posts.length / ITEMS_PER_PAGE)
-	);
-	const totalCommentPages = Math.max(
-		1,
-		Math.ceil(comments.length / ITEMS_PER_PAGE)
-	);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			setLoading(true);
-			setError(null);
-
-			try {
-				const postResponse = await fetchCurrentUserPosts();
-				if (postResponse) {
-					setPosts(postResponse);
-				} else {
-					setPosts([]);
-				}
-
-				const commentResponse = await fetchUserComments();
-				if (commentResponse) {
-					setComments(commentResponse);
-				} else {
-					setComments([]);
-				}
-			} catch (err) {
-				console.error('Failed to fetch data:', err);
-				setError('데이터를 불러오는 데 문제가 발생했습니다.');
-				setPosts([]);
-				setComments([]);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchData();
-	}, []);
+	const totalPostPages = Math.ceil(posts.length / ITEMS_PER_PAGE);
+	const totalCommentPages = Math.ceil(comments.length / ITEMS_PER_PAGE);
 
 	return (
-		<div className="w-full max-w-7xl mx-auto px-8 flex flex-col gap-8 mt-8">
+		<div>
 			{/* 타이틀 */}
 			<div className="flex flex-col gap-1 mb-2">
 				<h2 className="text-2xl font-bold">활동 내역</h2>
@@ -114,7 +126,7 @@ const CommunityInfoContainer = () => {
 												{post.title}
 											</span>
 											<Badge variant="secondary">
-												{post.postType
+												{post.post_type
 													? '매매일지'
 													: '일반'}
 											</Badge>
@@ -122,10 +134,8 @@ const CommunityInfoContainer = () => {
 										<CardContent className="flex flex-col gap-1 px-0 pb-0">
 											<div className="flex items-center gap-4 text-sm text-muted-foreground">
 												<span>
-													{post.createdAt.slice(
-														0,
-														10
-													)}
+													{post.created_at ||
+														'날짜 없음'}
 												</span>
 											</div>
 										</CardContent>
@@ -134,32 +144,38 @@ const CommunityInfoContainer = () => {
 							))
 						)}
 					</div>
+
 					{/* Pagination for posts */}
-					<div className="flex justify-center mt-4">
-						<button
-							className="px-3 py-1 border rounded disabled:opacity-50"
-							onClick={() =>
-								setPostPage((p) => Math.max(1, p - 1))
-							}
-							disabled={postPage === 1}
-						>
-							이전
-						</button>
-						<span className="mx-2">
-							{postPage} / {totalPostPages}
-						</span>
-						<button
-							className="px-3 py-1 border rounded disabled:opacity-50"
-							onClick={() =>
-								setPostPage((p) =>
-									Math.min(totalPostPages, p + 1)
-								)
-							}
-							disabled={postPage === totalPostPages}
-						>
-							다음
-						</button>
-					</div>
+					<Pagination>
+						<PaginationContent>
+							<PaginationItem>
+								<PaginationPrevious
+									onClick={() =>
+										setPostPage((prev) =>
+											Math.max(1, prev - 1)
+										)
+									}
+								/>
+							</PaginationItem>
+							<PaginationItem>
+								<PaginationLink href="#">
+									{postPage}
+								</PaginationLink>
+							</PaginationItem>
+							<PaginationItem>
+								<PaginationEllipsis />
+							</PaginationItem>
+							<PaginationItem>
+								<PaginationNext
+									onClick={() =>
+										setPostPage((prev) =>
+											Math.min(totalPostPages, prev + 1)
+										)
+									}
+								/>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
 				</TabsContent>
 
 				{/* 댓글 */}
@@ -182,10 +198,7 @@ const CommunityInfoContainer = () => {
 										<CardContent className="flex flex-col gap-1 px-0 pb-0">
 											<div className="flex items-center gap-4 text-sm text-muted-foreground">
 												<span>
-													{comment.createdAt.slice(
-														0,
-														10
-													)}
+													{comment.created_at}
 												</span>
 											</div>
 										</CardContent>
@@ -194,32 +207,41 @@ const CommunityInfoContainer = () => {
 							))
 						)}
 					</div>
+
 					{/* Pagination for comments */}
-					<div className="flex justify-center mt-4">
-						<button
-							className="px-3 py-1 border rounded disabled:opacity-50"
-							onClick={() =>
-								setCommentPage((p) => Math.max(1, p - 1))
-							}
-							disabled={commentPage === 1}
-						>
-							이전
-						</button>
-						<span className="mx-2">
-							{commentPage} / {totalCommentPages}
-						</span>
-						<button
-							className="px-3 py-1 border rounded disabled:opacity-50"
-							onClick={() =>
-								setCommentPage((p) =>
-									Math.min(totalCommentPages, p + 1)
-								)
-							}
-							disabled={commentPage === totalCommentPages}
-						>
-							다음
-						</button>
-					</div>
+					<Pagination>
+						<PaginationContent>
+							<PaginationItem>
+								<PaginationPrevious
+									onClick={() =>
+										setCommentPage((prev) =>
+											Math.max(1, prev - 1)
+										)
+									}
+								/>
+							</PaginationItem>
+							<PaginationItem>
+								<PaginationLink href="#">
+									{commentPage}
+								</PaginationLink>
+							</PaginationItem>
+							<PaginationItem>
+								<PaginationEllipsis />
+							</PaginationItem>
+							<PaginationItem>
+								<PaginationNext
+									onClick={() =>
+										setCommentPage((prev) =>
+											Math.min(
+												totalCommentPages,
+												prev + 1
+											)
+										)
+									}
+								/>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
 				</TabsContent>
 			</Tabs>
 		</div>

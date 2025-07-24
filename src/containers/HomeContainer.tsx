@@ -8,7 +8,7 @@ import HomeUser from './HomeUser';
 
 const HomeContainer = async () => {
 	const clientUser = await currentUser();
-
+	console.log('clientUser', clientUser);
 	if (!clientUser) {
 		return <HomeGeneral />;
 	}

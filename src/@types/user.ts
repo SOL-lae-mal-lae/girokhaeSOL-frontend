@@ -3,6 +3,10 @@ export interface User {
 	nickname: string;
 	age: number;
 	gender: string;
+	email: string | null;
+	postsCount: number;
+	commentsCount: number;
+	profileImage: string | null;
 }
 
 export interface UserSummary {
