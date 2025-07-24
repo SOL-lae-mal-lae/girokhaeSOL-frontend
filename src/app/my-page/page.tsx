@@ -1,1 +1,1 @@
-export { default } from '@/containers/my-page/CommunityInfo';
+export { default } from '@/containers/my-page/MyPageContainer';
