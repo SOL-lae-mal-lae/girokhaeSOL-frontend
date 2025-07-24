@@ -6,7 +6,7 @@ export const getFinancialStatements = async (
 ): Promise<FinancialStatementData | null> => {
 	try {
 		const res = await fetch(
-			`${CLIENT_HOST_FOR_CLIENT}/api/v1/financial-statements/?stock_code=${stk_cd}`
+			`${CLIENT_HOST_FOR_CLIENT}/api/v1/financial-statements?stock_code=${stk_cd}`
 		);
 		if (!res.ok) {
 			return null;
