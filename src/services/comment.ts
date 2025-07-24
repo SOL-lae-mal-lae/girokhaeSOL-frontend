@@ -1,3 +1,4 @@
+import { Comments } from '@/@types/comments';
 import { Response } from '@/@types/response';
 import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 
@@ -43,7 +44,7 @@ export const getComments = async (postId: string) => {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
 
-		const data: Response<Comment[]> = await response.json();
+		const data: Response<Comments[]> = await response.json();
 
 		return data.data;
 	} catch (error) {

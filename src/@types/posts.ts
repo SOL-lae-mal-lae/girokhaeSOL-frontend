@@ -7,11 +7,3 @@ export interface Post {
 	trade_log_id: number;
 	is_public: boolean;
 }
-
-export interface Comment {
-	id: number;
-	post_id: number;
-	user_id: string;
-	created_at: Date;
-	content: string;
-}
