@@ -26,9 +26,11 @@ interface Props {
 		end_date: string;
 		sequence: number;
 	}[];
+
+	chartWidth?: number;
 }
 
-const StockChart: FC<Props> = ({ stockChartList }) => {
+const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 	const chartContainerRef = useRef<{
 		[key: string]: HTMLDivElement | null;
 	}>({});
@@ -178,7 +180,7 @@ const StockChart: FC<Props> = ({ stockChartList }) => {
 		const chart = createChart(
 			chartContainerRef.current[selectedStockCode.stock_code]!,
 			{
-				width: 700,
+				width: chartWidth || 700,
 				height: 352,
 				localization: {
 					priceFormatter: myPriceFormatter,
