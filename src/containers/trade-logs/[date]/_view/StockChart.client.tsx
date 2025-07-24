@@ -357,22 +357,32 @@ const StockChart: FC<Props> = ({ stockChartList }) => {
 			bollingerLower: [],
 		};
 
-		const bollingerData = data.map((item) => {
-			const middle = Number(item.middle_band);
-			const upper = Number(item.upper_band);
-			const lower = Number(item.lower_band);
-			return {
-				time:
-					item.dt.substring(0, 4) +
-					'-' +
-					item.dt.substring(4, 6) +
-					'-' +
-					item.dt.substring(6, 8),
-				upper,
-				middle,
-				lower,
-			};
-		});
+		const bollingerData = data
+			.map((item) => {
+				if (item.middle_band && item.upper_band && item.lower_band) {
+					const middle = Number(item.middle_band);
+					const upper = Number(item.upper_band);
+					const lower = Number(item.lower_band);
+					return {
+						time:
+							item.dt.substring(0, 4) +
+							'-' +
+							item.dt.substring(4, 6) +
+							'-' +
+							item.dt.substring(6, 8),
+						upper,
+						middle,
+						lower,
+					};
+				}
+				return null;
+			})
+			.filter((item) => item) as {
+			time: string;
+			upper: number;
+			middle: number;
+			lower: number;
+		}[];
 
 		bollingerUpper.setData(
 			showBollingerBands
@@ -406,7 +416,7 @@ const StockChart: FC<Props> = ({ stockChartList }) => {
 				time: d.time,
 				value: d.lower,
 			}));
-
+		console.log(bollingerData);
 		chart.timeScale().setVisibleRange({
 			from: selectedStockCode.start_date,
 			to: selectedStockCode.end_date,
