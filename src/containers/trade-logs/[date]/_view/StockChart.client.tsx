@@ -416,7 +416,7 @@ const StockChart: FC<Props> = ({ stockChartList }) => {
 				time: d.time,
 				value: d.lower,
 			}));
-		console.log(bollingerData);
+
 		chart.timeScale().setVisibleRange({
 			from: selectedStockCode.start_date,
 			to: selectedStockCode.end_date,

@@ -2,27 +2,21 @@
 
 import { useEffect, useRef } from 'react';
 
-import { format } from 'date-fns/format';
 import { DayButton, getDefaultClassNames } from 'react-day-picker';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const CustomDayButton = ({
+const MiniCustomDayButton = ({
 	className,
 	day,
 	modifiers,
-	dates,
 	...props
-}: React.ComponentProps<typeof DayButton> & { dates: string[] }) => {
+}: React.ComponentProps<typeof DayButton>) => {
 	const { onClick, ...restProps } = props;
 	const defaultClassNames = getDefaultClassNames();
 
 	const ref = useRef<HTMLButtonElement>(null);
-
-	// 날짜가 dates 배열에 있는지 확인
-	const dateString = format(day.date, 'yyyy-MM-dd');
-	const hasTradeLog = dates.includes(dateString);
 
 	// 오늘 이후 날짜는 비활성화
 	const today = new Date();
@@ -60,26 +54,15 @@ const CustomDayButton = ({
 					'bg-gray-100/90 pointer-events-none select-none cursor-default hover:bg-gray-100/90 focus:bg-gray-100/90 focus:ring-0',
 				isToday &&
 					!isFuture &&
-					'box-border bg-brand-white border-3 border-brand-shinhan-blue',
+					'box-border bg-brand-white border-3 border-brand-shinhan-blue hover:bg-brand-shinhan-blue hover:text-brand-white focus:bg-brand-shinhan-blue focus:text-brand-white',
 				!isFuture && 'cursor-pointer'
 			)}
 			{...(isFuture ? {} : { onClick })}
 			{...restProps}
 		>
-			{/* 날짜 숫자를 원으로 감싸고, 인디케이터가 있으면 색상 변경 */}
-			<div
-				className={cn(
-					'absolute top-1 left-1 flex items-center justify-center w-7 h-7 rounded-full text-sm font-medium transition-colors',
-					hasTradeLog
-						? 'bg-brand-shinhan-blue text-brand-white border-1 border-brand-white'
-						: 'bg-transparent text-inherit',
-					isToday && 'top-[1px] left-[1px]'
-				)}
-			>
-				{day.date.getDate()}
-			</div>
+			{day.date.getDate()}
 		</Button>
 	);
 };
 
-export default CustomDayButton;
+export default MiniCustomDayButton;
