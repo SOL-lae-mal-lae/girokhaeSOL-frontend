@@ -26,9 +26,23 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import {
+	Table,
+	TableHeader,
+	TableBody,
+	TableRow,
+	TableHead,
+	TableCell,
+} from '@/components/ui/table';
+import {
+	TradeDetailTable,
+	TradeSummary,
+} from '@/containers/trade-logs/[date]/_view';
+import StockChart from '@/containers/trade-logs/[date]/_view/StockChart.client';
+import {
 	deleteCommunityPost,
 	getCommunityPost,
 } from '@/services/community-all-post';
+import { getTradeLogById } from '@/services/trade-logs';
 
 const GeneralPost: FC = () => {
 	const router = useRouter();
@@ -38,6 +52,13 @@ const GeneralPost: FC = () => {
 	const { data, isLoading } = useQuery({
 		queryKey: ['community-post', postId],
 		queryFn: () => getCommunityPost(postId),
+	});
+
+	// post_type이 true일 때만 매매일지 useQuery 활성화
+	const { data: tradeLog, isLoading: isLogLoading } = useQuery({
+		queryKey: ['trade-log', data?.trade_log_id],
+		queryFn: () => getTradeLogById(data!.user_id, data!.trade_log_id),
+		enabled: !!data && data.post_type, // post_type이 true일 때만 fetch
 	});
 
 	const { mutate: deletePost, isPending: isDeleting } = useMutation({
@@ -102,93 +123,239 @@ const GeneralPost: FC = () => {
 
 			{/* 게시글 내용 */}
 			<div className="flex-1 p-4">
-				<Card className="mb-6">
-					<CardContent className="p-6">
-						{/* 작성자 정보 */}
-						<div className="flex items-center justify-between">
-							<div className="flex items-center gap-3 mb-4">
-								<div
-									className={`w-10 h-10 rounded-full flex items-center justify-center border border-black`}
-								>
-									<User size={20} className="text-black" />
+				{data?.post_type ? (
+					<Card className="mb-6">
+						<CardContent className="p-6">
+							{/* 작성자 정보 */}
+							<div className="flex items-center justify-between">
+								<div className="flex items-center gap-3 mb-4">
+									<div
+										className={`w-10 h-10 rounded-full flex items-center justify-center border border-black`}
+									>
+										<User
+											size={20}
+											className="text-black"
+										/>
+									</div>
+									<div className="flex flex-col">
+										<span className="font-medium text-gray-900">
+											{data?.nickname}
+										</span>
+										<span className="text-sm text-gray-500">
+											{/* {post?.created_at.toLocaleString()} */}
+											{data?.created_at &&
+												new Date(
+													data.created_at
+												).toLocaleString('ko-KR', {
+													year: 'numeric',
+													month: '2-digit',
+													day: '2-digit',
+													hour: '2-digit',
+													minute: '2-digit',
+													hour12: false,
+												})}
+										</span>
+									</div>
 								</div>
-								<div className="flex flex-col">
-									<span className="font-medium text-gray-900">
-										{data?.nickname}
-									</span>
-									<span className="text-sm text-gray-500">
-										{/* {post?.created_at.toLocaleString()} */}
-										{data?.created_at &&
-											new Date(
-												data.created_at
-											).toLocaleString('ko-KR', {
-												year: 'numeric',
-												month: '2-digit',
-												day: '2-digit',
-												hour: '2-digit',
-												minute: '2-digit',
-												hour12: false,
-											})}
-									</span>
-								</div>
-							</div>
-							{/* 본인이 작성한 글에만 삭제 버튼 표시 */}
-							{user && user.id === data?.user_id && (
-								<div>
-									<AlertDialog>
-										<AlertDialogTrigger asChild>
-											<Button
-												variant="destructive"
-												size="sm"
-												disabled={isDeleting}
-												className="flex items-center gap-2 cursor-pointer bg-brand-shinhan-blue"
-											>
-												<Trash2 size={16} />
-												{isDeleting
-													? '삭제 중...'
-													: '삭제'}
-											</Button>
-										</AlertDialogTrigger>
-										<AlertDialogContent>
-											<AlertDialogHeader>
-												<AlertDialogTitle>
-													게시글 삭제
-												</AlertDialogTitle>
-												<AlertDialogDescription>
-													정말로 이 게시글을
-													삭제하시겠습니까?
-												</AlertDialogDescription>
-											</AlertDialogHeader>
-											<AlertDialogFooter>
-												<AlertDialogCancel>
-													취소
-												</AlertDialogCancel>
-												<AlertDialogAction
-													onClick={() => deletePost()}
-													className="bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue"
+								{/* 본인이 작성한 글에만 삭제 버튼 표시 */}
+								{user && user.id === data?.user_id && (
+									<div>
+										<AlertDialog>
+											<AlertDialogTrigger asChild>
+												<Button
+													variant="destructive"
+													size="sm"
+													disabled={isDeleting}
+													className="flex items-center gap-2 cursor-pointer bg-brand-shinhan-blue"
 												>
-													삭제
-												</AlertDialogAction>
-											</AlertDialogFooter>
-										</AlertDialogContent>
-									</AlertDialog>
-								</div>
-							)}
-						</div>
+													<Trash2 size={16} />
+													{isDeleting
+														? '삭제 중...'
+														: '삭제'}
+												</Button>
+											</AlertDialogTrigger>
+											<AlertDialogContent>
+												<AlertDialogHeader>
+													<AlertDialogTitle>
+														게시글 삭제
+													</AlertDialogTitle>
+													<AlertDialogDescription>
+														정말로 이 게시글을
+														삭제하시겠습니까?
+													</AlertDialogDescription>
+												</AlertDialogHeader>
+												<AlertDialogFooter>
+													<AlertDialogCancel>
+														취소
+													</AlertDialogCancel>
+													<AlertDialogAction
+														onClick={() =>
+															deletePost()
+														}
+														className="bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue"
+													>
+														삭제
+													</AlertDialogAction>
+												</AlertDialogFooter>
+											</AlertDialogContent>
+										</AlertDialog>
+									</div>
+								)}
+							</div>
+							<Card className="flex flex-row gap-2">
+								{!tradeLog && isLogLoading ? (
+									<div className="flex justify-center items-center h-full">
+										<LoadingSpinner text="매매일지를 불러오는 중..." />
+									</div>
+								) : (
+									tradeLog && (
+										<CardContent>
+											<StockChart
+												stockChartList={tradeLog.charts}
+											/>
+											{data?.is_public
+												? tradeLog.summaries && (
+														<div>
+															<TradeSummary
+																summaries={
+																	tradeLog.summaries
+																}
+															/>
+															{tradeLog.trade_details && (
+																<TradeDetailTable
+																	getFinanceData={() => {}}
+																	tradeDetails={
+																		tradeLog.trade_details
+																	}
+																/>
+															)}
+														</div>
+													)
+												: tradeLog.trade_details && (
+														<div>
+															<Table>
+																<TableHeader>
+																	<TableRow>
+																		<TableHead>
+																			종목명
+																		</TableHead>
+																		<TableHead>
+																			매수
+																			평균가
+																		</TableHead>
+																		<TableHead>
+																			매도
+																			평균가
+																		</TableHead>
+																		<TableHead>
+																			수익률
+																		</TableHead>
+																	</TableRow>
+																</TableHeader>
+																<TableBody>
+																	{tradeLog.trade_details.map(
+																		(
+																			row
+																		) => (
+																			<TableRow
+																				className="text-left"
+																				key={
+																					row.stock_code
+																				}
+																			>
+																				<TableCell>
+																					{
+																						row.stock_name
+																					}
+																				</TableCell>
+																				<TableCell>
+																					{row.avg_buy_price ===
+																					0 ? (
+																						<span className="text-muted-foreground">
+																							-
+																						</span>
+																					) : (
+																						row.avg_buy_price.toLocaleString()
+																					)}
+																				</TableCell>
+																				<TableCell>
+																					{row.avg_sell_price ===
+																					0 ? (
+																						<span className="text-muted-foreground">
+																							-
+																						</span>
+																					) : (
+																						row.avg_sell_price.toLocaleString()
+																					)}
+																				</TableCell>
+																				<TableCell
+																					className={
+																						row.profit_rate ===
+																						0
+																							? 'text-muted-foreground'
+																							: row.profit_rate >
+																								  0
+																								? 'text-red-500'
+																								: 'text-blue-500'
+																					}
+																				>
+																					{row.profit_rate ===
+																					0 ? (
+																						'-'
+																					) : (
+																						<>
+																							{row.profit_rate >
+																							0
+																								? '+'
+																								: ''}
+																							{
+																								row.profit_rate
+																							}
 
-						{/* 게시글 내용 */}
-						<div className="mb-6">
-							{data?.content.split('\n').map((line, index) => (
-								<p
-									key={index}
-									className="text-gray-700 leading-relaxed mb-2"
-								>
-									{line}
-								</p>
-							))}
-						</div>
-					</CardContent>
-				</Card>
+																							%
+																						</>
+																					)}
+																				</TableCell>
+																			</TableRow>
+																		)
+																	)}
+																</TableBody>
+															</Table>
+														</div>
+													)}
+										</CardContent>
+									)
+								)}
+							</Card>
+
+							{/* 게시글 내용 */}
+							<div className="mb-6">
+								{data?.content
+									.split('\n')
+									.map((line, index) => (
+										<p
+											key={index}
+											className="text-gray-700 leading-relaxed mb-2"
+										>
+											{line}
+										</p>
+									))}
+							</div>
+						</CardContent>
+					</Card>
+				) : (
+					// post_type이 false일 때: content만 출력
+					<div className="mb-6">
+						{data?.content.split('\n').map((line, index) => (
+							<p
+								key={index}
+								className="text-gray-700 leading-relaxed mb-2"
+							>
+								{line}
+							</p>
+						))}
+					</div>
+				)}
 
 				{/* 댓글 섹션 */}
 				<div className="space-y-4">
