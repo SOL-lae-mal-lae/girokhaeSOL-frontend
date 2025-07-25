@@ -16,6 +16,7 @@ interface Props {
 	icon: React.ReactNode;
 	index: number;
 	fontColor?: 'black' | 'red' | 'blue';
+	isCommunity?: boolean;
 }
 
 const InfoCard: FC<Props> = ({
@@ -24,6 +25,7 @@ const InfoCard: FC<Props> = ({
 	icon,
 	index = 0,
 	fontColor = 'black',
+	isCommunity = false,
 }) => {
 	const fontColorClass = {
 		black: 'text-brand-black',
@@ -32,7 +34,11 @@ const InfoCard: FC<Props> = ({
 	};
 
 	return (
-		<Card className="w-auto h-[200px] flex flex-col items-center justify-center">
+		<Card
+			className={`w-auto h-[200px] flex flex-col items-center justify-center ${
+				isCommunity ? 'shadow-none' : ''
+			}`}
+		>
 			<div
 				className={`flex items-center justify-center w-[46px] h-[46px] rounded-xl ${ICON_BG_COLOR_LIST[index]}`}
 			>
