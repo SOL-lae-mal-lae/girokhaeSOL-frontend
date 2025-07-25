@@ -10,9 +10,7 @@ interface MarkdownViewerProps {
 export const MarkdownViewer: FC<MarkdownViewerProps> = ({ markdown }) => {
 	return (
 		<div className="p-8[&>ul>li]:text-sub1">
-			<ReactMarkdown remarkPlugins={[remarkGfm]}>
-				{markdown}
-			</ReactMarkdown>
+			<ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
 		</div>
 	);
 };

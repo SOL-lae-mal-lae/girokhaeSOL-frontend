@@ -74,16 +74,10 @@ const AsideCard: FC<Props> = ({
 										<Badge
 											key={i}
 											className={
-												SENTIMENTS_COLORS[
-													s as keyof typeof SENTIMENTS
-												] || ''
+												SENTIMENTS_COLORS[s as keyof typeof SENTIMENTS] || ''
 											}
 										>
-											{
-												SENTIMENTS[
-													s as keyof typeof SENTIMENTS
-												]
-											}
+											{SENTIMENTS[s as keyof typeof SENTIMENTS]}
 										</Badge>
 									))}
 								</div>
@@ -93,9 +87,7 @@ const AsideCard: FC<Props> = ({
 				</div>
 				<Separator />
 				<div className="flex flex-col">
-					<div className="font-semibold mb-2 text-base">
-						상위 3개 매수 종목
-					</div>
+					<div className="font-semibold mb-2 text-base">상위 3개 매수 종목</div>
 					<ul className="border rounded divide-y bg-white">
 						{topBuy.map((item) => (
 							<li

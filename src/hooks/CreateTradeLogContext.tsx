@@ -117,10 +117,7 @@ const CreateTradeLogProvider = ({
 	const todayTradeCompanyRef = useRef<Stock[]>([]);
 
 	const handleSetTodayTradeCompanyList = (stocks: Stock[]) => {
-		todayTradeCompanyRef.current = [
-			...todayTradeCompanyRef.current,
-			...stocks,
-		];
+		todayTradeCompanyRef.current = [...todayTradeCompanyRef.current, ...stocks];
 		setTodayTradeCompanyList((prev) => [...prev, ...stocks]);
 	};
 
@@ -131,13 +128,10 @@ const CreateTradeLogProvider = ({
 	const handleSetSummaries = (summaries: TradeLogSummary) => {
 		setSummaries((prev) => {
 			return {
-				total_buy_amount:
-					prev.total_buy_amount + summaries.total_buy_amount,
-				total_sell_amount:
-					prev.total_sell_amount + summaries.total_sell_amount,
+				total_buy_amount: prev.total_buy_amount + summaries.total_buy_amount,
+				total_sell_amount: prev.total_sell_amount + summaries.total_sell_amount,
 				total_cmsn_tax: prev.total_cmsn_tax + summaries.total_cmsn_tax,
-				settlement_amount:
-					prev.settlement_amount + summaries.settlement_amount,
+				settlement_amount: prev.settlement_amount + summaries.settlement_amount,
 				profit_rate: prev.profit_rate + summaries.profit_rate,
 			};
 		});
@@ -164,9 +158,7 @@ const CreateTradeLogProvider = ({
 	};
 
 	const handleChangeUrl = (index: number, value: string) => {
-		setNewsUrls((prev) =>
-			prev.map((url, i) => (i === index ? value : url))
-		);
+		setNewsUrls((prev) => prev.map((url, i) => (i === index ? value : url)));
 	};
 
 	const handleChangeDate = (code: string, date: Date) => {
@@ -268,10 +260,7 @@ const CreateTradeLogProvider = ({
 				setDialogDescription('매매일지 작성에 실패했습니다.');
 				setDialogBody(
 					<div className="flex flex-col gap-2">
-						<p>
-							매매일지 작성 중 오류가 발생했습니다. 다시
-							시도해주세요.
-						</p>
+						<p>매매일지 작성 중 오류가 발생했습니다. 다시 시도해주세요.</p>
 					</div>
 				);
 				setOpen(true);
@@ -318,8 +307,7 @@ const CreateTradeLogProvider = ({
 				summaries,
 				tradeDetail,
 				onSetTodayTradeCompanyList: handleSetTodayTradeCompanyList,
-				onReorderTodayTradeCompanyList:
-					handleReorderTodayTradeCompanyList,
+				onReorderTodayTradeCompanyList: handleReorderTodayTradeCompanyList,
 				onSetSummaries: handleSetSummaries,
 				onAddTradeDetail: handleAddTradeDetail,
 				investmentType,

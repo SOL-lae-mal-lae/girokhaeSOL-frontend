@@ -37,16 +37,13 @@ export const getStockList = async () => {
 // post 작성 시, db에 저장
 export const createPost = async (data: CommunityPost) => {
 	try {
-		const response = await fetch(
-			`${CLIENT_HOST_FOR_CLIENT}/api/v1/community`,
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(data),
-			}
-		);
+		const response = await fetch(`${CLIENT_HOST_FOR_CLIENT}/api/v1/community`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		});
 		if (!response.ok) {
 			throw new Error('포스팅 실패');
 		}

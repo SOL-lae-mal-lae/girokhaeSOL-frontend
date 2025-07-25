@@ -51,9 +51,7 @@ const StockDayPickerCard: FC<Props> = ({ code, name }) => {
 						<span className="font-semibold text-sm leading-tight line-clamp-2 flex-1 mr-2">
 							{name}
 						</span>
-						<span className="text-xs text-gray-500 flex-shrink-0">
-							{code}
-						</span>
+						<span className="text-xs text-gray-500 flex-shrink-0">{code}</span>
 					</div>
 					<X
 						size={16}

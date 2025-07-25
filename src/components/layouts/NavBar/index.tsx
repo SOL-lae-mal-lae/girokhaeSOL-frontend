@@ -30,10 +30,7 @@ export const NavBar: FC<NavBarProps> = ({ children }: NavBarProps) => {
 					</Link>
 					<menu className="flex items-center gap-8 relative h-full text-body1">
 						{NAV_ITEMS.map((item) => (
-							<li
-								key={item.href}
-								className="relative h-full flex items-center"
-							>
+							<li key={item.href} className="relative h-full flex items-center">
 								<Link
 									href={item.href}
 									className="block py-2 px-1 transition-colors duration-200 hover:text-brand-shinhan-blue"

@@ -89,10 +89,8 @@ const HomeUser: FC<Props> = ({ userName }) => {
 				className="text-heading1 text-brand-royal-blue text-bold opacity-0"
 				style={{ visibility: 'hidden' }}
 			>
-				<strong className="text-brand-shinhan-blue">
-					{userName}님
-				</strong>
-				의 최근 1년 투자 현황
+				<strong className="text-brand-shinhan-blue">{userName}님</strong>의 최근
+				1년 투자 현황
 			</p>
 			<div className="flex flex-col gap-4 w-full">
 				<ul
@@ -104,8 +102,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 						<InfoCard
 							description="최근 1년 거래 횟수"
 							value={`${
-								userSummary?.journal_count_year.toLocaleString() ??
-								0
+								userSummary?.journal_count_year.toLocaleString() ?? 0
 							}회`}
 							icon={<ArrowLeftRight color="white" />}
 							index={0}
@@ -115,8 +112,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 						<InfoCard
 							description="누적 손익값"
 							value={`${
-								userSummary?.cumulative_profit_loss.toLocaleString() ??
-								0
+								userSummary?.cumulative_profit_loss.toLocaleString() ?? 0
 							}원`}
 							icon={<DollarSign color="white" />}
 							index={1}
@@ -125,11 +121,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 					<li className="flex-1">
 						<InfoCard
 							description="손익률"
-							value={`${
-								userSummary?.cumulative_profit_rate.toFixed(
-									2
-								) ?? 0
-							}%`}
+							value={`${userSummary?.cumulative_profit_rate.toFixed(2) ?? 0}%`}
 							icon={<Plus color="white" />}
 							index={2}
 						/>

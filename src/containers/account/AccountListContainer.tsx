@@ -87,8 +87,7 @@ const AccountListContainer = () => {
 							</CardHeader>
 							<CardContent>
 								<p className="text-gray-600">
-									이 계좌가 기본 조회 계좌로 설정되어
-									있습니다.
+									이 계좌가 기본 조회 계좌로 설정되어 있습니다.
 								</p>
 							</CardContent>
 						</Card>
@@ -98,9 +97,7 @@ const AccountListContainer = () => {
 				{/* 계좌 목록 섹션 */}
 				<div className="mb-6">
 					<div className="flex justify-between items-center mb-4">
-						<h3 className="text-lg font-semibold text-gray-800">
-							계좌 목록
-						</h3>
+						<h3 className="text-lg font-semibold text-gray-800">계좌 목록</h3>
 						<Button
 							className="bg-brand-shinhan-blue text-white cursor-pointer hover:bg-brand-navy-blue"
 							onClick={handleOpenDialog}
@@ -126,11 +123,7 @@ const AccountListContainer = () => {
 										<CardContent>
 											<Button
 												className="w-full bg-brand-shinhan-blue text-white cursor-pointer hover:bg-brand-navy-blue"
-												onClick={() =>
-													mutate(
-														account.account_id.toString()
-													)
-												}
+												onClick={() => mutate(account.account_id.toString())}
 											>
 												대표 계좌로 설정
 											</Button>

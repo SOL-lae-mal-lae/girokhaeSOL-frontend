@@ -22,8 +22,7 @@ const SummaryError: FC<Props> = ({ refetchSummary }) => {
 						데이터를 불러올 수 없습니다
 					</h2>
 					<p className="text-gray-600 max-w-md">
-						계좌 정보를 확인할 수 없습니다. 계좌가 연동되어 있는지
-						확인해주세요.
+						계좌 정보를 확인할 수 없습니다. 계좌가 연동되어 있는지 확인해주세요.
 					</p>
 				</div>
 			</div>

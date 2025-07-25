@@ -84,9 +84,7 @@ export const LoadingSpinner = ({
 			)}
 		>
 			<SpinnerComponent size={size} />
-			{text && (
-				<p className="text-sm text-gray-600 font-medium">{text}</p>
-			)}
+			{text && <p className="text-sm text-gray-600 font-medium">{text}</p>}
 		</div>
 	);
 };

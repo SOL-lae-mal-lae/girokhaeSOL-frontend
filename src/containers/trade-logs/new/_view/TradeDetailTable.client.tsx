@@ -47,10 +47,7 @@ const TradeDetailTable: FC<Props> = ({ selectedAccount, getFinanceData }) => {
 						>
 							<TableCell
 								onClick={(e) =>
-									getFinanceData(
-										row.stock_code,
-										e.currentTarget.innerText
-									)
+									getFinanceData(row.stock_code, e.currentTarget.innerText)
 								}
 								className="cursor-pointer underline text-brand-shinhan-blue"
 							>
@@ -58,45 +55,35 @@ const TradeDetailTable: FC<Props> = ({ selectedAccount, getFinanceData }) => {
 							</TableCell>
 							<TableCell>
 								{row.avg_buy_price === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.avg_buy_price.toLocaleString()
 								)}
 							</TableCell>
 							<TableCell>
 								{row.buy_quantity === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.buy_quantity
 								)}
 							</TableCell>
 							<TableCell>
 								{row.avg_sell_price === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.avg_sell_price.toLocaleString()
 								)}
 							</TableCell>
 							<TableCell>
 								{row.sell_quantity === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.sell_quantity
 								)}
 							</TableCell>
 							<TableCell>
 								{row.cmsn_alm_tax === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.cmsn_alm_tax.toLocaleString()
 								)}

@@ -148,9 +148,7 @@ const TradeLogDetailAside: FC<Props> = ({
 						disabled={isLoading}
 					>
 						{isLoading && <Spinner />}
-						{!isLoading && hasAiEvaluation
-							? '결과 확인하기'
-							: '평가 받기'}
+						{!isLoading && hasAiEvaluation ? '결과 확인하기' : '평가 받기'}
 					</Button>
 				</div>
 			</CardContent>

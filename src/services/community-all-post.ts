@@ -5,15 +5,12 @@ import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 export const getCommunityAllPost = async () => {
 	try {
 		// 백엔드 서버 주소로 직접 호출
-		const response = await fetch(
-			`${CLIENT_HOST_FOR_CLIENT}/api/v1/community`,
-			{
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}
-		);
+		const response = await fetch(`${CLIENT_HOST_FOR_CLIENT}/api/v1/community`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
 
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);

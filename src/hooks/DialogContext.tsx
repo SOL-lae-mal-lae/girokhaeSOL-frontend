@@ -47,9 +47,7 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{dialogTitle}</DialogTitle>
-						<DialogDescription>
-							{dialogDescription}
-						</DialogDescription>
+						<DialogDescription>{dialogDescription}</DialogDescription>
 					</DialogHeader>
 					{dialogBody}
 				</DialogContent>

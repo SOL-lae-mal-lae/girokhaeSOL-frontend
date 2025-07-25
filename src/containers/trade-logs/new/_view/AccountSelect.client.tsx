@@ -36,10 +36,7 @@ const AccountSelect: FC<Props> = ({
 					<Select
 						value={
 							accounts
-								?.find(
-									(account) =>
-										account.account_id === selectedAccount
-								)
+								?.find((account) => account.account_id === selectedAccount)
 								?.account_id.toString() || ''
 						}
 						onValueChange={onSelectAccount}

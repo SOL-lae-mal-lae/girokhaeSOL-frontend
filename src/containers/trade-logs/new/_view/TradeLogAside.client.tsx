@@ -39,32 +39,24 @@ const TradeLogAside = () => {
 					<div className="space-y-2">
 						<h3 className="font-semibold">투자 유형</h3>
 						<div className="flex flex-wrap gap-2">
-							{Object.entries(INVESTMENT_TYPES).map(
-								([key, value]) => {
-									return (
-										<Badge
-											key={key}
-											variant={
-												investmentType === key
-													? 'default'
-													: 'outline'
-											}
-											onClick={() =>
-												onSelectInvestmentType(
-													key as InvestmentType
-												)
-											}
-											className={`cursor-pointer px-2 py-1.5 ${
-												investmentType === key
-													? 'bg-brand-shinhan-blue text-white'
-													: 'border-brand-shinhan-blue text-brand-shinhan-blue'
-											}`}
-										>
-											{value}
-										</Badge>
-									);
-								}
-							)}
+							{Object.entries(INVESTMENT_TYPES).map(([key, value]) => {
+								return (
+									<Badge
+										key={key}
+										variant={investmentType === key ? 'default' : 'outline'}
+										onClick={() =>
+											onSelectInvestmentType(key as InvestmentType)
+										}
+										className={`cursor-pointer px-2 py-1.5 ${
+											investmentType === key
+												? 'bg-brand-shinhan-blue text-white'
+												: 'border-brand-shinhan-blue text-brand-shinhan-blue'
+										}`}
+									>
+										{value}
+									</Badge>
+								);
+							})}
 						</div>
 					</div>
 					{/* 감정 유형 (다중 선택) */}
@@ -72,28 +64,16 @@ const TradeLogAside = () => {
 						<h3 className="font-semibold">감정 유형</h3>
 						<div className="flex gap-2 flex-wrap">
 							{Object.entries(SENTIMENTS).map((sentiment) => {
-								const [key, value] = sentiment as [
-									SentimentType,
-									string,
-								];
+								const [key, value] = sentiment as [SentimentType, string];
 								return (
 									<Badge
 										key={key}
-										variant={
-											emotions.includes(key)
-												? 'default'
-												: 'outline'
-										}
+										variant={emotions.includes(key) ? 'default' : 'outline'}
 										onClick={() =>
 											onSelectEmotions(
 												emotions.includes(key)
-													? emotions.filter(
-															(e) => e !== key
-														)
-													: [
-															...emotions,
-															key as SentimentType,
-														]
+													? emotions.filter((e) => e !== key)
+													: [...emotions, key as SentimentType]
 											)
 										}
 										className={`cursor-pointer px-2 py-1.5 ${
@@ -141,16 +121,11 @@ const TradeLogAside = () => {
 						</div>
 						<div className="flex flex-col gap-2">
 							{newsUrls.map((url, idx) => (
-								<div
-									key={idx}
-									className="flex gap-2 items-center"
-								>
+								<div key={idx} className="flex gap-2 items-center">
 									<Input
 										placeholder="URL"
 										value={url}
-										onChange={(e) =>
-											onChangeNewsUrl(idx, e.target.value)
-										}
+										onChange={(e) => onChangeNewsUrl(idx, e.target.value)}
 										className={BRAND_OUTLINE}
 									/>
 									{newsUrls.length > 1 && (

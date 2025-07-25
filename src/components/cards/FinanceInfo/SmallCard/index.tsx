@@ -42,9 +42,7 @@ export function SmallCard({
 						</span>
 					</div>
 					<div className="text-2xl font-bold">
-						{icon && (
-							<div className={`text-lg ${cfg.icon}`}>{icon}</div>
-						)}
+						{icon && <div className={`text-lg ${cfg.icon}`}>{icon}</div>}
 					</div>
 				</div>
 			</CardContent>

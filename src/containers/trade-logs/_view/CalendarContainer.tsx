@@ -33,9 +33,7 @@ export const CalendarContainer: FC<Props> = ({ dates }) => {
 				}
 			}}
 			components={{
-				DayButton: (props) => (
-					<CustomDayButton {...props} dates={dates} />
-				),
+				DayButton: (props) => <CustomDayButton {...props} dates={dates} />,
 			}}
 		/>
 	);

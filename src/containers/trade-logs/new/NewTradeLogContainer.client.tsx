@@ -21,12 +21,8 @@ import NoReport from './_view/NoReport.client';
 import FinancialContainer from '../_view/FinancialContainer.client';
 
 const NewTradeLogContainerClient = () => {
-	const {
-		date,
-		onAddTradeDetail,
-		onSetTodayTradeCompanyList,
-		onSetSummaries,
-	} = useCreateTradeLog();
+	const { date, onAddTradeDetail, onSetTodayTradeCompanyList, onSetSummaries } =
+		useCreateTradeLog();
 	const queryClient = useQueryClient();
 	const [selectedAccount, setSelectedAccount] = useState<number>(0);
 	const [isClicked, setIsClicked] = useState(false);
@@ -124,26 +120,22 @@ const NewTradeLogContainerClient = () => {
 							</div>
 						)}
 						{!isLoadingTransaction && !transaction && <NoReport />}
-						{transaction &&
-							transaction.trade_details.length === 0 && (
-								<NoReport />
-							)}
-						{transaction &&
-							transaction.trade_details.length > 0 && (
-								<>
-									{/* 차트 자리 */}
-									<StockDatePicker
-										selectedAccount={selectedAccount}
-									/>
-									{/* 거래 요약 카드 */}
-									<TradeSummary />
-									{/* 상세 거래내역 테이블 */}
-									<TradeDetailTable
-										selectedAccount={selectedAccount}
-										getFinanceData={getFinanceData}
-									/>
-								</>
-							)}
+						{transaction && transaction.trade_details.length === 0 && (
+							<NoReport />
+						)}
+						{transaction && transaction.trade_details.length > 0 && (
+							<>
+								{/* 차트 자리 */}
+								<StockDatePicker selectedAccount={selectedAccount} />
+								{/* 거래 요약 카드 */}
+								<TradeSummary />
+								{/* 상세 거래내역 테이블 */}
+								<TradeDetailTable
+									selectedAccount={selectedAccount}
+									getFinanceData={getFinanceData}
+								/>
+							</>
+						)}
 					</CardContent>
 				</Card>
 				{/* 우측: 작성 폼 */}

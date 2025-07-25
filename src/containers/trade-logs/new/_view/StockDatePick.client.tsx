@@ -66,9 +66,7 @@ const StockDatePicker: FC<Props> = ({ selectedAccount }) => {
 		<div className="flex flex-col gap-2">
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
-					<h1 className="text-heading3 font-bold">
-						거래 기록 날짜 선택
-					</h1>
+					<h1 className="text-heading3 font-bold">거래 기록 날짜 선택</h1>
 					<HelpTooltip text="순서를 지정하고 시작일을 선택하면 매매일지에 차트가 생성됩니다." />
 				</div>
 				<Button

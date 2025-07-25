@@ -71,47 +71,35 @@ export default function FinancialContainer({
 							<div className="grid grid-flow-row gap-4 grid-cols-2 ">
 								<SmallCard
 									title="PBR"
-									value={
-										statements.pbr ? statements.pbr : '-'
-									}
+									value={statements.pbr ? statements.pbr : '-'}
 									color="blue"
 									icon={<TrendingUp />}
 									unit=""
 								/>
 								<SmallCard
 									title="PER"
-									value={
-										statements.per ? statements.per : '-'
-									}
+									value={statements.per ? statements.per : '-'}
 									color="green"
 									icon={<ChartColumn />}
 									unit=""
 								/>
 								<SmallCard
 									title="ROE"
-									value={
-										statements.roe ? statements.roe : '-'
-									}
+									value={statements.roe ? statements.roe : '-'}
 									color="orange"
 									icon={<Percent />}
 									unit="%"
 								/>
 								<SmallCard
 									title="EPS"
-									value={
-										statements.eps ? statements.eps : '-'
-									}
+									value={statements.eps ? statements.eps : '-'}
 									color="purple"
 									icon={<DollarSign />}
 									unit="원"
 								/>
 								<SmallCard
 									title="시가총액"
-									value={
-										statements.mac
-											? formatCurrency(statements.mac)
-											: '-'
-									}
+									value={statements.mac ? formatCurrency(statements.mac) : '-'}
 									color="default"
 									icon={<Building2 />}
 									unit=""

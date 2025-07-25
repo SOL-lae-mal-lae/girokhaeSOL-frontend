@@ -63,22 +63,15 @@ const AIEvaluation: FC<Props> = ({ result, isOpen, onChangeOpen }) => {
 							.filter((md) => md)
 							.map((md, index) => {
 								const splittedMd = md.split('SPLIT');
-								const title = splittedMd[0]
-									.replaceAll('*', '')
-									.trim();
+								const title = splittedMd[0].replaceAll('*', '').trim();
 								const content = splittedMd.slice(1).join('\n');
 								return (
-									<AccordionItem
-										value={`item-${index}`}
-										key={md}
-									>
+									<AccordionItem value={`item-${index}`} key={md}>
 										<AccordionTrigger className="text-[16px] text-bold cursor-pointer focus-visible:ring-0">
 											{title}
 										</AccordionTrigger>
 										<AccordionContent>
-											<MarkdownViewer
-												markdown={content}
-											/>
+											<MarkdownViewer markdown={content} />
 										</AccordionContent>
 									</AccordionItem>
 								);

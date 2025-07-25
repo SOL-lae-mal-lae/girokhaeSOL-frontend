@@ -47,9 +47,7 @@ export default function AccountSelectDialog({
 									onChange(
 										checked
 											? [...selected, acc.id]
-											: selected.filter(
-													(id) => id !== acc.id
-												)
+											: selected.filter((id) => id !== acc.id)
 									)
 								}
 								className={
