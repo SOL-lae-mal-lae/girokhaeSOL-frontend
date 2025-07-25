@@ -36,19 +36,19 @@ const CommunityContainer = () => {
 					<TabsList className="bg-brand-shinhan-blue/10 rounded-lg">
 						<TabsTrigger
 							value="all"
-							className="cursor-pointer data-[state=active]:bg-brand-shinhan-blue data-[state=active]:text-white hover:bg-brand-shinhan-blue/20"
+							className="cursor-pointer data-[state=active]:!bg-brand-shinhan-blue data-[state=active]:!text-white hover:bg-brand-shinhan-blue/20"
 						>
 							전체
 						</TabsTrigger>
 						<TabsTrigger
 							value="general"
-							className="cursor-pointer data-[state=active]:bg-brand-shinhan-blue data-[state=active]:text-white hover:bg-brand-shinhan-blue/20"
+							className="cursor-pointer data-[state=active]:!bg-brand-shinhan-blue data-[state=active]:!text-white hover:bg-brand-shinhan-blue/20"
 						>
 							일반 글
 						</TabsTrigger>
 						<TabsTrigger
 							value="trade-log"
-							className="cursor-pointer data-[state=active]:bg-brand-shinhan-blue data-[state=active]:text-white hover:bg-brand-shinhan-blue/20"
+							className="cursor-pointer data-[state=active]:!bg-brand-shinhan-blue data-[state=active]:!text-white hover:bg-brand-shinhan-blue/20"
 						>
 							매매일지 공유
 						</TabsTrigger>

@@ -71,9 +71,19 @@ const CommunityInfoContainer = () => {
 
 			{/* SHADCN Tabs */}
 			<Tabs defaultValue="posts" className="w-full">
-				<TabsList className="mb-4">
-					<TabsTrigger value="posts">작성한 게시글</TabsTrigger>
-					<TabsTrigger value="comments">작성한 댓글</TabsTrigger>
+				<TabsList className="bg-brand-shinhan-blue/10">
+					<TabsTrigger
+						className="cursor-pointer data-[state=active]:!bg-brand-shinhan-blue data-[state=active]:!text-white hover:bg-brand-shinhan-blue/20"
+						value="posts"
+					>
+						작성한 게시글
+					</TabsTrigger>
+					<TabsTrigger
+						className="cursor-pointer data-[state=active]:!bg-brand-shinhan-blue data-[state=active]:!text-white hover:bg-brand-shinhan-blue/20"
+						value="comments"
+					>
+						작성한 댓글
+					</TabsTrigger>
 				</TabsList>
 
 				{/* 게시글 */}
@@ -98,8 +108,6 @@ const CommunityInfoContainer = () => {
 							</div>
 						) : (
 							paginatedPosts?.map((post) => {
-								// Log each post during rendering
-								console.log('Rendering Post:', post);
 								return (
 									<Card
 										className="flex flex-row items-center justify-between p-4"
@@ -109,7 +117,7 @@ const CommunityInfoContainer = () => {
 											<CardTitle className="flex items-center gap-2">
 												<span className="text-lg font-semibold">
 													<p>
-														{post.title}{' '}
+														{post.title}
 														<Badge variant="secondary">
 															{post.post_type
 																? '매매일지'
