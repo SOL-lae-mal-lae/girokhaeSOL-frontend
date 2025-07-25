@@ -65,9 +65,7 @@ export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
 									{post.title}
 								</CardTitle>
 								<span className="text-sm text-gray-500">
-									{new Date(
-										post.created_at
-									).toLocaleDateString()}
+									{new Date(post.created_at).toLocaleDateString()}
 								</span>
 							</div>
 							<div className="flex items-center gap-2">
@@ -91,9 +89,7 @@ export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
 									</div>
 									<div className="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition-colors cursor-pointer">
 										<MessageCircle size={16} />
-										<span className="text-sm">
-											{post.comment_count}
-										</span>
+										<span className="text-sm">{post.comment_count}</span>
 									</div>
 								</div>
 							</div>

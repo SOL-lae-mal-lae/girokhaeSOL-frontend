@@ -16,23 +16,25 @@ import {
 interface Props {
 	getFinanceData: (code: string, name: string) => void;
 	tradeDetails: TradeLogTransaction[];
+	isCommunity?: boolean;
 	readOnly?: boolean;
 }
 
 const TradeDetailTable: FC<Props> = ({
 	getFinanceData,
 	tradeDetails,
+	isCommunity = false,
 	readOnly = false,
 }) => {
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-3">
 			<div
 				className={`flex items-center gap-1 ${
 					readOnly ? 'justify-center' : ''
 				}`}
 			>
 				<h1 className="text-heading3 font-bold">거래 기록</h1>
-				{!readOnly && (
+				{!readOnly && !isCommunity && (
 					<HelpTooltip text="종목명을 클릭하면 재무제표를 확인할 수 있습니다." />
 				)}
 			</div>
@@ -53,57 +55,50 @@ const TradeDetailTable: FC<Props> = ({
 					{tradeDetails.map((row) => (
 						<TableRow key={`${row.stock_name}-${row.stock_code}`}>
 							<TableCell
-								onClick={() =>
-									getFinanceData(
-										row.stock_code,
-										row.stock_name
-									)
-								}
-								className="cursor-pointer underline text-brand-shinhan-blue"
+								onClick={() => {
+									if (!isCommunity) {
+										getFinanceData(row.stock_code, row.stock_name);
+									}
+								}}
+								className={`${
+									!isCommunity
+										? 'cursor-pointer underline text-brand-shinhan-blue'
+										: ''
+								}`}
 							>
 								{row.stock_name}
 							</TableCell>
 							<TableCell>
 								{row.avg_buy_price === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.avg_buy_price.toLocaleString()
 								)}
 							</TableCell>
 							<TableCell>
 								{row.buy_quantity === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.buy_quantity
 								)}
 							</TableCell>
 							<TableCell>
 								{row.avg_sell_price === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.avg_sell_price.toLocaleString()
 								)}
 							</TableCell>
 							<TableCell>
 								{row.sell_quantity === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.sell_quantity
 								)}
 							</TableCell>
 							<TableCell>
 								{row.cmsn_alm_tax === 0 ? (
-									<span className="text-muted-foreground">
-										-
-									</span>
+									<span className="text-muted-foreground">-</span>
 								) : (
 									row.cmsn_alm_tax.toLocaleString()
 								)}

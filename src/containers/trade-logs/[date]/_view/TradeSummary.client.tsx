@@ -21,7 +21,7 @@ const TradeSummary = ({ summaries }: Props) => {
 	} = summaries;
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-4">
 			<h1 className="text-heading3 font-bold">금일 거래 요약</h1>
 			<div className="grid grid-cols-2 gap-4 w-full">
 				<InfoCard
