@@ -21,8 +21,8 @@ export interface TradeLogTransaction {
 	stock_name: string;
 	stock_code: string;
 	avg_buy_price: number;
-	buy_quantity: number;
 	avg_sell_price: number;
+	buy_quantity: number;
 	sell_quantity: number;
 	cmsn_alm_tax: number;
 	profit_amount: number;
@@ -72,8 +72,6 @@ export interface TradeLogById {
 	date: string;
 	summaries: TradeLogSummary;
 	trade_details: TradeLogTransaction[];
-	rationale: string;
-	evaluation: string;
 	charts: {
 		stock_name: string;
 		stock_code: string;
@@ -81,4 +79,6 @@ export interface TradeLogById {
 		end_date: string;
 		sequence: number;
 	}[];
+	rationale: string;
+	evaluation: string;
 }

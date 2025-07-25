@@ -64,9 +64,7 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 		[key: string]: HTMLDivElement | null;
 	}>({});
 
-	const [selectedStockCode, setSelectedStockCode] = useState(
-		stockChartList[0]
-	);
+	const [selectedStockCode, setSelectedStockCode] = useState(stockChartList[0]);
 	const [showMA, setShowMA] = useState(true);
 	const [showBollingerBands, setShowBollingerBands] = useState(false);
 
@@ -77,10 +75,7 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 
 	// 차트 시리즈 토글 함수들
 	const toggleMA = () => {
-		if (
-			!selectedStockCode ||
-			!seriesRef.current[selectedStockCode.stock_code]
-		)
+		if (!selectedStockCode || !seriesRef.current[selectedStockCode.stock_code])
 			return;
 
 		const series = seriesRef.current[selectedStockCode.stock_code];
@@ -118,10 +113,7 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 	};
 
 	const toggleBollingerBands = () => {
-		if (
-			!selectedStockCode ||
-			!seriesRef.current[selectedStockCode.stock_code]
-		)
+		if (!selectedStockCode || !seriesRef.current[selectedStockCode.stock_code])
 			return;
 
 		const series = seriesRef.current[selectedStockCode.stock_code];
@@ -458,7 +450,7 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 	}, [data, isSuccess, selectedStockCode, showMA, showBollingerBands]);
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-4">
 			<h1 className="text-heading3 font-bold">거래 기록 차트</h1>
 			<div className="flex justify-between items-center">
 				<Select
@@ -523,9 +515,7 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 								key={stock.stock_code}
 								ref={(el) => {
 									if (el) {
-										chartContainerRef.current[
-											stock.stock_code
-										] = el;
+										chartContainerRef.current[stock.stock_code] = el;
 									}
 								}}
 								className={`relative ${stock.stock_code === selectedStockCode.stock_code ? 'block' : 'hidden'}`}
@@ -535,9 +525,7 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 				)}
 				{isPending && (
 					<div className="h-96 flex flex-col gap-2">
-						<h1 className="text-heading3 font-bold">
-							거래 기록 차트
-						</h1>
+						<h1 className="text-heading3 font-bold">거래 기록 차트</h1>
 						<div className="flex items-center justify-center flex-1">
 							<LoadingSpinner text="차트를 불러오는 중..." />
 						</div>

@@ -154,13 +154,12 @@ const GeneralPost: FC = () => {
 			<div className="flex-1 p-4">
 				{data?.post_type ? (
 					<Card className="mb-6">
-						<CardContent className="p-6">
+						<CardContent className="p-0">
 							{/* 작성자 정보 */}
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-3">
 									<div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
-										{data?.user_id === user?.id &&
-										user?.imageUrl ? (
+										{data?.user_id === user?.id && user?.imageUrl ? (
 											<img
 												src={user.imageUrl}
 												alt="프로필 이미지"
@@ -181,9 +180,7 @@ const GeneralPost: FC = () => {
 										<span className="text-sm text-gray-500">
 											{/* {post?.created_at.toLocaleString()} */}
 											{data?.created_at &&
-												new Date(
-													data.created_at
-												).toLocaleString('ko-KR', {
+												new Date(data.created_at).toLocaleString('ko-KR', {
 													year: 'numeric',
 													month: '2-digit',
 													day: '2-digit',
@@ -207,56 +204,36 @@ const GeneralPost: FC = () => {
 													<MoreVertical size={16} />
 												</Button>
 											</PopoverTrigger>
-											<PopoverContent
-												className="w-32 p-0"
-												align="end"
-											>
+											<PopoverContent className="w-32 p-0" align="end">
 												<div className="flex flex-col">
 													<button
 														className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
 														onClick={() => {
 															// 수정 기능은 나중에 구현
-															toast.info(
-																'수정 기능은 준비 중입니다.'
-															);
+															toast.info('수정 기능은 준비 중입니다.');
 														}}
 													>
-														<Edit
-															size={14}
-															className="text-gray-500"
-														/>
+														<Edit size={14} className="text-gray-500" />
 														수정하기
 													</button>
 													<AlertDialog>
-														<AlertDialogTrigger
-															asChild
-														>
+														<AlertDialogTrigger asChild>
 															<button className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-																<Trash2
-																	size={14}
-																	className="text-red-600"
-																/>
+																<Trash2 size={14} className="text-red-600" />
 																삭제하기
 															</button>
 														</AlertDialogTrigger>
 														<AlertDialogContent>
 															<AlertDialogHeader>
-																<AlertDialogTitle>
-																	게시글 삭제
-																</AlertDialogTitle>
+																<AlertDialogTitle>게시글 삭제</AlertDialogTitle>
 																<AlertDialogDescription>
-																	이 게시글을
-																	삭제하시겠습니까?
+																	이 게시글을 삭제하시겠습니까?
 																</AlertDialogDescription>
 															</AlertDialogHeader>
 															<AlertDialogFooter>
-																<AlertDialogCancel>
-																	취소
-																</AlertDialogCancel>
+																<AlertDialogCancel>취소</AlertDialogCancel>
 																<AlertDialogAction
-																	onClick={() =>
-																		deletePost()
-																	}
+																	onClick={() => deletePost()}
 																	className="bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue"
 																>
 																	삭제
@@ -272,129 +249,118 @@ const GeneralPost: FC = () => {
 							</div>
 
 							{data?.post_type ? (
-								<Card className="flex flex-row gap-2">
+								<Card className="flex flex-row gap-2 mt-8 p-8">
 									{!tradeLog && isLogLoading ? (
 										<div className="flex justify-center items-center h-full">
 											<LoadingSpinner text="매매일지를 불러오는 중..." />
 										</div>
 									) : (
 										tradeLog && (
-											<CardContent>
+											<CardContent className="grid grid-cols-2 gap-15">
 												<StockChart
-													stockChartList={
-														tradeLog.charts
+													stockChartList={tradeLog.charts}
+													chartWidth={500}
+												/>
+												<TradeSummary
+													summaries={
+														data?.is_public
+															? tradeLog.summaries
+															: {
+																	total_buy_amount: 0,
+																	total_sell_amount: 0,
+																	total_cmsn_tax: 0,
+																	settlement_amount: 0,
+																	profit_rate: 0,
+																}
 													}
 												/>
-												{data?.is_public
-													? tradeLog.summaries && (
-															<div>
-																<TradeSummary
-																	summaries={
-																		tradeLog.summaries
-																	}
-																/>
-																{tradeLog.trade_details && (
-																	<TradeDetailTable
-																		getFinanceData={() => {}}
-																		tradeDetails={
-																			tradeLog.trade_details
-																		}
-																	/>
-																)}
-															</div>
-														)
-													: tradeLog.trade_details && (
-															<div>
-																<Table>
-																	<TableHeader>
-																		<TableRow>
-																			<TableHead>
-																				종목명
-																			</TableHead>
-																			<TableHead>
-																				매수
-																				평균가
-																			</TableHead>
-																			<TableHead>
-																				매도
-																				평균가
-																			</TableHead>
-																			<TableHead>
-																				수익률
-																			</TableHead>
-																		</TableRow>
-																	</TableHeader>
-																	<TableBody>
-																		{tradeLog.trade_details.map(
-																			(
-																				row
-																			) => (
-																				<TableRow
-																					className="text-left"
-																					key={
-																						row.stock_code
-																					}
-																				>
-																					<TableCell>
-																						{
-																							row.stock_name
-																						}
-																					</TableCell>
-																					<TableCell>
-																						{row.avg_buy_price ===
-																						0 ? (
-																							<span className="text-muted-foreground">
-																								-
-																							</span>
-																						) : (
-																							row.avg_buy_price.toLocaleString()
-																						)}
-																					</TableCell>
-																					<TableCell>
-																						{row.avg_sell_price ===
-																						0 ? (
-																							<span className="text-muted-foreground">
-																								-
-																							</span>
-																						) : (
-																							row.avg_sell_price.toLocaleString()
-																						)}
-																					</TableCell>
-																					<TableCell
-																						className={
-																							row.profit_rate ===
-																							0
-																								? 'text-muted-foreground'
-																								: row.profit_rate >
-																									  0
-																									? 'text-red-500'
-																									: 'text-blue-500'
-																						}
-																					>
-																						{row.profit_rate ===
-																						0 ? (
-																							'-'
-																						) : (
-																							<>
-																								{row.profit_rate >
-																								0
-																									? '+'
-																									: ''}
-																								{
-																									row.profit_rate
-																								}
+												{data?.is_public ? (
+													<TradeDetailTable
+														getFinanceData={() => {}}
+														tradeDetails={tradeLog.trade_details}
+														isCommunity={true}
+													/>
+												) : (
+													<div>
+														<h1 className="text-heading3 font-bold">
+															거래 기록
+														</h1>
+														<Table>
+															<TableHeader>
+																<TableRow>
+																	<TableHead>종목명</TableHead>
+																	<TableHead>매수 평균가</TableHead>
+																	<TableHead>매도 평균가</TableHead>
+																	<TableHead>수익률</TableHead>
+																</TableRow>
+															</TableHeader>
+															<TableBody>
+																{tradeLog.trade_details.map((row) => (
+																	<TableRow
+																		className="text-left"
+																		key={row.stock_code}
+																	>
+																		<TableCell>{row.stock_name}</TableCell>
+																		<TableCell>
+																			{row.avg_buy_price === 0 ? (
+																				<span className="text-muted-foreground">
+																					-
+																				</span>
+																			) : (
+																				row.avg_buy_price.toLocaleString()
+																			)}
+																		</TableCell>
+																		<TableCell>
+																			{row.avg_sell_price === 0 ? (
+																				<span className="text-muted-foreground">
+																					-
+																				</span>
+																			) : (
+																				row.avg_sell_price.toLocaleString()
+																			)}
+																		</TableCell>
+																		<TableCell
+																			className={
+																				row.profit_rate === 0
+																					? 'text-muted-foreground'
+																					: row.profit_rate > 0
+																						? 'text-red-500'
+																						: 'text-blue-500'
+																			}
+																		>
+																			{row.profit_rate === 0 ? (
+																				'-'
+																			) : (
+																				<>
+																					{row.profit_rate > 0 ? '+' : ''}
+																					{row.profit_rate}%
+																				</>
+																			)}
+																		</TableCell>
+																	</TableRow>
+																))}
+															</TableBody>
+														</Table>
+													</div>
+												)}
 
-																								%
-																							</>
-																						)}
-																					</TableCell>
-																				</TableRow>
-																			)
-																		)}
-																	</TableBody>
-																</Table>
-															</div>
-														)}
+												<div className="flex flex-col gap-2">
+													<h3 className="text-lg font-semibold text-gray-900">
+														매매일지 분석
+													</h3>
+													<h3 className="text-lg font-semibold text-gray-900">
+														매매 근거
+													</h3>
+													<p className="text-gray-700 leading-relaxed mb-2">
+														{tradeLog?.rationale}
+													</p>
+													<h3 className="text-lg font-semibold text-gray-900">
+														투자 평가
+													</h3>
+													<p className="text-gray-700 leading-relaxed mb-2">
+														{tradeLog?.evaluation}
+													</p>
+												</div>
 											</CardContent>
 										)
 									)}
@@ -402,17 +368,12 @@ const GeneralPost: FC = () => {
 							) : null}
 
 							{/* 게시글 내용 */}
-							<div className="mb-6">
-								{data?.content
-									.split('\n')
-									.map((line, index) => (
-										<p
-											key={index}
-											className="text-gray-700 leading-relaxed mb-2"
-										>
-											{line}
-										</p>
-									))}
+							<div className="mb-6 mt-10">
+								{data?.content.split('\n').map((line, index) => (
+									<p key={index} className="text-gray-700 leading-relaxed mb-2">
+										{line}
+									</p>
+								))}
 							</div>
 						</CardContent>
 					</Card>
@@ -424,8 +385,7 @@ const GeneralPost: FC = () => {
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-3">
 									<div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
-										{data?.user_id === user?.id &&
-										user?.imageUrl ? (
+										{data?.user_id === user?.id && user?.imageUrl ? (
 											<img
 												src={user.imageUrl}
 												alt="프로필 이미지"
@@ -446,9 +406,7 @@ const GeneralPost: FC = () => {
 										<span className="text-sm text-gray-500">
 											{/* {post?.created_at.toLocaleString()} */}
 											{data?.created_at &&
-												new Date(
-													data.created_at
-												).toLocaleString('ko-KR', {
+												new Date(data.created_at).toLocaleString('ko-KR', {
 													year: 'numeric',
 													month: '2-digit',
 													day: '2-digit',
@@ -472,56 +430,36 @@ const GeneralPost: FC = () => {
 													<MoreVertical size={16} />
 												</Button>
 											</PopoverTrigger>
-											<PopoverContent
-												className="w-32 p-0"
-												align="end"
-											>
+											<PopoverContent className="w-32 p-0" align="end">
 												<div className="flex flex-col">
 													<button
 														className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
 														onClick={() => {
 															// 수정 기능은 나중에 구현
-															toast.info(
-																'수정 기능은 준비 중입니다.'
-															);
+															toast.info('수정 기능은 준비 중입니다.');
 														}}
 													>
-														<Edit
-															size={14}
-															className="text-gray-500"
-														/>
+														<Edit size={14} className="text-gray-500" />
 														수정하기
 													</button>
 													<AlertDialog>
-														<AlertDialogTrigger
-															asChild
-														>
+														<AlertDialogTrigger asChild>
 															<button className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-																<Trash2
-																	size={14}
-																	className="text-red-600"
-																/>
+																<Trash2 size={14} className="text-red-600" />
 																삭제하기
 															</button>
 														</AlertDialogTrigger>
 														<AlertDialogContent>
 															<AlertDialogHeader>
-																<AlertDialogTitle>
-																	게시글 삭제
-																</AlertDialogTitle>
+																<AlertDialogTitle>게시글 삭제</AlertDialogTitle>
 																<AlertDialogDescription>
-																	이 게시글을
-																	삭제하시겠습니까?
+																	이 게시글을 삭제하시겠습니까?
 																</AlertDialogDescription>
 															</AlertDialogHeader>
 															<AlertDialogFooter>
-																<AlertDialogCancel>
-																	취소
-																</AlertDialogCancel>
+																<AlertDialogCancel>취소</AlertDialogCancel>
 																<AlertDialogAction
-																	onClick={() =>
-																		deletePost()
-																	}
+																	onClick={() => deletePost()}
 																	className="bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue"
 																>
 																	삭제
@@ -538,16 +476,11 @@ const GeneralPost: FC = () => {
 
 							{/* 게시글 내용 */}
 							<div className="my-6">
-								{data?.content
-									.split('\n')
-									.map((line, index) => (
-										<p
-											key={index}
-											className="text-gray-700 leading-relaxed mb-2"
-										>
-											{line}
-										</p>
-									))}
+								{data?.content.split('\n').map((line, index) => (
+									<p key={index} className="text-gray-700 leading-relaxed mb-2">
+										{line}
+									</p>
+								))}
 							</div>
 						</CardContent>
 					</Card>
@@ -567,10 +500,7 @@ const GeneralPost: FC = () => {
 							value={commentContent}
 							onChange={(e) => setCommentContent(e.target.value)}
 							onKeyPress={(e) => {
-								if (
-									e.key === 'Enter' &&
-									commentContent.trim()
-								) {
+								if (e.key === 'Enter' && commentContent.trim()) {
 									postComments(commentContent.trim());
 									setCommentContent('');
 								}
@@ -603,8 +533,7 @@ const GeneralPost: FC = () => {
 									<CardContent className="p-6">
 										<div className="flex items-start gap-3">
 											<div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
-												{comment.user_id === user?.id &&
-												user?.imageUrl ? (
+												{comment.user_id === user?.id && user?.imageUrl ? (
 													<img
 														src={user.imageUrl}
 														alt="댓글 작성자 프로필"
@@ -626,9 +555,7 @@ const GeneralPost: FC = () => {
 														</span>
 														<span className="text-xs text-gray-500">
 															{comment.created_at &&
-																new Date(
-																	comment.created_at
-																).toLocaleString(
+																new Date(comment.created_at).toLocaleString(
 																	'ko-KR',
 																	{
 																		year: 'numeric',
@@ -641,52 +568,38 @@ const GeneralPost: FC = () => {
 																)}
 														</span>
 													</div>
-													{user &&
-														user.id ===
-															comment.user_id && (
-															<div>
-																<AlertDialog>
-																	<AlertDialogTrigger
-																		asChild
-																	>
-																		<button className="flex items-center gap-2 cursor-pointer text-caption">
-																			<Trash2
-																				size={
-																					12
-																				}
-																			/>
-																		</button>
-																	</AlertDialogTrigger>
-																	<AlertDialogContent>
-																		<AlertDialogHeader>
-																			<AlertDialogTitle>
-																				댓글
-																				삭제
-																			</AlertDialogTitle>
-																			<AlertDialogDescription>
-																				댓글을
-																				삭제하시겠습니까?
-																			</AlertDialogDescription>
-																		</AlertDialogHeader>
-																		<AlertDialogFooter>
-																			<AlertDialogCancel>
-																				취소
-																			</AlertDialogCancel>
-																			<AlertDialogAction
-																				onClick={() =>
-																					deleteComments(
-																						comment.id.toString()
-																					)
-																				}
-																				className="bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue"
-																			>
-																				삭제
-																			</AlertDialogAction>
-																		</AlertDialogFooter>
-																	</AlertDialogContent>
-																</AlertDialog>
-															</div>
-														)}
+													{user && user.id === comment.user_id && (
+														<div>
+															<AlertDialog>
+																<AlertDialogTrigger asChild>
+																	<button className="flex items-center gap-2 cursor-pointer text-caption">
+																		<Trash2 size={12} />
+																	</button>
+																</AlertDialogTrigger>
+																<AlertDialogContent>
+																	<AlertDialogHeader>
+																		<AlertDialogTitle>
+																			댓글 삭제
+																		</AlertDialogTitle>
+																		<AlertDialogDescription>
+																			댓글을 삭제하시겠습니까?
+																		</AlertDialogDescription>
+																	</AlertDialogHeader>
+																	<AlertDialogFooter>
+																		<AlertDialogCancel>취소</AlertDialogCancel>
+																		<AlertDialogAction
+																			onClick={() =>
+																				deleteComments(comment.id.toString())
+																			}
+																			className="bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue"
+																		>
+																			삭제
+																		</AlertDialogAction>
+																	</AlertDialogFooter>
+																</AlertDialogContent>
+															</AlertDialog>
+														</div>
+													)}
 												</div>
 												<p className="text-gray-700 text-sm mb-3">
 													{comment.content}
