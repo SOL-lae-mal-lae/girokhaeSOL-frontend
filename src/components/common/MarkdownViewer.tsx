@@ -9,7 +9,7 @@ interface MarkdownViewerProps {
 
 export const MarkdownViewer: FC<MarkdownViewerProps> = ({ markdown }) => {
 	return (
-		<div className="p-8[&>ul>li]:text-sub1">
+		<div className="p-8[&>ul>li]:text-sub1 font-light">
 			<ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
 		</div>
 	);

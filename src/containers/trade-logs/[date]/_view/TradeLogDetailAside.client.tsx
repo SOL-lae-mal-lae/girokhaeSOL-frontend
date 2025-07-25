@@ -138,9 +138,9 @@ const TradeLogDetailAside: FC<Props> = ({
 				<div className="flex flex-col gap-2">
 					<div className="flex flex-row gap-2 items-center">
 						<h4 className="font-medium text-sm text-muted-foreground">
-							평가받기
+							피드백 받기
 						</h4>
-						<HelpTooltip text="작성한 매매일지를 기반으로 AI평가를 받을 수 있습니다." />
+						<HelpTooltip text="작성한 매매일지를 기반으로 AI 피드백을 받을 수 있습니다." />
 					</div>
 					<Button
 						className="w-full bg-brand-shinhan-blue text-white hover:bg-brand-navy-blue cursor-pointer"
@@ -148,7 +148,7 @@ const TradeLogDetailAside: FC<Props> = ({
 						disabled={isLoading}
 					>
 						{isLoading && <Spinner />}
-						{!isLoading && hasAiEvaluation ? '결과 확인하기' : '평가 받기'}
+						{!isLoading && hasAiEvaluation ? '결과 확인하기' : '피드백 받기'}
 					</Button>
 				</div>
 			</CardContent>

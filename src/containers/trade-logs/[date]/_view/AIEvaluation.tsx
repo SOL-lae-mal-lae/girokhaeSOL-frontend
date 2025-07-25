@@ -71,7 +71,9 @@ const AIEvaluation: FC<Props> = ({ result, isOpen, onChangeOpen }) => {
 											{title}
 										</AccordionTrigger>
 										<AccordionContent>
-											<MarkdownViewer markdown={content} />
+											{content.split('PARAGRAPH').map((text) => {
+												return <MarkdownViewer key={text} markdown={text} />;
+											})}
 										</AccordionContent>
 									</AccordionItem>
 								);
