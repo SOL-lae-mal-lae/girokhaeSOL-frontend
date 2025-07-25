@@ -64,11 +64,11 @@ const UserInfoContainer = ({ email, profileImage }: Props) => {
 						나이: {data?.age}세
 					</div>
 					<div className="text-sm text-gray-800">
-						게시글 갯수:{' '}
+						게시글 갯수:
 						<span className="font-bold text-blue-600">
 							{data?.postsCount}
 						</span>
-						· 댓글{' '}
+						· 댓글
 						<span className="font-bold text-blue-600">
 							{data?.commentsCount}
 						</span>
