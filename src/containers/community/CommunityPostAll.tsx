@@ -3,8 +3,9 @@
 import { useRouter } from 'next/navigation';
 
 import { useQuery } from '@tanstack/react-query';
-import { MessageCircle, Share2 } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 
+import { StockItem } from '@/@types/stockItem';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import {
@@ -17,9 +18,13 @@ type PostType = 'all' | 'general' | 'trade-log';
 
 interface CommunityPostAllProps {
 	postType: PostType;
+	selectedStock: StockItem;
 }
 
-export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
+export const CommunityPostAll = ({
+	postType,
+	selectedStock,
+}: CommunityPostAllProps) => {
 	const router = useRouter();
 	const { data, isLoading } = useQuery({
 		queryKey: ['community-all-post', postType],
@@ -27,14 +32,23 @@ export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
 			switch (postType) {
 				case 'all':
 					return getCommunityAllPost();
-				case 'general':
-					return getCommunityGeneralPost();
 				case 'trade-log':
+					return getCommunityGeneralPost();
+				case 'general':
 					return getCommunityTradeLogPost();
 				default:
 					return getCommunityAllPost();
 			}
 		},
+		select: (data) => {
+			if (selectedStock.stock_name && data) {
+				return data.filter((post) =>
+					post.tags.includes(selectedStock.stock_name)
+				);
+			}
+			return data;
+		},
+		staleTime: 1000 * 60 * 5,
 	});
 
 	const handleCardClick = (postId: number) => {
@@ -84,9 +98,6 @@ export const CommunityPostAll = ({ postType }: CommunityPostAllProps) => {
 
 								{/* 우측 하단 아이콘들 */}
 								<div className="flex items-center gap-4 justify-end">
-									<div className="flex items-center gap-1 text-gray-500 hover:text-green-600 transition-colors cursor-pointer">
-										<Share2 size={16} />
-									</div>
 									<div className="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition-colors cursor-pointer">
 										<MessageCircle size={16} />
 										<span className="text-sm">{post.comment_count}</span>

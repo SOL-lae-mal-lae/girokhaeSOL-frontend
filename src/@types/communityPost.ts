@@ -7,6 +7,7 @@ export interface CommunityAllPost {
 	title: string;
 	content: string;
 	comment_count: number;
+	tags: string[];
 }
 
 export interface CommunityPost {
