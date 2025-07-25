@@ -5,28 +5,16 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useQuery } from '@tanstack/react-query';
-import { ChevronsUpDown, LockKeyhole, X } from 'lucide-react';
+import { LockKeyhole, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { StockItem } from '@/@types/stockItem';
+import StockSearch from '@/components/custom/StockSearch';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from '@/components/ui/command';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from '@/components/ui/popover';
 import {
 	Select,
 	SelectContent,
@@ -50,7 +38,7 @@ import {
 	TradeSummary,
 } from '@/containers/trade-logs/[date]/_view';
 import StockChart from '@/containers/trade-logs/[date]/_view/StockChart.client';
-import { createPost, getStockList, getTradeDates } from '@/services/post';
+import { createPost, getTradeDates } from '@/services/post';
 import { getTradeLogByDate } from '@/services/trade-logs';
 
 export default function CommunityPostWrite() {
@@ -58,18 +46,15 @@ export default function CommunityPostWrite() {
 	const [shareSensitive, setShareSensitive] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(''); // 실제로는 일지 날짜 목록 필요
 	const [selectedStock, setSelectedStock] = useState<StockItem[]>([]);
-	const [popOpen, setPopOpen] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+	const [popOpen, setPopOpen] = useState(false);
 
 	const { data: tradeLog, isLoading: isLoadingTradeLog } = useQuery({
 		queryKey: ['tradeLog', 'detail', selectedDate],
 		queryFn: () => getTradeLogByDate(selectedDate),
 		enabled: !!selectedDate, // 날짜가 선택됐을 때만 fetch
-	});
-	const { data: stockList, isLoading: isStockLoading } = useQuery({
-		queryKey: ['stockList'],
-		queryFn: () => getStockList(),
 	});
 
 	const { data: diaryList } = useQuery({
@@ -77,7 +62,6 @@ export default function CommunityPostWrite() {
 		queryFn: () => getTradeDates(),
 	});
 
-	const [value, setValue] = useState('');
 	const router = useRouter();
 
 	const validSelectedStock = selectedStock.filter(
@@ -85,9 +69,13 @@ export default function CommunityPostWrite() {
 			s && typeof s === 'object' && 'stock_code' in s && 'stock_name' in s
 	);
 
-	if (isStockLoading) {
-		return <LoadingSpinner text="종목 가져오는 중..." />;
-	}
+	const handleSelectStock = (stock: StockItem) => {
+		setSelectedStock((prev) => [...prev, stock]);
+	};
+
+	const handlePopover = (state: boolean) => {
+		setPopOpen(state);
+	};
 
 	return (
 		<div className="w-full h-full">
@@ -319,62 +307,12 @@ export default function CommunityPostWrite() {
 						<div className="mb-4">
 							<div className="w-full flex flex-row items-center gap-2">
 								<Label className="block font-semibold">태그 추가</Label>
-								<Popover open={popOpen} onOpenChange={setPopOpen}>
-									<PopoverTrigger asChild>
-										<Button
-											variant="outline"
-											role="combobox"
-											aria-expanded={popOpen}
-											className="w-[200px] flex cursor-pointer"
-										>
-											<span className="flex-1 truncate text-start">
-												{value
-													? stockList?.find(
-															(stock) => stock.stock_name === value
-														)?.stock_name
-													: '종목명 선택'}
-											</span>
-											<ChevronsUpDown className="opacity-50" />
-										</Button>
-									</PopoverTrigger>
-									<PopoverContent className="w-[200px] p-0">
-										<Command>
-											<CommandInput placeholder="종목명 검색" className="h-9" />
-											<CommandList>
-												<CommandEmpty>검색 결과가 없습니다.</CommandEmpty>
-												<CommandGroup>
-													{stockList?.map((stock) => {
-														return (
-															<CommandItem
-																key={stock.stock_code}
-																value={stock.stock_name}
-																onSelect={(currentValue) => {
-																	setValue(
-																		currentValue === value ? '' : currentValue
-																	);
-																	if (
-																		!selectedStock.some(
-																			(s) => s.stock_code === stock.stock_code
-																		)
-																	) {
-																		setSelectedStock((prev) => [
-																			...prev,
-																			stock,
-																		]);
-																	}
-
-																	setPopOpen(false);
-																}}
-															>
-																{stock.stock_name}
-															</CommandItem>
-														);
-													})}
-												</CommandGroup>
-											</CommandList>
-										</Command>
-									</PopoverContent>
-								</Popover>
+								<StockSearch
+									popoverOpen={popOpen}
+									onControlPopover={handlePopover}
+									selectedStock={selectedStock}
+									onSelectStock={handleSelectStock}
+								/>
 							</div>
 
 							<div className="relative w-full gap-1 mt-4 flex flex-row flex-wrap ">
