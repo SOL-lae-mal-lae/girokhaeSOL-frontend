@@ -2,6 +2,7 @@
 
 import { FC, useState } from 'react';
 
+import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 
 import { useUser } from '@clerk/nextjs';
@@ -28,7 +29,7 @@ import {
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
 	Popover,
@@ -123,7 +124,7 @@ const GeneralPost: FC = () => {
 	if (isLoading) {
 		return (
 			<div className="flex justify-center items-center h-full">
-				<LoadingSpinner text="게시글 불러오는 중..." />;
+				<LoadingSpinner text="게시글 불러오는 중..." />
 			</div>
 		);
 	}
@@ -154,22 +155,26 @@ const GeneralPost: FC = () => {
 			<div className="flex-1 p-4">
 				{data?.post_type ? (
 					<Card className="mb-6">
-						<CardContent className="p-0">
+						<CardContent>
 							{/* 작성자 정보 */}
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-3">
 									<div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
 										{data?.user_id === user?.id && user?.imageUrl ? (
-											<img
+											<Image
 												src={user.imageUrl}
 												alt="프로필 이미지"
 												className="w-full h-full object-cover"
+												width={40}
+												height={40}
 											/>
 										) : (
-											<img
-												src="/images/userImg.png"
+											<Image
+												src="/images/userImage.png"
 												alt="기본 프로필 이미지"
 												className="w-full h-full object-cover"
+												width={40}
+												height={40}
 											/>
 										)}
 									</div>
@@ -249,14 +254,14 @@ const GeneralPost: FC = () => {
 							</div>
 
 							{data?.post_type ? (
-								<Card className="flex flex-row gap-2 mt-8 p-8">
+								<Card className="flex flex-row gap-2 mt-8">
 									{!tradeLog && isLogLoading ? (
 										<div className="flex justify-center items-center h-full">
 											<LoadingSpinner text="매매일지를 불러오는 중..." />
 										</div>
 									) : (
 										tradeLog && (
-											<CardContent className="grid grid-cols-2 gap-15">
+											<CardContent className="grid grid-cols-2 gap-12">
 												<StockChart
 													stockChartList={tradeLog.charts}
 													chartWidth={500}
@@ -273,7 +278,9 @@ const GeneralPost: FC = () => {
 																	profit_rate: 0,
 																}
 													}
+													isSensitive={!data?.is_public}
 												/>
+
 												{data?.is_public ? (
 													<TradeDetailTable
 														getFinanceData={() => {}}
@@ -344,22 +351,34 @@ const GeneralPost: FC = () => {
 													</div>
 												)}
 
-												<div className="flex flex-col gap-2">
-													<h3 className="text-lg font-semibold text-gray-900">
+												<div className="flex flex-col gap-3">
+													<h1 className="text-heading3 font-bold">
 														매매일지 분석
-													</h3>
-													<h3 className="text-lg font-semibold text-gray-900">
-														매매 근거
-													</h3>
-													<p className="text-gray-700 leading-relaxed mb-2">
-														{tradeLog?.rationale}
-													</p>
-													<h3 className="text-lg font-semibold text-gray-900">
-														투자 평가
-													</h3>
-													<p className="text-gray-700 leading-relaxed mb-2">
-														{tradeLog?.evaluation}
-													</p>
+													</h1>
+													<Card className="min-h-[200px]">
+														<CardHeader>
+															<h3 className="text-lg font-semibold text-gray-900">
+																매매 근거
+															</h3>
+														</CardHeader>
+														<CardContent>
+															<p className="text-gray-700 leading-relaxed mb-2">
+																{tradeLog?.rationale}
+															</p>
+														</CardContent>
+													</Card>
+													<Card className="min-h-[200px]">
+														<CardHeader>
+															<h3 className="text-lg font-semibold text-gray-900">
+																투자 평가
+															</h3>
+														</CardHeader>
+														<CardContent>
+															<p className="text-gray-700 leading-relaxed mb-2">
+																{tradeLog?.evaluation}
+															</p>
+														</CardContent>
+													</Card>
 												</div>
 											</CardContent>
 										)
@@ -386,16 +405,20 @@ const GeneralPost: FC = () => {
 								<div className="flex items-center gap-3">
 									<div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
 										{data?.user_id === user?.id && user?.imageUrl ? (
-											<img
+											<Image
 												src={user.imageUrl}
 												alt="프로필 이미지"
 												className="w-full h-full object-cover"
+												width={28}
+												height={28}
 											/>
 										) : (
-											<img
-												src="/images/userImg.png"
+											<Image
+												src="/images/userImage.png"
 												alt="기본 프로필 이미지"
 												className="w-full h-full object-cover"
+												width={28}
+												height={28}
 											/>
 										)}
 									</div>
@@ -534,16 +557,20 @@ const GeneralPost: FC = () => {
 										<div className="flex items-start gap-3">
 											<div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
 												{comment.user_id === user?.id && user?.imageUrl ? (
-													<img
+													<Image
 														src={user.imageUrl}
 														alt="댓글 작성자 프로필"
 														className="w-full h-full object-cover"
+														width={28}
+														height={28}
 													/>
 												) : (
-													<img
-														src="/images/userImg.png"
+													<Image
+														src="/images/userImage.png"
 														alt="기본 프로필 이미지"
 														className="w-full h-full object-cover"
+														width={28}
+														height={28}
 													/>
 												)}
 											</div>
