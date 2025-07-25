@@ -34,9 +34,7 @@ export const fetchUserComments = async (): Promise<myPageComments[]> => {
 
 export const fetchCurrentUserPosts = async (): Promise<myPagePosts[]> => {
 	try {
-		const res = await fetch(
-			`${CLIENT_HOST_FOR_CLIENT}/api/v1/my-page/posts`
-		);
+		const res = await fetch(`${CLIENT_HOST_FOR_CLIENT}/api/v1/my-page/posts`);
 
 		if (!res.ok) {
 			return [];
@@ -44,16 +42,14 @@ export const fetchCurrentUserPosts = async (): Promise<myPagePosts[]> => {
 
 		const data = await res.json();
 
-		const mappedPosts = (data.data.posts || []).map(
-			(post: myPagePosts) => ({
-				title: post.title,
-				content: post.content,
-				isPublic: post.is_public, // boolean 타입 유지
-				postType: post.post_type, // string으로 매핑
-				userId: post.user_id, // string으로 매핑
-				created_at: post.created_at, // string 그대로 사용
-			})
-		);
+		const mappedPosts = (data.data.posts || []).map((post: myPagePosts) => ({
+			title: post.title,
+			content: post.content,
+			isPublic: post.is_public, // boolean 타입 유지
+			postType: post.post_type, // string으로 매핑
+			userId: post.user_id, // string으로 매핑
+			created_at: post.created_at, // string 그대로 사용
+		}));
 		return mappedPosts;
 	} catch (error) {
 		console.error(error);
@@ -63,9 +59,7 @@ export const fetchCurrentUserPosts = async (): Promise<myPagePosts[]> => {
 
 export const fetchCurrentUserInfo = async (): Promise<User | null> => {
 	try {
-		const res = await fetch(
-			`${CLIENT_HOST_FOR_CLIENT}/api/v1/my-page/user`
-		);
+		const res = await fetch(`${CLIENT_HOST_FOR_CLIENT}/api/v1/my-page/user`);
 
 		if (!res.ok) {
 			return null;

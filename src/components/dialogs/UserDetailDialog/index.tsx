@@ -71,9 +71,7 @@ const UserDetailDialog: FC<Props> = ({ onClose }) => {
 								<Input
 									type="number"
 									{...field}
-									onChange={(e) =>
-										field.onChange(Number(e.target.value))
-									}
+									onChange={(e) => field.onChange(Number(e.target.value))}
 								/>
 							</FormControl>
 							<FormMessage />
@@ -93,26 +91,14 @@ const UserDetailDialog: FC<Props> = ({ onClose }) => {
 									defaultValue={field.value}
 								>
 									<div className="flex items-center gap-2">
-										<RadioGroupItem
-											value="male"
-											id="male"
-										></RadioGroupItem>
-										<Label
-											className="font-normal"
-											htmlFor="male"
-										>
+										<RadioGroupItem value="male" id="male"></RadioGroupItem>
+										<Label className="font-normal" htmlFor="male">
 											남성
 										</Label>
 									</div>
 									<div className="flex items-center gap-2">
-										<RadioGroupItem
-											id="female"
-											value="female"
-										></RadioGroupItem>
-										<Label
-											className="font-normal"
-											htmlFor="female"
-										>
+										<RadioGroupItem id="female" value="female"></RadioGroupItem>
+										<Label className="font-normal" htmlFor="female">
 											여성
 										</Label>
 									</div>

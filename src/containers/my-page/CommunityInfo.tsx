@@ -119,9 +119,7 @@ const CommunityInfoContainer = () => {
 													<p>
 														{post.title}
 														<Badge variant="secondary">
-															{post.post_type
-																? '매매일지'
-																: '일반'}
+															{post.post_type ? '매매일지' : '일반'}
 														</Badge>
 													</p>
 													<p
@@ -138,9 +136,7 @@ const CommunityInfoContainer = () => {
 												<div className="flex items-center gap-4 text-sm text-muted-foreground">
 													<span>
 														{/* Format the date correctly */}
-														{new Date(
-															post.created_at
-														).toLocaleDateString() ||
+														{new Date(post.created_at).toLocaleDateString() ||
 															'날짜 없음'}
 													</span>
 												</div>
@@ -157,17 +153,11 @@ const CommunityInfoContainer = () => {
 						<PaginationContent>
 							<PaginationItem>
 								<PaginationPrevious
-									onClick={() =>
-										setPostPage((prev) =>
-											Math.max(1, prev - 1)
-										)
-									}
+									onClick={() => setPostPage((prev) => Math.max(1, prev - 1))}
 								/>
 							</PaginationItem>
 							<PaginationItem>
-								<PaginationLink href="#">
-									{postPage}
-								</PaginationLink>
+								<PaginationLink href="#">{postPage}</PaginationLink>
 							</PaginationItem>
 							<PaginationItem>
 								<PaginationEllipsis />
@@ -175,9 +165,7 @@ const CommunityInfoContainer = () => {
 							<PaginationItem>
 								<PaginationNext
 									onClick={() =>
-										setPostPage((prev) =>
-											Math.min(totalPostPages, prev + 1)
-										)
+										setPostPage((prev) => Math.min(totalPostPages, prev + 1))
 									}
 								/>
 							</PaginationItem>
@@ -222,9 +210,7 @@ const CommunityInfoContainer = () => {
 												<div className="flex items-center gap-4 text-sm text-muted-foreground">
 													<span>
 														{/* Format the date correctly */}
-														{new Date(
-															comment.created_at
-														).toLocaleDateString()}
+														{new Date(comment.created_at).toLocaleDateString()}
 													</span>
 												</div>
 											</CardContent>
@@ -241,16 +227,12 @@ const CommunityInfoContainer = () => {
 							<PaginationItem>
 								<PaginationPrevious
 									onClick={() =>
-										setCommentPage((prev) =>
-											Math.max(1, prev - 1)
-										)
+										setCommentPage((prev) => Math.max(1, prev - 1))
 									}
 								/>
 							</PaginationItem>
 							<PaginationItem>
-								<PaginationLink href="#">
-									{commentPage}
-								</PaginationLink>
+								<PaginationLink href="#">{commentPage}</PaginationLink>
 							</PaginationItem>
 							<PaginationItem>
 								<PaginationEllipsis />
@@ -259,10 +241,7 @@ const CommunityInfoContainer = () => {
 								<PaginationNext
 									onClick={() =>
 										setCommentPage((prev) =>
-											Math.min(
-												totalCommentPages,
-												prev + 1
-											)
+											Math.min(totalCommentPages, prev + 1)
 										)
 									}
 								/>

@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 import { useQuery } from '@tanstack/react-query'; // react-query에서 useMutation 가져오기
 
 import { Card } from '@/components/ui/card';
@@ -41,10 +43,12 @@ const UserInfoContainer = ({ email, profileImage }: Props) => {
 				<div>
 					{/* Profile image section */}
 					<div className="flex-shrink-0 mr-4">
-						<img
+						<Image
 							src={profileImage}
 							alt="Profile Image"
 							className="w-24 h-24 rounded-full object-cover"
+							width={96}
+							height={96}
 						/>
 					</div>
 

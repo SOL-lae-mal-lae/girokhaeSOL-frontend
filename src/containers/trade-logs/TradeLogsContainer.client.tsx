@@ -25,9 +25,7 @@ const TradeLogsContainerClient = () => {
 	});
 
 	if (isLoading) {
-		return (
-			<PageSpinner text="거래 기록을 불러오는 중..." variant="shinhan" />
-		);
+		return <PageSpinner text="거래 기록을 불러오는 중..." variant="shinhan" />;
 	}
 
 	return (
