@@ -16,8 +16,8 @@ const MyPageContainer = async () => {
 	const email = clientUser.emailAddresses;
 	const profileImage = clientUser.imageUrl;
 	//console.log('clientUser', clientUser);
-	console.log(email[0]?.emailAddress);
-	console.log(profileImage);
+	// console.log(email[0]?.emailAddress);
+	// console.log(profileImage);
 
 	return (
 		<div className="w-full h-full">
