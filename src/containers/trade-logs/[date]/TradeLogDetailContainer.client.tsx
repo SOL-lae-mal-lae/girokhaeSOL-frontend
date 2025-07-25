@@ -81,9 +81,7 @@ const TradeLogDetailContainerClient = ({ date }: Props) => {
 			<div className="w-full max-w-7xl mx-auto px-8 flex flex-col gap-8 mt-8">
 				<div className="flex flex-col gap-1 mb-2">
 					<h2 className="text-2xl font-bold">매매일지 상세</h2>
-					<div className="text-base text-muted-foreground">
-						{date}
-					</div>
+					<div className="text-base text-muted-foreground">{date}</div>
 				</div>
 				<div className="flex items-center justify-center h-full p-8">
 					<p className="text-muted-foreground">
@@ -111,7 +109,7 @@ const TradeLogDetailContainerClient = ({ date }: Props) => {
 						<StockChart stockChartList={tradeLog.charts} />
 
 						{/* 거래 요약 카드 */}
-						<TradeSummary summaries={tradeLog.summaries} />
+						<TradeSummary summaries={tradeLog.summaries} isSensitive={false} />
 
 						{/* 상세 거래내역 테이블 */}
 						<TradeDetailTable
