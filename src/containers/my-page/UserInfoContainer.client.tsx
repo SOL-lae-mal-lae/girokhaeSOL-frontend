@@ -37,40 +37,36 @@ const UserInfoContainer = ({ email, profileImage }: Props) => {
 			style={{ paddingInline: '0' }}
 		>
 			<h2 className="text-2xl font-bold mb-2">내 정보</h2>
-			<Card className="flex flex-row items-center p-6 bg-white shadow-md rounded-lg">
-				{/* Profile image section */}
-				<div className="flex-shrink-0 mr-4">
-					<img
-						src={profileImage}
-						alt="Profile Image"
-						className="w-24 h-24 rounded-full object-cover"
-					/>
-				</div>
-
-				{/* User Info section */}
-				<div className="flex flex-col gap-2">
-					<div className="text-xl font-semibold text-gray-800">
-						{data?.nickname}
+			<Card className="flex flex-row items-center justify-between p-6 bg-white shadow-md rounded-lg">
+				<div>
+					{/* Profile image section */}
+					<div className="flex-shrink-0 mr-4">
+						<img
+							src={profileImage}
+							alt="Profile Image"
+							className="w-24 h-24 rounded-full object-cover"
+						/>
 					</div>
-					<div className="text-sm text-gray-600">{email}</div>
-					<div className="text-sm text-gray-600">
-						성별: {data?.gender}
+
+					{/* User Info section */}
+					<div className="flex flex-col gap-2">
+						<div className="text-xl font-semibold text-gray-800">
+							{data?.nickname}
+						</div>
+						<div className="text-sm text-gray-600">{email}</div>
+						<div className="text-sm text-gray-600">성별: {data?.gender}</div>
 					</div>
 				</div>
 
 				{/* Additional Stats section */}
-				<div className="flex flex-col items-end gap-2">
+				<div className="flex flex-col items-end gap-2 flex-end">
+					<div className="text-sm text-gray-800">나이 {data?.age}세</div>
 					<div className="text-sm text-gray-800">
-						나이: {data?.age}세
-					</div>
-					<div className="text-sm text-gray-800">
-						게시글 갯수:
+						게시글 갯수
+						<span className="font-bold text-blue-600">{` ${data?.postsCount} `}</span>
+						댓글
 						<span className="font-bold text-blue-600">
-							{data?.postsCount}
-						</span>
-						· 댓글
-						<span className="font-bold text-blue-600">
-							{data?.commentsCount}
+							{` ${data?.commentsCount}`}
 						</span>
 					</div>
 				</div>
