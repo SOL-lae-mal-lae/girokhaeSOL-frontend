@@ -1,11 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-import { useMutation } from '@tanstack/react-query'; // Import useMutation from react-query
+import { useQuery } from '@tanstack/react-query'; // Import useMutation from react-query
 
-import { myPageComments } from '@/@types/comments';
-import { myPagePosts } from '@/@types/posts';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardTitle, CardContent } from '@/components/ui/card';
 import {
@@ -17,84 +15,59 @@ import {
 	PaginationPrevious,
 	PaginationEllipsis,
 } from '@/components/ui/pagination';
+import { LoadingSpinner } from '@/components/ui/spinner';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { fetchCurrentUserPosts, fetchUserComments } from '@/services/my-page';
 
 const ITEMS_PER_PAGE = 10;
 
 const CommunityInfoContainer = () => {
-	const [posts, setPosts] = useState<myPagePosts[]>([]); // 게시글 상태
-	const [comments, setComments] = useState<myPageComments[]>([]); // 댓글 상태
 	const [postPage, setPostPage] = useState(1); // 게시글 페이지
 	const [commentPage, setCommentPage] = useState(1); // 댓글 페이지
-	const [loading, setLoading] = useState(true); // 로딩 상태
-	const [error, setError] = useState<string | null>(null); // 에러 상태
 
 	// 게시글과 댓글을 가져오는 useMutation 훅
-	const { mutate: getPosts } = useMutation({
-		mutationFn: fetchCurrentUserPosts,
-		onSuccess: (data) => {
-			if (data) setPosts(data);
-			setLoading(false);
-		},
-		onError: () => {
-			setError('데이터를 불러오는 데 문제가 발생했습니다.');
-			setLoading(false);
-		},
+	const {
+		data: postsData,
+		isLoading: postsLoading,
+		error: postsError,
+	} = useQuery({
+		queryKey: ['my-page-posts'],
+		queryFn: fetchCurrentUserPosts,
+		staleTime: 1000 * 60 * 5, // 5분 후 데이터 갱신
 	});
 
-	const { mutate: getComments } = useMutation({
-		mutationFn: fetchUserComments,
-		onSuccess: (data) => {
-			if (data) setComments(data);
-			setLoading(false);
-		},
-		onError: () => {
-			setError('데이터를 불러오는 데 문제가 발생했습니다.');
-			setLoading(false);
-		},
+	const {
+		data: commentsData,
+		isLoading: commentsLoading,
+		error: commentsError,
+	} = useQuery({
+		queryKey: ['my-page-comments'],
+		queryFn: fetchUserComments,
+		staleTime: 1000 * 60 * 5, // 5분 후 데이터 갱신
 	});
-
-	useEffect(() => {
-		setLoading(true);
-		setError(null);
-		// 게시글과 댓글을 가져오는 함수 호출
-		getPosts();
-		getComments();
-	}, [getPosts, getComments]);
 
 	// 게시글 페이지네이션 처리
-	const paginatedPosts = posts.slice(
+	const paginatedPosts = postsData?.slice(
 		(postPage - 1) * ITEMS_PER_PAGE,
 		postPage * ITEMS_PER_PAGE
 	);
 
 	// 댓글 페이지네이션 처리
-	const paginatedComments = comments.slice(
+	const paginatedComments = commentsData?.slice(
 		(commentPage - 1) * ITEMS_PER_PAGE,
 		commentPage * ITEMS_PER_PAGE
 	);
 
-	const totalPostPages = Math.ceil(posts.length / ITEMS_PER_PAGE);
-	const totalCommentPages = Math.ceil(comments.length / ITEMS_PER_PAGE);
+	const totalPostPages = Math.ceil(postsData?.length ?? 0 / ITEMS_PER_PAGE);
+	const totalCommentPages = Math.ceil(
+		commentsData?.length ?? 0 / ITEMS_PER_PAGE
+	);
 
 	return (
 		<div>
 			<div className="flex flex-col gap-1 mb-2">
 				<h2 className="text-2xl font-bold">활동 내역</h2>
 			</div>
-
-			{/* 로딩 상태 */}
-			{loading && (
-				<div className="text-center text-muted-foreground py-8">
-					로딩 중...
-				</div>
-			)}
-
-			{/* 에러 상태 */}
-			{error && (
-				<div className="text-center text-red-600 py-8">{error}</div>
-			)}
 
 			{/* SHADCN Tabs */}
 			<Tabs defaultValue="posts" className="w-full">
@@ -106,12 +79,25 @@ const CommunityInfoContainer = () => {
 				{/* 게시글 */}
 				<TabsContent value="posts">
 					<div className="flex flex-col gap-4">
-						{paginatedPosts.length === 0 ? (
+						{/* 로딩 상태 */}
+						{postsLoading && (
+							<div className="text-center text-muted-foreground py-8">
+								<LoadingSpinner text="게시글을 가져오는 중입니다..." />
+							</div>
+						)}
+
+						{/* 에러 상태 */}
+						{postsError && (
+							<div className="text-center text-red-600 py-8">
+								{postsError.message}
+							</div>
+						)}
+						{paginatedPosts?.length === 0 ? (
 							<div className="text-center text-muted-foreground py-8">
 								작성한 게시글이 없습니다.
 							</div>
 						) : (
-							paginatedPosts.map((post) => {
+							paginatedPosts?.map((post) => {
 								// Log each post during rendering
 								console.log('Rendering Post:', post);
 								return (
@@ -194,12 +180,25 @@ const CommunityInfoContainer = () => {
 				{/* 댓글 */}
 				<TabsContent value="comments">
 					<div className="flex flex-col gap-4">
-						{paginatedComments.length === 0 ? (
+						{/* 로딩 상태 */}
+						{commentsLoading && (
+							<div className="text-center text-muted-foreground py-8">
+								<LoadingSpinner text="댓글을 가져오는 중입니다..." />
+							</div>
+						)}
+
+						{/* 에러 상태 */}
+						{commentsError && (
+							<div className="text-center text-red-600 py-8">
+								{commentsError.message}
+							</div>
+						)}
+						{paginatedComments?.length === 0 ? (
 							<div className="text-center text-muted-foreground py-8">
 								작성한 댓글이 없습니다.
 							</div>
 						) : (
-							paginatedComments.map((comment) => {
+							paginatedComments?.map((comment) => {
 								// Log each comment during rendering
 								console.log('Rendering Comment:', comment);
 								return (
