@@ -45,6 +45,8 @@ const HomeUser: FC<Props> = ({ userName }) => {
 				startDate: oneYearAgoFormatted,
 				endDate: todayFormatted,
 			}),
+		retry: 3, // 최대 3번 재시도
+		retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // 지수 백오프
 	});
 	const titleRef = useRef<HTMLParagraphElement>(null);
 	const infoCardsRef = useRef<HTMLUListElement>(null);
