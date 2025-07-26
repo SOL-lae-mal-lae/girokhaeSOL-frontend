@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import Link from 'next/link';
+
 import { useQuery } from '@tanstack/react-query'; // Import useMutation from react-query
 
 import { Badge } from '@/components/ui/badge';
@@ -109,40 +111,39 @@ const CommunityInfoContainer = () => {
 						) : (
 							paginatedPosts?.map((post) => {
 								return (
-									<Card
-										className="flex flex-row items-center justify-between p-4"
-										key={post.title}
-									>
-										<div className="flex flex-col gap-1 flex-1">
-											<CardTitle className="flex items-center gap-2">
-												<span className="text-lg font-semibold">
-													<p>
-														{post.title}
-														<Badge variant="secondary">
-															{post.post_type ? '매매일지' : '일반'}
-														</Badge>
-													</p>
-													<p
-														className="text-base font-medium"
-														style={{
-															fontSize: '0.8em',
-														}}
-													>
-														{post.content}
-													</p>
-												</span>
-											</CardTitle>
-											<CardContent className="flex flex-col gap-1 px-0 pb-0">
-												<div className="flex items-center gap-4 text-sm text-muted-foreground">
-													<span>
-														{/* Format the date correctly */}
-														{new Date(post.created_at).toLocaleDateString() ||
-															'날짜 없음'}
+									<Link key={post.title} href={`/community/${post.id}`}>
+										<Card className="flex flex-row items-center justify-between p-4">
+											<div className="flex flex-col gap-1 flex-1">
+												<CardTitle className="flex items-center gap-2">
+													<span className="text-lg font-semibold">
+														<p>
+															{post.title}
+															<Badge variant="secondary">
+																{post.post_type ? '매매일지' : '일반'}
+															</Badge>
+														</p>
+														<p
+															className="text-base font-medium"
+															style={{
+																fontSize: '0.8em',
+															}}
+														>
+															{post.content}
+														</p>
 													</span>
-												</div>
-											</CardContent>
-										</div>
-									</Card>
+												</CardTitle>
+												<CardContent className="flex flex-col gap-1 px-0 pb-0">
+													<div className="flex items-center gap-4 text-sm text-muted-foreground">
+														<span>
+															{/* Format the date correctly */}
+															{new Date(post.created_at).toLocaleDateString() ||
+																'날짜 없음'}
+														</span>
+													</div>
+												</CardContent>
+											</div>
+										</Card>
+									</Link>
 								);
 							})
 						)}

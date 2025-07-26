@@ -43,6 +43,7 @@ export const fetchCurrentUserPosts = async (): Promise<myPagePosts[]> => {
 		const data = await res.json();
 
 		const mappedPosts = (data.data.posts || []).map((post: myPagePosts) => ({
+			id: post.id,
 			title: post.title,
 			content: post.content,
 			isPublic: post.is_public, // boolean 타입 유지
