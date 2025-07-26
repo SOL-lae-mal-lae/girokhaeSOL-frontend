@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LockKeyhole, X } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -42,13 +42,15 @@ import { createPost, getTradeDates } from '@/services/post';
 import { getTradeLogByDate } from '@/services/trade-logs';
 
 export default function CommunityPostWrite() {
+	const queryClient = useQueryClient();
+	const router = useRouter();
+
 	const [shareDiary, setShareDiary] = useState(false);
 	const [shareSensitive, setShareSensitive] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(''); // 실제로는 일지 날짜 목록 필요
 	const [selectedStock, setSelectedStock] = useState<StockItem[]>([]);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-
 	const [popOpen, setPopOpen] = useState(false);
 
 	const { data: tradeLog, isLoading: isLoadingTradeLog } = useQuery({
@@ -62,7 +64,19 @@ export default function CommunityPostWrite() {
 		queryFn: () => getTradeDates(),
 	});
 
-	const router = useRouter();
+	const { mutate: createPostMutate } = useMutation({
+		mutationFn: createPost,
+		onSuccess: (data) => {
+			if (data) {
+				router.push('/community');
+			} else {
+				toast.error('게시글 작성에 실패했습니다.');
+			}
+			queryClient.invalidateQueries({
+				queryKey: ['community-all-post'],
+			});
+		},
+	});
 
 	const validSelectedStock = selectedStock.filter(
 		(s): s is StockItem =>
@@ -75,6 +89,43 @@ export default function CommunityPostWrite() {
 
 	const handlePopover = (state: boolean) => {
 		setPopOpen(state);
+	};
+
+	const handleCreatePost = () => {
+		if (inputRef.current && inputRef.current.value === '') {
+			toast.error('제목과 내용을 입력해주세요.');
+			return;
+		}
+		if (textareaRef.current && textareaRef.current.value.length < 10) {
+			toast.error('내용은 최소 10자 이상이어야 합니다.');
+			return;
+		}
+		if (shareDiary) {
+			if (diaryList && selectedDate) {
+				const diaryId = diaryList.find((d) => d.date === selectedDate)!.id;
+				createPostMutate({
+					post_type: shareDiary,
+					title: inputRef.current?.value ?? '',
+					content: textareaRef.current?.value ?? '',
+					trade_log_id: diaryId,
+					is_public: shareSensitive,
+					tags: selectedStock,
+				});
+			} else {
+				toast.error('날짜를 선택해주세요.');
+				return;
+			}
+			// 일반 글은 id 없음, 종목 선택 없음
+		} else {
+			createPostMutate({
+				post_type: shareDiary,
+				title: inputRef.current?.value ?? '',
+				content: textareaRef.current?.value ?? '',
+				trade_log_id: null,
+				is_public: shareSensitive,
+				tags: selectedStock,
+			});
+		}
 	};
 
 	return (
@@ -341,60 +392,7 @@ export default function CommunityPostWrite() {
 						</div>
 						<Button
 							className="w-full bg-brand-shinhan-blue text-white mt-10 py-2 rounded cursor-pointer hover:bg-brand-navy-blue"
-							onClick={() => {
-								// 매매일지 공유 시, 날짜 선택, 리스트 없으면 토스트 띄우고 종료
-								if (inputRef.current && inputRef.current.value === '') {
-									toast.error('제목과 내용을 입력해주세요.');
-									return;
-								}
-								if (
-									textareaRef.current &&
-									textareaRef.current.value.length < 10
-								) {
-									toast.error('내용은 최소 10자 이상이어야 합니다.');
-									return;
-								}
-								if (shareDiary) {
-									if (diaryList && selectedDate) {
-										const diaryId = diaryList.find(
-											(d) => d.date === selectedDate
-										)!.id;
-										createPost({
-											post_type: shareDiary,
-											title: inputRef.current?.value ?? '',
-											content: textareaRef.current?.value ?? '',
-											trade_log_id: diaryId,
-											is_public: shareSensitive,
-											tags: selectedStock,
-										}).then((res) => {
-											if (res) {
-												router.push('/community');
-											} else {
-												toast.error('게시글 작성에 실패했습니다.');
-											}
-										});
-									} else {
-										toast.error('날짜를 선택해주세요.');
-										return;
-									}
-									// 일반 글은 id 없음, 종목 선택 없음
-								} else {
-									createPost({
-										post_type: shareDiary,
-										title: inputRef.current?.value ?? '',
-										content: textareaRef.current?.value ?? '',
-										trade_log_id: null,
-										is_public: shareSensitive,
-										tags: selectedStock,
-									}).then((res) => {
-										if (res) {
-											router.push('/community');
-										} else {
-											toast.error('게시글 작성에 실패했습니다.');
-										}
-									});
-								}
-							}}
+							onClick={handleCreatePost}
 						>
 							올리기
 						</Button>
