@@ -60,9 +60,9 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 			bollingerLower: any[];
 		};
 	}>({});
-	const legendRef = useRef<{
-		[key: string]: HTMLDivElement | null;
-	}>({});
+	const maRef = useRef<HTMLDivElement>(null);
+	const bollingerRef = useRef<HTMLDivElement>(null);
+	const ohlcRef = useRef<HTMLDivElement>(null);
 
 	const [selectedStockCode, setSelectedStockCode] = useState(stockChartList[0]);
 	const [showMA, setShowMA] = useState(true);
@@ -207,26 +207,26 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 		const lineSeries5 = chart.addSeries(LineSeries, {
 			color: 'green',
 			lineWidth: 1,
-			lastValueVisible: true,
-			priceLineVisible: true,
+			lastValueVisible: false,
+			priceLineVisible: false,
 		});
 		const lineSeries20 = chart.addSeries(LineSeries, {
 			color: 'red',
 			lineWidth: 1,
-			lastValueVisible: true,
-			priceLineVisible: true,
+			lastValueVisible: false,
+			priceLineVisible: false,
 		});
 		const lineSeries60 = chart.addSeries(LineSeries, {
 			color: 'orange',
 			lineWidth: 1,
-			lastValueVisible: true,
-			priceLineVisible: true,
+			lastValueVisible: false,
+			priceLineVisible: false,
 		});
 		const lineSeries120 = chart.addSeries(LineSeries, {
 			color: 'purple',
 			lineWidth: 1,
-			lastValueVisible: true,
-			priceLineVisible: true,
+			lastValueVisible: false,
+			priceLineVisible: false,
 		});
 
 		const candleStickSeries = chart.addSeries(CandlestickSeries, {
@@ -416,98 +416,181 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 			to: selectedStockCode.end_date,
 		});
 
-		// Legend 추가
-		const legend = document.createElement('div');
-		legend.style.position = 'absolute';
-		legend.style.left = '12px';
-		legend.style.top = '12px';
-		legend.style.zIndex = '1';
-		legend.style.fontSize = '12px';
-		legend.style.fontFamily = 'Arial, sans-serif';
-		legend.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-		legend.style.padding = '8px';
-		legend.style.borderRadius = '4px';
-		legend.style.border = '1px solid #ccc';
+		// 마우스 이동에 따른 값 업데이트 함수
+		const updateValues = (param: any) => {
+			if (
+				param.point === undefined ||
+				!param.time ||
+				param.point.x < 0 ||
+				param.point.x >
+					chartContainerRef.current[selectedStockCode.stock_code]!
+						.clientWidth ||
+				param.point.y < 0 ||
+				param.point.y >
+					chartContainerRef.current[selectedStockCode.stock_code]!.clientHeight
+			) {
+				// 차트 영역을 벗어나면 기본값으로 초기화
+				if (ohlcRef.current) {
+					ohlcRef.current.innerHTML = '시가: - 고가: - 저가: - 종가: -';
+				}
+				if (maRef.current) {
+					maRef.current.innerHTML =
+						'이동평균선 <span style="color: green;">5:</span> - <span style="color: red;">20:</span> - <span style="color: orange;">60:</span> - <span style="color: purple;">120:</span> -';
+				}
+				if (bollingerRef.current) {
+					bollingerRef.current.innerHTML =
+						'<span style="color: rgb(3, 178, 108);">중심선:</span> - <span style="color: rgb(255, 195, 66);">상한선:</span> - <span style="color: rgb(255, 195, 66);">하한선:</span> -';
+				}
+				return;
+			}
 
-		legend.innerHTML = `
-      <div style="margin-bottom: 4px;"><span style="color: green;">■</span> 이동평균선 5</div>
-      <div style="margin-bottom: 4px;"><span style="color: red;">■</span> 이동평균선 20</div>
-      <div style="margin-bottom: 4px;"><span style="color: orange;">■</span> 이동평균선 60</div>
-      <div style="margin-bottom: 4px;"><span style="color: purple;">■</span> 이동평균선 120</div>
-      <div><span style="color: rgb(255, 195, 66);">■</span> 상한선, 하한선</div>
-			<div><span style="color: rgb(3, 178, 108);">■</span> 중심선</div>
-    `;
+			// 캔들스틱 데이터
+			const candleData = param.seriesData.get(candleStickSeries);
 
-		legendRef.current[selectedStockCode.stock_code] = legend;
-		chartContainerRef.current[selectedStockCode.stock_code]!.appendChild(
-			legend
-		);
+			// 이동평균선 데이터들
+			const ma5Data = showMA ? param.seriesData.get(lineSeries5) : null;
+			const ma20Data = showMA ? param.seriesData.get(lineSeries20) : null;
+			const ma60Data = showMA ? param.seriesData.get(lineSeries60) : null;
+			const ma120Data = showMA ? param.seriesData.get(lineSeries120) : null;
+
+			// 볼린저 밴드 데이터들
+			const bollingerUpperData = showBollingerBands
+				? param.seriesData.get(bollingerUpper)
+				: null;
+			const bollingerMiddleData = showBollingerBands
+				? param.seriesData.get(bollingerMiddle)
+				: null;
+			const bollingerLowerData = showBollingerBands
+				? param.seriesData.get(bollingerLower)
+				: null;
+
+			// 가격 포맷팅 함수
+			const formatPrice = (price: number | undefined) => {
+				if (price === undefined || price === null) return '-';
+				return `${Math.round(price).toLocaleString('ko-KR')}원`;
+			};
+
+			// OHLC 영역 업데이트
+			if (ohlcRef.current && candleData) {
+				const open = formatPrice(candleData.open);
+				const high = formatPrice(candleData.high);
+				const low = formatPrice(candleData.low);
+				const close = formatPrice(candleData.close);
+
+				ohlcRef.current.innerHTML = `시가: ${open} 고가: ${high} 저가: ${low} 종가: ${close}`;
+			}
+
+			// 이동평균선 영역 업데이트
+			if (maRef.current) {
+				const ma5 = formatPrice(ma5Data?.value);
+				const ma20 = formatPrice(ma20Data?.value);
+				const ma60 = formatPrice(ma60Data?.value);
+				const ma120 = formatPrice(ma120Data?.value);
+
+				maRef.current.innerHTML = `이동평균선 <span style="color: green;">5:</span> ${ma5} <span style="color: red;">20:</span> ${ma20} <span style="color: orange;">60:</span> ${ma60} <span style="color: purple;">120:</span> ${ma120}`;
+			}
+
+			// 볼린저 밴드 영역 업데이트
+			if (bollingerRef.current) {
+				const upper = formatPrice(bollingerUpperData?.value);
+				const middle = formatPrice(bollingerMiddleData?.value);
+				const lower = formatPrice(bollingerLowerData?.value);
+
+				bollingerRef.current.innerHTML = `<span style="color: rgb(3, 178, 108);">중심선:</span> ${middle} <span style="color: rgb(255, 195, 66);">상한선:</span> ${upper} <span style="color: rgb(255, 195, 66);">하한선:</span> ${lower}`;
+			}
+		};
+
+		// 크로스헤어 이벤트 구독
+		chart.subscribeCrosshairMove(updateValues);
 
 		return () => {
 			chart.remove();
-			legend.remove();
 		};
 	}, [data, isSuccess, selectedStockCode, showMA, showBollingerBands]);
 
 	return (
 		<div className="flex flex-col gap-4">
 			<h1 className="text-heading3 font-bold">거래 기록 차트</h1>
-			<div className="flex justify-between items-center">
-				<Select
-					value={selectedStockCode.stock_code}
-					onValueChange={(value) => {
-						const stockCode = stockChartList.find(
-							(stock) => stock.stock_code === value
-						);
-						if (stockCode) {
-							setSelectedStockCode(stockCode);
-						}
-					}}
-				>
-					<SelectTrigger className="w-[200px] cursor-pointer">
-						<SelectValue placeholder="주식 선택" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectGroup>
-							<SelectLabel>주식 종목</SelectLabel>
-							{stockChartList.map((stock) => (
-								<SelectItem
-									key={stock.stock_code}
-									value={stock.stock_code}
-									className="cursor-pointer"
-								>
-									{stock.stock_name}
-								</SelectItem>
-							))}
-						</SelectGroup>
-					</SelectContent>
-				</Select>
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-2">
-						<label htmlFor="ma-switch" className="text-sm">
-							이동평균선
-						</label>
-						<Switch
-							id="ma-switch"
-							checked={showMA}
-							onCheckedChange={toggleMA}
-							className="data-[state=checked]:bg-brand-shinhan-blue data-[state=unchecked]:!bg-gray [&>span]:!bg-white cursor-pointer"
-						/>
-					</div>
-					<div className="flex items-center gap-2">
-						<label htmlFor="bollinger-switch" className="text-sm">
-							볼린저밴드
-						</label>
-						<Switch
-							id="bollinger-switch"
-							checked={showBollingerBands}
-							onCheckedChange={toggleBollingerBands}
-							className="data-[state=checked]:bg-brand-shinhan-blue data-[state=unchecked]:!bg-gray [&>span]:!bg-white cursor-pointer"
-						/>
+			<div className="flex flex-col gap-2">
+				<div className="flex justify-between items-center">
+					<Select
+						value={selectedStockCode.stock_code}
+						onValueChange={(value) => {
+							const stockCode = stockChartList.find(
+								(stock) => stock.stock_code === value
+							);
+							if (stockCode) {
+								setSelectedStockCode(stockCode);
+							}
+						}}
+					>
+						<SelectTrigger className="w-[200px] cursor-pointer">
+							<SelectValue placeholder="주식 선택" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectGroup>
+								<SelectLabel>주식 종목</SelectLabel>
+								{stockChartList.map((stock) => (
+									<SelectItem
+										key={stock.stock_code}
+										value={stock.stock_code}
+										className="cursor-pointer"
+									>
+										{stock.stock_name}
+									</SelectItem>
+								))}
+							</SelectGroup>
+						</SelectContent>
+					</Select>
+					<div className="flex items-center gap-4">
+						<div className="flex items-center gap-2">
+							<label htmlFor="ma-switch" className="text-sm">
+								이동평균선
+							</label>
+							<Switch
+								id="ma-switch"
+								checked={showMA}
+								onCheckedChange={toggleMA}
+								className="data-[state=checked]:bg-brand-shinhan-blue data-[state=unchecked]:!bg-gray [&>span]:!bg-white cursor-pointer"
+							/>
+						</div>
+						<div className="flex items-center gap-2">
+							<label htmlFor="bollinger-switch" className="text-sm">
+								볼린저밴드
+							</label>
+							<Switch
+								id="bollinger-switch"
+								checked={showBollingerBands}
+								onCheckedChange={toggleBollingerBands}
+								className="data-[state=checked]:bg-brand-shinhan-blue data-[state=unchecked]:!bg-gray [&>span]:!bg-white cursor-pointer"
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div className="h-96 rounded-lg flex flex-col gap-4 p-4">
+			<div className="h-96 rounded-lg flex flex-col gap-4 p-4 relative">
+				<div className="absolute flex flex-col gap-1 w-full text-[11px] top-4 left-4 z-20">
+					<div ref={ohlcRef}>
+						시가: - <span style={{ color: '#333' }}>고가: -</span>{' '}
+						<span style={{ color: '#333' }}>저가: -</span>{' '}
+						<span style={{ color: '#333' }}>종가: -</span>
+					</div>
+					{showMA && (
+						<div ref={maRef}>
+							이동평균선 <span style={{ color: 'green' }}>5: -</span>{' '}
+							<span style={{ color: 'red' }}>20: -</span>{' '}
+							<span style={{ color: 'orange' }}>60: -</span>{' '}
+							<span style={{ color: 'purple' }}>120: -</span>
+						</div>
+					)}
+					{showBollingerBands && (
+						<div ref={bollingerRef}>
+							<span style={{ color: 'rgb(3, 178, 108)' }}>중심선: -</span>{' '}
+							<span style={{ color: 'rgb(255, 195, 66)' }}>상한선: -</span>{' '}
+							<span style={{ color: 'rgb(255, 195, 66)' }}>하한선: -</span>
+						</div>
+					)}
+				</div>
 				{!isPending && (
 					<div className="flex-1">
 						{stockChartList.map((stock) => (
@@ -525,7 +608,6 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 				)}
 				{isPending && (
 					<div className="h-96 flex flex-col gap-2">
-						<h1 className="text-heading3 font-bold">거래 기록 차트</h1>
 						<div className="flex items-center justify-center flex-1">
 							<LoadingSpinner text="차트를 불러오는 중..." />
 						</div>
