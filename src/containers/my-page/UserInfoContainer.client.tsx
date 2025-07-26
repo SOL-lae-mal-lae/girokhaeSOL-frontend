@@ -13,6 +13,11 @@ interface Props {
 	profileImage: string;
 }
 
+const GENDER_MAP = {
+	male: '남성',
+	female: '여성',
+};
+
 const UserInfoContainer = ({ email, profileImage }: Props) => {
 	// 사용자 정보를 가져오는 useMutation 훅
 	const { data, isLoading } = useQuery({
@@ -58,7 +63,9 @@ const UserInfoContainer = ({ email, profileImage }: Props) => {
 							{data?.nickname}
 						</div>
 						<div className="text-sm text-gray-600">{email}</div>
-						<div className="text-sm text-gray-600">성별: {data?.gender}</div>
+						<div className="text-sm text-gray-600">
+							성별: {GENDER_MAP[data?.gender as keyof typeof GENDER_MAP]}
+						</div>
 					</div>
 				</div>
 
