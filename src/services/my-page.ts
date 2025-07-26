@@ -22,6 +22,8 @@ export const fetchUserComments = async (): Promise<myPageComments[]> => {
 				content: comment.content,
 				userId: comment.user_id,
 				created_at: comment.created_at, // string 그대로 사용
+				post_id: comment.post_id,
+				post_title: comment.post_title,
 			})
 		);
 

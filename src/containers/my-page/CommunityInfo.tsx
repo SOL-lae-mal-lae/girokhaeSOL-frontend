@@ -7,7 +7,14 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query'; // Import useMutation from react-query
 
 import { Badge } from '@/components/ui/badge';
-import { Card, CardTitle, CardContent } from '@/components/ui/card';
+import {
+	Card,
+	CardTitle,
+	CardContent,
+	CardHeader,
+	CardDescription,
+	CardFooter,
+} from '@/components/ui/card';
 import {
 	Pagination,
 	PaginationContent,
@@ -112,36 +119,24 @@ const CommunityInfoContainer = () => {
 							paginatedPosts?.map((post) => {
 								return (
 									<Link key={post.title} href={`/community/${post.id}`}>
-										<Card className="flex flex-row items-center justify-between p-4">
-											<div className="flex flex-col gap-1 flex-1">
-												<CardTitle className="flex items-center gap-2">
-													<span className="text-lg font-semibold">
-														<p>
-															{post.title}
-															<Badge variant="secondary">
-																{post.post_type ? '매매일지' : '일반'}
-															</Badge>
-														</p>
-														<p
-															className="text-base font-medium"
-															style={{
-																fontSize: '0.8em',
-															}}
-														>
-															{post.content}
-														</p>
-													</span>
+										<Card className="flex flex-col justify-between gap-2">
+											<CardHeader className="flex flex-col gap-1 flex-1 w-full">
+												<CardTitle className="flex items-center gap-2 ">
+													{post.title}
+													<Badge variant="secondary">
+														{post.post_type ? '매매일지' : '일반'}
+													</Badge>
 												</CardTitle>
-												<CardContent className="flex flex-col gap-1 px-0 pb-0">
-													<div className="flex items-center gap-4 text-sm text-muted-foreground">
-														<span>
-															{/* Format the date correctly */}
-															{new Date(post.created_at).toLocaleDateString() ||
-																'날짜 없음'}
-														</span>
-													</div>
-												</CardContent>
-											</div>
+											</CardHeader>
+											<CardContent className=" text-gray-600 truncate">
+												{post.content}
+											</CardContent>
+											<CardFooter>
+												<span className="text-sm text-muted-foreground">
+													{new Date(post.created_at).toLocaleDateString() ||
+														'날짜 없음'}
+												</span>
+											</CardFooter>
 										</Card>
 									</Link>
 								);
@@ -196,27 +191,26 @@ const CommunityInfoContainer = () => {
 							</div>
 						) : (
 							paginatedComments?.map((comment) => {
-								// Log each comment during rendering
-								console.log('Rendering Comment:', comment);
 								return (
-									<Card
-										key={comment.id}
-										className="flex flex-row items-center justify-between p-4"
-									>
-										<div className="flex flex-col gap-1 flex-1">
-											<CardTitle className="text-base font-medium">
-												{comment.content}
-											</CardTitle>
-											<CardContent className="flex flex-col gap-1 px-0 pb-0">
-												<div className="flex items-center gap-4 text-sm text-muted-foreground">
-													<span>
-														{/* Format the date correctly */}
-														{new Date(comment.created_at).toLocaleDateString()}
-													</span>
-												</div>
-											</CardContent>
-										</div>
-									</Card>
+									<Link key={comment.id} href={`/community/${comment.post_id}`}>
+										<Card
+											key={comment.id}
+											className="flex flex-col justify-between"
+										>
+											<CardHeader className="w-full">
+												<CardTitle className="text-base font-medium truncate">
+													{comment.content}
+												</CardTitle>
+												<CardDescription>{comment.post_title}</CardDescription>
+											</CardHeader>
+											<CardFooter>
+												<span className="text-sm text-muted-foreground">
+													{/* Format the date correctly */}
+													{new Date(comment.created_at).toLocaleDateString()}
+												</span>
+											</CardFooter>
+										</Card>
+									</Link>
 								);
 							})
 						)}
