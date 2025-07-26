@@ -55,6 +55,8 @@ COPY --from=builder /app/.env.production ./.env.production
 
 COPY --from=builder /app/src/middleware.ts ./src/middleware.ts
 
+COPY --from=builder /app/next.config.ts ./next.config.ts
+
 # Next.js 애플리케이션이 기본적으로 사용하는 포트 3000을 외부에 노출합니다.
 EXPOSE 3000
 
