@@ -3,12 +3,7 @@ import { NextResponse } from 'next/server';
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 const isApiRoute = createRouteMatcher(['/api(.*)']);
-const isPublicRoute = createRouteMatcher([
-	'/',
-	'/community',
-	'/my-page',
-	'/auth-required',
-]);
+const isPublicRoute = createRouteMatcher(['/', '/auth-required']);
 
 export default clerkMiddleware(async (auth, req) => {
 	const { userId } = await auth();
