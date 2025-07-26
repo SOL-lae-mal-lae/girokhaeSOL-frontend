@@ -49,16 +49,12 @@ const AIEvaluation: FC<Props> = ({ result, isOpen, onChangeOpen }) => {
 				</SheetHeader>
 				<div className="h-[250px]">
 					<ScoreChart
-						scores={[
-							Number(splittedResult[0]),
-							Number(splittedResult[1]),
-							Number(splittedResult[2]),
-						]}
+						scores={[Number(splittedResult[0]), Number(splittedResult[1])]}
 					/>
 				</div>
 				<div className="overflow-y-auto p-4">
 					<Accordion type="multiple" defaultValue={['item-0']}>
-						{splittedResult[3]
+						{splittedResult[2]
 							.split('SEPARATOR')
 							.filter((md) => md)
 							.map((md, index) => {
