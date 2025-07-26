@@ -12,4 +12,6 @@ export interface myPageComments {
 	nickname: string;
 	content: string;
 	created_at: string; // Adjusted to match the Post interface
+	post_id: number;
+	post_title: boolean;
 }
