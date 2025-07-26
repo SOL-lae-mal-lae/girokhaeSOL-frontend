@@ -10,6 +10,7 @@ export interface Post {
 }
 
 export interface myPagePosts {
+	id: number;
 	title: string;
 	content: string;
 	is_public: boolean;
