@@ -6,7 +6,13 @@ import { useQuery } from '@tanstack/react-query';
 import { MessageCircle } from 'lucide-react';
 
 import { StockItem } from '@/@types/stockItem';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import {
 	getCommunityGeneralPost,
@@ -70,7 +76,7 @@ export const CommunityPostAll = ({
 				data.map((post) => (
 					<Card
 						key={post.id}
-						className="hover:shadow-md transition-shadow cursor-pointer p-6"
+						className="hover:shadow-md transition-shadow cursor-pointer"
 						onClick={() => handleCardClick(post.id)}
 					>
 						<CardHeader className="pb-3">
@@ -82,11 +88,11 @@ export const CommunityPostAll = ({
 									{new Date(post.created_at).toLocaleDateString()}
 								</span>
 							</div>
-							<div className="flex items-center gap-2">
+							<CardDescription className="flex items-center gap-2">
 								<span className="text-sm font-medium text-blue-600">
 									{post.nickname}
 								</span>
-							</div>
+							</CardDescription>
 						</CardHeader>
 						<CardContent className="pt-0">
 							<div className="relative">
@@ -95,7 +101,6 @@ export const CommunityPostAll = ({
 										? `${post.content.substring(0, 120)}...`
 										: post.content}
 								</p>
-
 								{/* 우측 하단 아이콘들 */}
 								<div className="flex items-center gap-4 justify-end">
 									<div className="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition-colors cursor-pointer">
