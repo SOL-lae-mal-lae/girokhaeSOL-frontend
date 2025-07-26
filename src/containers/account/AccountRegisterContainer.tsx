@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import CryptoJS from 'crypto-js';
@@ -43,7 +41,6 @@ interface AccountRegisterContainerClientProps {
 const AccountRegisterContainerClient = ({
 	onClose,
 }: AccountRegisterContainerClientProps) => {
-	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const { mutate, isPending } = useMutation({
@@ -59,7 +56,6 @@ const AccountRegisterContainerClient = ({
 			});
 			queryClient.refetchQueries({ queryKey: ['accounts'] });
 			onClose();
-			router.push('/');
 		},
 	});
 
