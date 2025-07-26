@@ -68,13 +68,14 @@ export default function CommunityPostWrite() {
 		mutationFn: createPost,
 		onSuccess: (data) => {
 			if (data) {
+				queryClient.invalidateQueries({
+					queryKey: ['community-all-post'],
+				});
+				toast.success('게시글 작성에 성공했습니다.');
 				router.push('/community');
 			} else {
 				toast.error('게시글 작성에 실패했습니다.');
 			}
-			queryClient.invalidateQueries({
-				queryKey: ['community-all-post'],
-			});
 		},
 	});
 
@@ -194,7 +195,7 @@ export default function CommunityPostWrite() {
 															해당 날짜의 매매 현황을 확인하세요
 														</p>
 													</div>
-													<div className="bg-gray-50 rounded-lg p-4">
+													<div className="bg-gray-100 rounded-lg p-4 border">
 														<Table>
 															<TableHeader>
 																<TableRow>
@@ -265,7 +266,7 @@ export default function CommunityPostWrite() {
 														거래 결정의 이유와 배경
 													</p>
 												</div>
-												<div className="bg-brand-light-blue/30 rounded-lg p-4 border">
+												<div className="bg-gray-100 rounded-lg p-4 border">
 													<div className="text-gray-800 leading-relaxed text-body2 text-start">
 														{tradeLog.rationale
 															.split('\n')
@@ -288,7 +289,7 @@ export default function CommunityPostWrite() {
 														거래 결과에 대한 분석과 평가
 													</p>
 												</div>
-												<div className="bg-brand-light-blue/30 rounded-lg p-4 border text-body2 text-start">
+												<div className="bg-gray-100 rounded-lg p-4 border text-body2 text-start">
 													<div className="text-gray-800 leading-relaxed">
 														{tradeLog.evaluation
 															.split('\n')
