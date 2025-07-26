@@ -553,7 +553,7 @@ const GeneralPost: FC = () => {
 									key={comment.id}
 									className="border-0 shadow-none bg-brand-shinhan-blue/10"
 								>
-									<CardContent className="p-6">
+									<CardContent>
 										<div className="flex items-start gap-3">
 											<div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
 												{comment.user_id === user?.id && user?.imageUrl ? (
