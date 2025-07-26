@@ -4,7 +4,7 @@ import { createContext, useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, subMonths } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -115,6 +115,20 @@ const CreateTradeLogProvider = ({
 	const rationalRef = useRef<HTMLTextAreaElement | null>(null);
 	const evaluationRef = useRef<HTMLTextAreaElement | null>(null);
 	const todayTradeCompanyRef = useRef<Stock[]>([]);
+	const { mutate: createTradeLogMutate } = useMutation({
+		mutationFn: createTradeLog,
+		onSuccess: (data) => {
+			if (data) {
+				queryClient.invalidateQueries({
+					queryKey: ['monthlyTradeLogs', 'diaryList'],
+				});
+				toast.success('매매일지 작성이 완료되었습니다.');
+				router.push('/trade-logs');
+			} else {
+				toast.error('매매일지 작성에 실패했습니다.');
+			}
+		},
+	});
 
 	const handleSetTodayTradeCompanyList = (stocks: Stock[]) => {
 		todayTradeCompanyRef.current = [...todayTradeCompanyRef.current, ...stocks];
@@ -242,40 +256,7 @@ const CreateTradeLogProvider = ({
 			evaluation: evaluationRef.current.value,
 			news_links: newsUrls.map((url) => ({ url })),
 		};
-
-		// API 호출
-		try {
-			const response = await createTradeLog(data);
-
-			if (response) {
-				// 성공 처리
-				queryClient.invalidateQueries({
-					queryKey: ['monthlyTradeLogs'],
-				});
-				toast.success('매매일지 작성이 완료되었습니다.');
-				router.push('/trade-logs');
-			} else {
-				// 실패 처리
-				setDialogTitle('오류');
-				setDialogDescription('매매일지 작성에 실패했습니다.');
-				setDialogBody(
-					<div className="flex flex-col gap-2">
-						<p>매매일지 작성 중 오류가 발생했습니다. 다시 시도해주세요.</p>
-					</div>
-				);
-				setOpen(true);
-			}
-		} catch (error) {
-			console.error('매매일지 작성 오류:', error);
-			setDialogTitle('오류');
-			setDialogDescription('매매일지 작성 중 오류가 발생했습니다.');
-			setDialogBody(
-				<div className="flex flex-col gap-2">
-					<p>네트워크 오류가 발생했습니다. 다시 시도해주세요.</p>
-				</div>
-			);
-			setOpen(true);
-		}
+		createTradeLogMutate(data);
 	};
 
 	useEffect(() => {
