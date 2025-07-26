@@ -7,14 +7,7 @@ import { useRouter, useParams } from 'next/navigation';
 
 import { useUser } from '@clerk/nextjs';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-	ArrowLeft,
-	Send,
-	Share2,
-	Trash2,
-	MoreVertical,
-	Edit,
-} from 'lucide-react';
+import { ArrowLeft, Send, Trash2, MoreVertical, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
@@ -146,15 +139,12 @@ const GeneralPost: FC = () => {
 						{data?.title}
 					</h1>
 				</div>
-				<Button variant="ghost" size="sm" className="p-2">
-					<Share2 size={20} />
-				</Button>
 			</div>
 
 			{/* 게시글 내용 */}
 			<div className="flex-1 p-4">
 				{data?.post_type ? (
-					<Card className="mb-6">
+					<Card>
 						<CardContent>
 							{/* 작성자 정보 */}
 							<div className="flex items-center justify-between">
@@ -399,7 +389,7 @@ const GeneralPost: FC = () => {
 				) : (
 					// post_type이 false일 때: content만 출력
 					<Card className="mb-6">
-						<CardContent className="p-6">
+						<CardContent>
 							{/* 작성자 정보 */}
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-3">
