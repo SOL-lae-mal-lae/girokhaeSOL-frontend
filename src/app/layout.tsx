@@ -5,7 +5,6 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { Base, Login, NavBar } from '@/components/layouts';
 import QueryClientProvider from '@/components/providers/QueryClientProvider';
 import { Toaster } from '@/components/ui/sonner';
-import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 import { DialogProvider } from '@/hooks/DialogContext';
 
 import type { Metadata } from 'next';
@@ -37,7 +36,7 @@ export const metadata: Metadata = {
 	title: '기록해SOL',
 	description: '매매일지 작성하고 부자되자!',
 	openGraph: {
-		images: `${CLIENT_HOST_FOR_CLIENT}/images/og_image.jpg`,
+		images: '/images/og_image.png',
 	},
 };
 

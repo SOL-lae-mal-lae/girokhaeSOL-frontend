@@ -38,7 +38,6 @@ import {
 	TableHead,
 	TableCell,
 } from '@/components/ui/table';
-import { CLIENT_HOST_FOR_CLIENT } from '@/constants/hosts';
 import {
 	TradeDetailTable,
 	TradeSummary,
@@ -161,7 +160,7 @@ const GeneralPost: FC = () => {
 											/>
 										) : (
 											<Image
-												src={`${CLIENT_HOST_FOR_CLIENT}/images/userImage.png`}
+												src={'/images/userImage.png'}
 												alt="기본 프로필 이미지"
 												className="w-full h-full object-cover"
 												width={40}
