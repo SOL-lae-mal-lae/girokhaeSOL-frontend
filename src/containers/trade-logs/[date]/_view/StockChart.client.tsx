@@ -569,7 +569,7 @@ const StockChart: FC<Props> = ({ stockChartList, chartWidth }) => {
 				</div>
 			</div>
 			<div className="h-96 rounded-lg flex flex-col gap-4 p-4 relative">
-				<div className="absolute flex flex-col gap-1 w-full text-[11px] top-4 left-4 z-20">
+				<div className="absolute flex flex-col items-start gap-1 w-full text-[11px] top-4 left-4 z-20">
 					<div ref={ohlcRef}>
 						시가: - <span style={{ color: '#333' }}>고가: -</span>{' '}
 						<span style={{ color: '#333' }}>저가: -</span>{' '}
