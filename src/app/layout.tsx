@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 	title: '기록해SOL',
 	description: '매매일지 작성하고 부자되자!',
 	openGraph: {
-		images: `${CLIENT_HOST_FOR_CLIENT}/og_image.jpg`,
+		images: `${CLIENT_HOST_FOR_CLIENT}/images/og_image.jpg`,
 	},
 };
 
