@@ -143,7 +143,7 @@ const GeneralPost: FC = () => {
 			</div>
 
 			{/* 게시글 내용 */}
-			<div className="flex-1 p-4">
+			<div className="flex flex-col flex-1 p-4 gap-8">
 				{data?.post_type ? (
 					<Card>
 						<CardContent>
