@@ -160,7 +160,7 @@ const GeneralPost: FC = () => {
 											/>
 										) : (
 											<Image
-												src={'/images/userImage.png'}
+												src={'/images/userImg.png'}
 												alt="기본 프로필 이미지"
 												className="w-full h-full object-cover"
 												width={40}
@@ -404,7 +404,7 @@ const GeneralPost: FC = () => {
 											/>
 										) : (
 											<Image
-												src="/images/userImage.png"
+												src="/images/userImg.png"
 												alt="기본 프로필 이미지"
 												className="w-full h-full object-cover"
 												width={28}
@@ -556,7 +556,7 @@ const GeneralPost: FC = () => {
 													/>
 												) : (
 													<Image
-														src="/images/userImage.png"
+														src="/images/userImg.png"
 														alt="기본 프로필 이미지"
 														className="w-full h-full object-cover"
 														width={28}
