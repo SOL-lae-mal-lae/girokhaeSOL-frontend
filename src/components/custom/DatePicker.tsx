@@ -24,7 +24,7 @@ interface Props {
 }
 
 const DatePicker: FC<Props> = ({ id, label }) => {
-	const { stockDateRange, onChangeDate } = useCreateTradeLog();
+	const { stockDateRange, onChangeDate, date: curDate } = useCreateTradeLog();
 	const [open, setOpen] = useState(false);
 
 	// 6개월 전 날짜를 기본값으로 설정
@@ -62,7 +62,9 @@ const DatePicker: FC<Props> = ({ id, label }) => {
 							}
 						}}
 						components={{
-							DayButton: (props) => <MiniCustomDayButton {...props} />,
+							DayButton: (props) => (
+								<MiniCustomDayButton curDate={curDate} {...props} />
+							),
 						}}
 					/>
 				</PopoverContent>

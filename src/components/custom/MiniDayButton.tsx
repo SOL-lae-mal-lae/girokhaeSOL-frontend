@@ -11,8 +11,9 @@ const MiniCustomDayButton = ({
 	className,
 	day,
 	modifiers,
+	curDate,
 	...props
-}: React.ComponentProps<typeof DayButton>) => {
+}: React.ComponentProps<typeof DayButton> & { curDate: string }) => {
 	const { onClick, ...restProps } = props;
 	const defaultClassNames = getDefaultClassNames();
 
@@ -21,7 +22,12 @@ const MiniCustomDayButton = ({
 	// 오늘 이후 날짜는 비활성화
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
-	const isFuture = day.date > today;
+
+	// curDate를 Date 객체로 변환하여 비교
+	const curDateObj = new Date(curDate);
+	curDateObj.setHours(0, 0, 0, 0);
+
+	const isFuture = day.date > curDateObj;
 	const isWeekend = day.date.getDay() === 0 || day.date.getDay() === 6;
 	// 오늘 날짜 판별
 	const isToday = day.date.getTime() === today.getTime();
