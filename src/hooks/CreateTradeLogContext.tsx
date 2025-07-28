@@ -120,7 +120,10 @@ const CreateTradeLogProvider = ({
 		onSuccess: (data) => {
 			if (data) {
 				queryClient.invalidateQueries({
-					queryKey: ['monthlyTradeLogs', 'diaryList'],
+					queryKey: ['diaryList'],
+				});
+				queryClient.refetchQueries({
+					queryKey: ['monthlyTradeLogs'],
 				});
 				toast.success('매매일지 작성이 완료되었습니다.');
 				router.push('/trade-logs');
