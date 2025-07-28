@@ -37,6 +37,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 		data: userSummary,
 		isLoading,
 		isSuccess,
+		isError,
 		refetch,
 	} = useQuery({
 		queryKey: ['userSummary'],
@@ -80,7 +81,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 		);
 	}
 
-	if (!userSummary) {
+	if (isError) {
 		return <SummaryError refetchSummary={() => refetch()} />;
 	}
 
