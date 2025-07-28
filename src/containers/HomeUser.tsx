@@ -35,7 +35,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 
 	const {
 		data: userSummary,
-		isLoading,
+		isFetching,
 		isSuccess,
 		isError,
 		refetch,
@@ -47,7 +47,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 				endDate: todayFormatted,
 			}),
 		retry: 3, // 최대 3번 재시도
-		retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // 지수 백오프
+		retryDelay: 1000,
 	});
 	const titleRef = useRef<HTMLParagraphElement>(null);
 	const infoCardsRef = useRef<HTMLUListElement>(null);
@@ -73,7 +73,7 @@ const HomeUser: FC<Props> = ({ userName }) => {
 		};
 	}, [userSummary, isSuccess]);
 
-	if (isLoading) {
+	if (isFetching) {
 		return (
 			<div className="flex justify-center items-center h-full">
 				<LoadingSpinner text="사용자 정보 요약하는 중..." />
